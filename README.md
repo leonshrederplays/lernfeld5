@@ -17,4 +17,3 @@
 * Code kommentieren / Dokumentieren
 * MySQL als Datenbank verwenden
 * Java ist die Projektsprache für dieses Lernfeld
-* **6.0KMH schnell gehen!!!**
