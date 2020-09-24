@@ -7,7 +7,7 @@
 ## Team-Rollen
 
 * Hendrik (Scrum-Master)
-* Maximilian (Scrum-Member)
+* Maximilian (Scrum-Member / Datenschutzbeauftragter)
 * Jakob (Product-Owner)
 * Leon (Tech-Leader)
 
