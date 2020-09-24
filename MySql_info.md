@@ -12,11 +12,6 @@
 - [Analyzing Business Metrics](https://www.codecademy.com/learn/sql-analyzing-business-metrics)
 - [SQL joins infografic](https://www.codeproject.com/Articles/33052/Visual-Representation-of-SQL-Joins)
 
-## Tools
-- [TablePlus](https://tableplus.io/)
-- [DataGrip](https://www.jetbrains.com/datagrip/)
-- [Sequel Pro](http://www.sequelpro.com/) (abandoned)
-
 ## Commands
 Access monitor: `mysql -u [username] -p;` (will prompt for password)
 
