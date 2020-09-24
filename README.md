@@ -1,13 +1,15 @@
 # Lernfeld5
 
 ## Index
+* [Team-Rollen](https://github.com/leonshrederplays/lernfeld5#team-rollen)
+* [Team-Regeln](https://github.com/leonshrederplays/lernfeld5#team-regeln)
 
 ## Team-Rollen
 
 * Hendrik (Scrum-Master)
-* Maximilian ()
-* Jakob ()
-* Leon ()
+* Maximilian (Scrum-Member)
+* Jakob (Product-Owner)
+* Leon (Tech-Leader)
 
 ## Team-Regeln
 
