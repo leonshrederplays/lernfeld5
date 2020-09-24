@@ -6,6 +6,7 @@
 - http://www.sqlteaching.com/
 - https://www.codecademy.com/learn/learn-sql
 - https://www.codecademy.com/catalog/language/sql
+- http://tutorials.jenkov.com/jdbc/statement.html#:~:text=Here%20is%20an%20example%20of%20executing%20a%20database%20update%20via,executeUpdate(sql)%3B
 
 ### Related tutorials
 - [MySQL-CLI](https://www.youtube.com/playlist?list=PLfdtiltiRHWEw4-kRrh1ZZy_3OcQxTn7P)
