@@ -50,9 +50,8 @@ public class BaseController {
             Button b = (Button) o;
             //System.out.println(b.getId());
             switch (b.getId()) {
-                case "chats":
-                    
-                    setScene("scenes/chats.fxml");
+                case "createRecipe":
+                    setScene("scenes/createRecipe.fxml");
                     break;
                 case "friends":
                     
