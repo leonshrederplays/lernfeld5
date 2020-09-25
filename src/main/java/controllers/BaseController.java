@@ -17,18 +17,6 @@ public class BaseController {
         myStage = stage;
     }
 
-    public Parent setScene() throws IOException {
-        return setScene("scenes/chats.fxml");
-    }
-
-    public Parent setSceneRegister() throws IOException {
-        return setScene("scenes/register.fxml");
-    }
-
-    public Parent setSceneLogin() throws IOException {
-        return setScene("scenes/login.fxml");
-    }
-
     public Parent setScene(String fullPath) {
         Parent root = null;
         try {
