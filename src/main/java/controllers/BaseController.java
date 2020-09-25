@@ -22,7 +22,7 @@ public class BaseController {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource(fullPath));
             root = loader.load();
-            Scene scene = new Scene(root, 1920, 1080);
+            Scene scene = new Scene(root, 1280, 800);
             BaseController controller = loader.getController();
             controller.setStage(myStage);
             myStage.setScene(scene);
