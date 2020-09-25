@@ -16,13 +16,5 @@ public class HomeController extends BaseController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        createRecipe.setOnAction(event -> {
-            try {
-                changeScene(event);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
     }
 }

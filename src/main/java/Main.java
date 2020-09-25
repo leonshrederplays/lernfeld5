@@ -8,6 +8,8 @@ import javafx.stage.StageStyle;
 
 public class Main extends Application {
 
+    private Object Scene;
+
     public static void main(String[] args) {
         Application.launch(args);
     }
@@ -16,7 +18,7 @@ public class Main extends Application {
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("scenes/home.fxml"));
         Parent root = loader.load();
-        Scene scene = new Scene(root, 1920, 1080);
+        Scene scene = new Scene(root, 1280, 720);
         BaseController controller = loader.getController();
         controller.setStage(stage);
         stage.setScene(scene);
