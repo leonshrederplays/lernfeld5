@@ -15,7 +15,7 @@ public class DBUtils {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost:3306/";
             String user = "root";
-            String pass = "like1234";
+            String pass = "";
             conn = DriverManager.getConnection(url, user, pass);
             conn.setAutoCommit(false);
             System.out.println(conn);

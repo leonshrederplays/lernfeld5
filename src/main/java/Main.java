@@ -1,11 +1,7 @@
-import controllers.BaseController;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import utils.Commander;
 import utils.DBUtils;
+
+import java.util.Scanner;
 
 public class Main /*extends Application*/ {
 
@@ -16,6 +12,28 @@ public class Main /*extends Application*/ {
         DBUtils dbUtils = new DBUtils();
         dbUtils.connector();
         dbUtils.createSQL();
+        Commander commander = new Commander();
+        Scanner input = new Scanner(System.in);
+
+        String command = null;
+        do {
+            System.out.println("Enter the command you want to execute: ");
+            command = input.next();
+            switch (command) {
+                case "help" -> {
+                    commander.helper();
+                    command = null;
+                }
+                case "ingredients" -> {
+                    commander.ingredients();
+                    command = null;
+                }
+                case "exit" -> {
+                    commander.shutdown();
+                    command = null;
+                }
+            }
+        } while (true);
     }
 
     /*@Override
