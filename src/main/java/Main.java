@@ -5,16 +5,19 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import utils.DBUtils;
 
-public class Main extends Application {
+public class Main /*extends Application*/ {
 
     private Object Scene;
 
     public static void main(String[] args) {
-        Application.launch(args);
+        //Application.launch(args);
+        DBUtils dbUtils = new DBUtils();
+        dbUtils.createSQL();
     }
 
-    @Override
+    /*@Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("scenes/home.fxml"));
         Parent root = loader.load();
@@ -24,5 +27,5 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setTitle("Name WIP");
         stage.show();
-    }
+    }*/
 }
