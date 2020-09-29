@@ -20,18 +20,18 @@ public class Main /*extends Application*/ {
             System.out.println("Enter the command you want to execute: ");
             command = input.next();
             switch (command) {
-                case "help" -> {
+                case "help":
                     commander.helper();
                     command = null;
-                }
-                case "ingredients" -> {
+                    break;
+                case "ingredients":
                     commander.ingredients();
                     command = null;
-                }
-                case "exit" -> {
+                    break;
+                case "exit":
                     commander.shutdown();
                     command = null;
-                }
+                    break;
             }
         } while (true);
     }

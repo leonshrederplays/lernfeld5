@@ -16,6 +16,16 @@ public class DBUtils {
             String url = "jdbc:mysql://localhost:3306/";
             String user = "root";
             String pass = "";
+            try {
+                conn = DriverManager.getConnection(url, user, pass);
+            } catch (SQLException e) {
+                try {
+                    pass = "like1234";
+                    conn = DriverManager.getConnection(url, user, pass);
+                } catch (SQLException ec) {
+                    ec.printStackTrace();
+                }
+            }
             conn = DriverManager.getConnection(url, user, pass);
             conn.setAutoCommit(false);
             System.out.println(conn);
