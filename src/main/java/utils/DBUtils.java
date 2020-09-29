@@ -15,7 +15,7 @@ public class DBUtils {
             Class.forName("com.mysql.cj.jdbc.Driver");
             String url = "jdbc:mysql://localhost:3306/";
             String user = "root";
-            String pass = "like1234";
+            String pass = "";
             conn = DriverManager.getConnection(url, user, pass);
             conn.setAutoCommit(false);
             System.out.println(conn);
@@ -29,8 +29,8 @@ public class DBUtils {
         try (Connection conn = connector()) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
             // SQL-Skript
-            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL.sql")).replace("file:", "");
-            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "");
+            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL.sql")).replace("file:", "").replace("%20"," ");
+            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
             // Das SQL-Skript ausführen.
             // Datenbank und Tabellen erstellen.
             sr.runScript(new BufferedReader(new FileReader(dbFile)));
