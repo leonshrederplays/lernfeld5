@@ -1,6 +1,13 @@
 package utils;
 
+import constructors.IngredientList;
+import instances.ConfigInstance;
+
+import java.util.List;
+
 public class Commander {
+
+    public DBUtils dbUtil = new DBUtils();
 
     public void helper(){
         System.out.print("Here is a list of available commands\n" +
@@ -11,11 +18,19 @@ public class Commander {
     }
 
     public void ingredients(){
-        System.out.println("This function is not available yet.");
-    }
-
-    public void recipes() {
-
+        List<IngredientList> list = dbUtil.selectIngredients();
+        list.forEach(ingredient -> {
+            String str ="ID: " + ingredient.getIngredientID() + ": "
+                    + "Name: " + ingredient.getIngredientName() + ", "
+                    + "Einheit: " + ingredient.getUnit() + ", "
+                    + "Nettopreis: " + ingredient.getNettoprice() + ", "
+                    + "Bestand: " + ingredient.getAmount() + ", "
+                    + "Lieferant: " + ingredient.getSupplierID() + ", "
+                    + "" + ingredient.getCalorie() + ", "
+                    + "" + ingredient.getCarbohydrates() + ", "
+                    + "" + ingredient.getProtein();
+            System.out.println(str);
+        });
     }
 
     public void shutdown(){

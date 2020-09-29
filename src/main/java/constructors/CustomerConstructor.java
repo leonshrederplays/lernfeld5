@@ -1,5 +1,7 @@
 package constructors;
 
 public class CustomerConstructor {
-    public 
+    public CustomerConstructor () {
+
+    }
 }

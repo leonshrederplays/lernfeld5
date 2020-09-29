@@ -1,3 +1,4 @@
+import instances.ConfigInstance;
 import utils.Commander;
 import utils.DBUtils;
 
@@ -33,7 +34,7 @@ public class Main /*extends Application*/ {
                     command = null;
                     break;
                 default:
-                    System.out.println("YEET type help to get an command list.");
+                    System.out.println("YEET type help to get the command list.");
                     break;
             }
         } while (true);
@@ -42,7 +43,7 @@ public class Main /*extends Application*/ {
     /*@Override
     public void start(Stage stage) throws Exception {
         FXMLLoader loader = new FXMLLoader(getClass().getClassLoader().getResource("scenes/home.fxml"));
-        Parent root = loader.load();
+        Parent root = loader.load();*
         Scene scene = new Scene(root, 1280, 800);
         BaseController controller = loader.getController();
         controller.setStage(stage);
