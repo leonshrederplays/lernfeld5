@@ -18,7 +18,7 @@ public class Commander {
     }
 
     public void ingredients(){
-        List<IngredientList> list = dbUtil.selectIngredients();
+        List<IngredientList> list = ConfigInstance.ingredientList;
         list.forEach(ingredient -> {
             String str ="ID: " + ingredient.getIngredientID()
                     + " / Name: " + ingredient.getIngredientName();

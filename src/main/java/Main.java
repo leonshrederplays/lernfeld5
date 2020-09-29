@@ -11,8 +11,14 @@ public class Main /*extends Application*/ {
     public static void main(String[] args) {
         //Application.launch(args);
         DBUtils dbUtils = new DBUtils();
-        dbUtils.connector();
+        dbUtils.firstBootConnector();
         dbUtils.createSQL();
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        dbUtils.selectData();
         Commander commander = new Commander();
         Scanner input = new Scanner(System.in);
 
@@ -29,7 +35,7 @@ public class Main /*extends Application*/ {
                     try {
                         String arg = input.nextLine();
                         if(arg.length() != 0) {
-                            commander.
+                            commander.ingredientDescription();
                         } else {
                             commander.ingredients();
                         }
