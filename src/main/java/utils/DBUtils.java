@@ -29,8 +29,8 @@ public class DBUtils {
         try (Connection conn = connector()) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
             // SQL-Skript
-            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL.sql")).replace("file:", "");
-            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "");
+            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL.sql")).replace("file:", "").replace("%20"," ");
+            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
             // Das SQL-Skript ausführen.
             // Datenbank und Tabellen erstellen.
             sr.runScript(new BufferedReader(new FileReader(dbFile)));
