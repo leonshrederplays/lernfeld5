@@ -22,17 +22,18 @@ public class DBUtils {
             String user = "root";
             String pass = "";
             try {
+                // Connect to MySQL
                 conn = DriverManager.getConnection(url, user, pass);
-                conn.createStatement().executeQuery("USE krautundrueben");
             } catch (SQLException e) {
                 try {
                     pass = "like1234";
+                    // Connect to MySQL with password
                     conn = DriverManager.getConnection(url, user, pass);
-                    conn.createStatement().executeQuery("USE krautundrueben");
                 } catch (SQLException ec) {
                     ec.printStackTrace();
                 }
             }
+            // Dont push changes automatically to MySQL
             conn.setAutoCommit(false);
             System.out.println(conn);
         } catch (SQLException | ClassNotFoundException ex) {
@@ -49,15 +50,18 @@ public class DBUtils {
             String user = "root";
             String pass = "";
             try {
+                // Connect to MySQL
                 conn = DriverManager.getConnection(url, user, pass);
             } catch (SQLException e) {
                 try {
                     pass = "like1234";
+                    // COnnect to MySQL with password
                     conn = DriverManager.getConnection(url, user, pass);
                 } catch (SQLException ec) {
                     ec.printStackTrace();
                 }
             }
+            // Dont push changes automatically to MySQL
             conn.setAutoCommit(false);
             System.out.println(conn);
         } catch (SQLException | ClassNotFoundException ex) {
@@ -67,6 +71,7 @@ public class DBUtils {
     }
 
     public void createSQL() {
+        // Get Connection to MySQL
         try (Connection conn = firstBootConnector()) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
             // SQL-Skript
@@ -87,14 +92,21 @@ public class DBUtils {
     }
 
     public List<IngredientList> selectIngredients() {
+        // Define a List of Ingredients
         List<IngredientList> list = new ArrayList<>();
+        // Get Connection
         try (Connection conn = connector()) {
+            // Pass your SQL in this String.
             String sql = "SELECT * FROM ZUTAT";
+            // Make a preparedStatement and set Scroll to insensitive (both directions)
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                // Execute query and safe Result in rs
                 try (ResultSet rs = ps.executeQuery()) {
+                    // If no result do nothing
                     if (!rs.next()) {
-                        System.out.println("No requests");
+                        System.out.println("No results");
                     } else {
+                        // For Each result add it to IngredientList.
                         do {
                             // rs.getObject or etc. And Column Number required.
                             list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getInt(9)));
@@ -105,6 +117,7 @@ public class DBUtils {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        // Return the list which can be obtained by List<IngredientList> list = dbUtil.selectIngredients(); !!Dependency it needs to have DBUtils dbUtil = new DBUtils(); to be defined!!
         return list;
     }
 }

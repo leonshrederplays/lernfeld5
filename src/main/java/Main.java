@@ -26,7 +26,17 @@ public class Main /*extends Application*/ {
                     command = null;
                     break;
                 case "ingredients":
-                    commander.ingredients();
+                    try {
+                        String arg = input.nextLine();
+                        if(arg.length() != 0) {
+                            commander.
+                        } else {
+                            commander.ingredients();
+                        }
+                    } catch(Exception e) {
+                        e.printStackTrace();
+                        command = null;
+                    }
                     command = null;
                     break;
                 case "exit":
@@ -34,6 +44,7 @@ public class Main /*extends Application*/ {
                     command = null;
                     break;
                 default:
+                    System.out.println(command);
                     System.out.println("YEET type help to get the command list.");
                     break;
             }

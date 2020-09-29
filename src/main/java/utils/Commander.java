@@ -20,17 +20,21 @@ public class Commander {
     public void ingredients(){
         List<IngredientList> list = dbUtil.selectIngredients();
         list.forEach(ingredient -> {
-            String str ="ID: " + ingredient.getIngredientID() + ": "
-                    + "Name: " + ingredient.getIngredientName() + ", "
-                    + "Einheit: " + ingredient.getUnit() + ", "
+            String str ="ID: " + ingredient.getIngredientID()
+                    + " / Name: " + ingredient.getIngredientName();
+                    /*+ "Einheit: " + ingredient.getUnit() + ", "
                     + "Nettopreis: " + ingredient.getNettoprice() + ", "
                     + "Bestand: " + ingredient.getAmount() + ", "
                     + "Lieferant: " + ingredient.getSupplierID() + ", "
                     + "" + ingredient.getCalorie() + ", "
                     + "" + ingredient.getCarbohydrates() + ", "
-                    + "" + ingredient.getProtein();
+                    + "" + ingredient.getProtein();*/
             System.out.println(str);
         });
+    }
+
+    public void ingredientDescription() {
+
     }
 
     public void shutdown(){
