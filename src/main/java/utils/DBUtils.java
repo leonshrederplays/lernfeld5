@@ -1,6 +1,8 @@
 package utils;
 
 
+import instances.ConfigInstance;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -17,11 +19,11 @@ public class DBUtils {
             String user = "root";
             String pass = "";
             try {
-                conn = DriverManager.getConnection(url, user, pass);
+                ConfigInstance.conn = DriverManager.getConnection(url, user, pass);
             } catch (SQLException e) {
                 try {
                     pass = "like1234";
-                    conn = DriverManager.getConnection(url, user, pass);
+                    ConfigInstance.conn = DriverManager.getConnection(url, user, pass);
                 } catch (SQLException ec) {
                     ec.printStackTrace();
                 }

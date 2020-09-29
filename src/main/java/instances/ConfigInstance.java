@@ -1,2 +1,9 @@
-package instances;public class ConfigInstance {
+package instances;
+
+import java.sql.Connection;
+
+public class ConfigInstance {
+
+    public static Connection conn;
+
 }

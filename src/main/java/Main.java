@@ -32,6 +32,9 @@ public class Main /*extends Application*/ {
                     commander.shutdown();
                     command = null;
                     break;
+                default:
+                    System.out.println("YEET type help to get an command list.");
+                    break;
             }
         } while (true);
     }
