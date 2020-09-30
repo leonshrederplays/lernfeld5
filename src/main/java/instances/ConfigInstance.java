@@ -1,6 +1,7 @@
 package instances;
 
 import constructors.IngredientList;
+import constructors.RecipeList;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -13,4 +14,5 @@ public class ConfigInstance implements Serializable {
     public static Connection conn;
 
     public static List<IngredientList> ingredientList = new ArrayList<>();
+    public static List<RecipeList> recipeList = new ArrayList<>();
 }
