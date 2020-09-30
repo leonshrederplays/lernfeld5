@@ -2,6 +2,7 @@ DROP DATABASE IF EXISTS krautundrueben;
 CREATE DATABASE IF NOT EXISTS krautundrueben;
 USE krautundrueben;
 
+
 CREATE TABLE KUNDE (
     KUNDENNR        INTEGER NOT NULL,
     NACHNAME        VARCHAR(50),
@@ -64,14 +65,14 @@ ZUTATENNR 	INTEGER,
 MENGE 		INTEGER
 
 );
-CREATE TABLE KATEGORIE {
-REZEPTNR INTEGER,
+CREATE TABLE KATEGORIE (
+REZEPTNR INTEGER NOT NULL,
 KATEGORIE VARCHAR(50)
-};
-CREATE TABLE ALLERGENE {
-REZEPTNR INTEGER,
+);
+CREATE TABLE ALLERGENE (
+REZEPTNR INTEGER NOT NULL,
 ALLERGENE VARCHAR(50)
-};
+);
 /******************************************************************************/
 /***                              Primary Keys                              ***/
 /******************************************************************************/
