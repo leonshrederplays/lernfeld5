@@ -54,6 +54,19 @@ public class Main /*extends Application*/ {
                     commander.recipe();
                     command = null;
                     System.out.println(" ");
+                    break;
+                case "orders":
+                    try {
+                        if (command.length > 1) {
+                            commander.orderDescription(command[1]);
+                        } else {
+                            commander.orders();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    command = null;
+                    System.out.println(" ");
                 default:
                     System.out.println("YEET type help to get the command list.");
                     command = null;

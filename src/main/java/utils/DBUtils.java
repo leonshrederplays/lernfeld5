@@ -2,6 +2,7 @@ package utils;
 
 
 import constructors.IngredientList;
+import constructors.OrderList;
 import instances.ConfigInstance;
 
 import java.io.BufferedReader;
@@ -74,6 +75,7 @@ public class DBUtils {
 
     public void selectData() {
         selectIngredients();
+        selectOrder();
     }
 
     public void createSQL() {
@@ -127,4 +129,37 @@ public class DBUtils {
         // Return the list which can be obtained by List<IngredientList> list = dbUtil.selectIngredients(); !!Dependency it needs to have DBUtils dbUtil = new DBUtils(); to be defined!!
         //return list;
     }
+    public /*List<OrderList>*/ void selectOrder() {
+        // Define a List of Ingredients
+        //List<OrderList> list = new ArrayList<>();
+        // Get Connection
+        try (Connection conn = connector()) {
+            // Pass your SQL in this String.
+            String sql = "SELECT * FROM BESTELLUNG";
+            // Make a preparedStatement and set Scroll to insensitive (both directions)
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                // Execute query and safe Result in rs
+                try (ResultSet rs = ps.executeQuery()) {
+                    // If no result do nothing
+                    if (!rs.next()) {
+                        System.out.println("No results");
+                    } else {
+                        // For Each result add it to IngredientList.
+                        do {
+                            // rs.getObject or etc. And Column Number required.
+                            //list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+                            inst.orderList.add(new OrderList(rs.getInt(1), rs.getInt(2), rs.getDate(3), rs.getDouble(4)));
+                        } while (rs.next());
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        // Return the list which can be obtained by List<IngredientList> list = dbUtil.selectIngredients(); !!Dependency it needs to have DBUtils dbUtil = new DBUtils(); to be defined!!
+        //return list;
+    }
+
 }
+
+

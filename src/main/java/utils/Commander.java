@@ -2,6 +2,7 @@ package utils;
 
 import com.sun.javafx.image.IntPixelGetter;
 import constructors.IngredientList;
+import constructors.OrderList;
 import constructors.RecipeList;
 import instances.ConfigInstance;
 
@@ -74,6 +75,35 @@ public class Commander {
             }, () -> {
                 System.out.println("Die Zutat: " + arg + " existiert nicht. Gebe ingreds ein um alle Zutaten zu listen.");
             });
+        }
+    }
+    public void orders(){
+        List<OrderList> list = ConfigInstance.orderList;
+        list.forEach(orders -> {
+            String str ="Bestellnummer: " + orders.getBESTELLNR()
+                    + " Kundennummer: " + orders.getKUNDENNR();
+            System.out.println(str);
+        });
+    }
+
+    public void orderDescription(String arg) {
+        List<OrderList> list = ConfigInstance.orderList;
+        try {
+            int id = Integer.parseInt(arg);
+            list.stream().filter(orders -> id == orders.getBESTELLNR()).findAny().ifPresentOrElse(orders -> {
+                String str =
+                        "Eigenschaften der Bestellung: "
+                                + "\nBestellnummer: " + orders.getBESTELLNR()
+                                + "\nKundennummer: " + orders.getKUNDENNR()
+                                + "\nBestelldatum: " + orders.getBESTELLDATUM()
+                                + "\nRechnungsbetrag: " + orders.getRECHNUNGSBETRAG();
+
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Die Bestellung: " + arg + " existiert nicht. Gebe orders ein um alle Bestellungen zu listen.");
+            });
+        } catch (NumberFormatException e) {
+            System.out.println("Die Bestellung muss mit der Bestellnummer gesucht werden um dir alle anzuzeigen gebe orders ein.");
         }
     }
 
