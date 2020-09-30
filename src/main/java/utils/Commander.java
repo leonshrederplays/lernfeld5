@@ -1,6 +1,7 @@
 package utils;
 
 import com.sun.javafx.image.IntPixelGetter;
+import constructors.CustomerList;
 import constructors.IngredientList;
 import constructors.RecipeList;
 import instances.ConfigInstance;
@@ -120,5 +121,55 @@ public class Commander {
                     + " / Name: " + recipe.getRecipeName();
             System.out.println(str);
         });
+    }
+    public void customer(){
+        List<CustomerList> list = ConfigInstance.customerList;
+        list.forEach(customer -> {
+            String str ="KundenNr: " + customer.getKUNDENNR()
+                    + " / Nachname: " + customer.getNACHNAME()
+                    + " Vorname: " + customer.getVORNAME();
+            System.out.println(str);
+        });
+    }
+    public void customerDescription(String arg) {
+        List<CustomerList> list = ConfigInstance.customerList;
+        try {
+            int id = Integer.parseInt(arg);
+            list.stream().filter(customer -> id == customer.getKUNDENNR()).findAny().ifPresentOrElse(customer -> {
+                String str =
+                        "Daten des Kunden: "
+                                + "KundenNr: " + customer.getKUNDENNR()
+                                + " / Nachname: " + customer.getNACHNAME()
+                                + "\nVorname: " + customer.getVORNAME() + ", "
+                                + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
+                                + "\nStrasse: " + customer.getSTRASSE() + ", "
+                                + "\nHausNr: " + customer.getHAUSNR() + ", "
+                                + "\nPLZ: " + customer.getPLZ() + ", "
+                                + "\nOrt: " + customer.getORT() + ", "
+                                + "\nTelefon: " + customer.getTELEFON() + ", "
+                                + "\nEmail: " + customer.getEMAIL();
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Der Kunde: " + arg + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
+            });
+        } catch (NumberFormatException e) {
+            list.stream().filter(customer -> arg.toLowerCase().equals(customer.getNACHNAME().toLowerCase())).findAny().ifPresentOrElse(customer -> {
+                String str =
+                        "Daten des Kunden: "
+                                + "KundenNr: " + customer.getKUNDENNR()
+                                + " / Nachname: " + customer.getNACHNAME()
+                                + "\nVorname: " + customer.getVORNAME() + ", "
+                                + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
+                                + "\nStrasse: " + customer.getSTRASSE() + ", "
+                                + "\nHausNr: " + customer.getHAUSNR() + ", "
+                                + "\nPLZ: " + customer.getPLZ() + ", "
+                                + "\nOrt: " + customer.getORT() + ", "
+                                + "\nTelefon: " + customer.getTELEFON() + ", "
+                                + "\nEmail: " + customer.getEMAIL();
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Der Kunde: " + arg + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
+            });
+        }
     }
 }

@@ -63,6 +63,19 @@ public class Main /*extends Application*/ {
                     command = null;
                     System.out.println(" ");
                     break;
+                case "customer":
+                    try {
+                        if (command.length > 1) {
+                            commander.customerDescription(command[1]);
+                        } else {
+                            commander.customer();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    command = null;
+                    System.out.println(" ");
+                    break;
                 default:
                     System.out.println("YEET type help to get the command list.");
                     command = null;

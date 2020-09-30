@@ -8,13 +8,13 @@ public class CustomerList implements Serializable {
     private String  VORNAME;
     private String  GEBURTSDATUM;
     private String  STRASSE;
-    private int     HAUSNR;
+    private String   HAUSNR;
     private int     PLZ;
     private String  ORT;
     private String  TELEFON;
     private String  EMAIL;
 
-    public CustomerList(int KUNDENNR,String NACHNAME, String VORNAME, String GEBURTSDATUM, String STRASSE, int HAUSNR, int PLZ, String ORT, String TELEFON, String EMAIL) {
+    public CustomerList(int KUNDENNR,String NACHNAME, String VORNAME, String GEBURTSDATUM, String STRASSE, String HAUSNR, int PLZ, String ORT, String TELEFON, String EMAIL) {
         this.KUNDENNR = KUNDENNR;
         this.NACHNAME = NACHNAME;
         this.VORNAME = VORNAME;
@@ -68,11 +68,11 @@ public class CustomerList implements Serializable {
         this.STRASSE = STRASSE;
     }
 
-    public int getHAUSNR() {
+    public String getHAUSNR() {
         return HAUSNR;
     }
 
-    public void setHAUSNR(int HAUSNR) {
+    public void setHAUSNR(String HAUSNR) {
         this.HAUSNR = HAUSNR;
     }
 
