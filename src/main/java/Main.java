@@ -41,17 +41,24 @@ public class Main /*extends Application*/ {
                         }
                     } catch(Exception e) {
                         e.printStackTrace();
-                        command = null;
                     }
                     command = null;
+                    System.out.println(" ");
                     break;
                 case "exit":
                     commander.shutdown();
                     command = null;
+                    System.out.println(" ");
+                    break;
+                case "test":
+                    commander.ingredientDescription();
+                    command = null;
+                    System.out.println(" ");
                     break;
                 default:
                     System.out.println(command);
                     System.out.println("YEET type help to get the command list.");
+                    command = null;
                     break;
             }
         } while (true);

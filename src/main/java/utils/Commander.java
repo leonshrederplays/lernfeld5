@@ -34,7 +34,21 @@ public class Commander {
     }
 
     public void ingredientDescription() {
-
+        List<IngredientList> list = ConfigInstance.ingredientList;
+        list.forEach(ingredient -> {
+            String str =
+                    "Eigenschaften der Zutat: "
+                    + "ID: " + ingredient.getIngredientID()
+                    + " / Name: " + ingredient.getIngredientName()
+                    + "\nEinheit: " + ingredient.getUnit() + ", "
+                    + "\nNettopreis: " + ingredient.getNettoprice() + ", "
+                    + "\nBestand: " + ingredient.getAmount() + ", "
+                    + "\nLieferant: " + ingredient.getSupplierID() + ", "
+                    + "\nKalorien: " + ingredient.getCalorie() + ", "
+                    + "\nKohlenhydrate: " + ingredient.getCarbohydrates() + ", "
+                    + "\nProtein: " + ingredient.getProtein();
+            System.out.println(str);
+        });
     }
 
     public void shutdown(){
