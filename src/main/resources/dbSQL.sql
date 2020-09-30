@@ -87,7 +87,7 @@ ALLERGENE VARCHAR(50)
 CREATE TABLE BESTELLUNGREZEPT (
     BESTELLNR           INTEGER,
     REZEPTNR            INTEGER NOT NULL,
-    MENGE               INTEGER,
+    MENGE               INTEGER
 );
 
 /******************************************************************************/
