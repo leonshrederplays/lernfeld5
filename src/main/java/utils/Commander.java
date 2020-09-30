@@ -36,7 +36,7 @@ public class Commander {
             System.out.println(str);
         });
     }
-
+    
     public void ingredientDescription(String arg) {
         List<IngredientList> list = ConfigInstance.ingredientList;
         try {
