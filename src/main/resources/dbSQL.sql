@@ -1,4 +1,3 @@
-DROP DATABASE IF EXISTS krautundrueben;
 CREATE DATABASE IF NOT EXISTS krautundrueben;
 USE krautundrueben;
 
@@ -84,10 +83,10 @@ ALLERGENE VARCHAR(50)
 );
 
 
-CREATE TABLE BESTELLUNGREZEPT (
+CREATE TABLE IF NOT EXISTS krautundrueben.BESTELLUNGREZEPT (
     BESTELLNR           INTEGER,
     REZEPTNR            INTEGER NOT NULL,
-    MENGE               INTEGER,
+    MENGE               INTEGER
 );
 
 /******************************************************************************/
