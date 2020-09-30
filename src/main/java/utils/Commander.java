@@ -2,6 +2,7 @@ package utils;
 
 import com.sun.javafx.image.IntPixelGetter;
 import constructors.IngredientList;
+import constructors.RecipeList;
 import instances.ConfigInstance;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class Commander {
         System.out.print("Here is a list of available commands\n" +
                 "\n" +
                 "help -- shows a list of all available commands\n" +
-                "ingredients / ingredients <recipe name> -- lists all available ingredients/lists the ingredients of a recipe\n" +
+                "ingreds / ingreds <ingredient name>/<ingredient ID> -- lists all available ingredients/lists the ingredients of a recipe\n" +
                 "exit -- exit the program\n\n");
     }
 
@@ -78,5 +79,10 @@ public class Commander {
 
     public void shutdown(){
         System.exit(0);
+    }
+
+    public void recipe() {
+        List<RecipeList> list = ConfigInstance.recipeList;
+
     }
 }
