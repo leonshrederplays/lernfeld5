@@ -1,13 +1,20 @@
+        // Get connection to MySQL
         try (Connection conn = connector()) {
             // Hier SQL Befehl in den String schreiben.
-            String sql = "";
+            String sql = "SELECT * FROM ZUTATEN WHERE NAME = ?";
+            // Make a preparedStatement and set Scroll to insensitive (both directions)
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
-                ps.setObject(1, "Hendrik");
+                // Set the first ? in the defined SQL string to Hendrik
+                ps.setString(1, "Hendrik");
+                // Execute query and safe Result in rs
                 try (ResultSet rs = ps.executeQuery()) {
+                    // If no result do nothing
                     if (!rs.next()) {
                         System.out.println("No requests");
                     } else {
+                        // For Each result get the first column of SQL;
                         do {
+                            // rs.getObject or etc. And Column Number required.
                             // rs.getObject or etc. And Column Number required.
                             rs.getString(1);
                         } while (rs.next());

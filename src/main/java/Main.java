@@ -32,10 +32,10 @@ public class Main /*extends Application*/ {
                     commander.helper();
                     command = null;
                     break;
-                case "ingredients":
+                case "ingreds":
                     try {
                         if (command.length > 1) {
-                            commander.ingredientDescription();
+                            commander.ingredientDescription(command[1]);
                         } else {
                             commander.ingredients();
                         }
@@ -49,11 +49,6 @@ public class Main /*extends Application*/ {
                     commander.shutdown();
                     command = null;
                     System.out.println(" ");
-                    break;
-                case "test":
-                    commander.ingredientDescription();
-                    command = null;
-                    System.out.println("");
                     break;
                 default:
                     System.out.println("YEET type help to get the command list.");

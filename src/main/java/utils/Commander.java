@@ -4,6 +4,8 @@ import constructors.IngredientList;
 import instances.ConfigInstance;
 
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class Commander {
 
@@ -33,20 +35,20 @@ public class Commander {
         });
     }
 
-    public void ingredientDescription() {
+    public void ingredientDescription(String arg) {
         List<IngredientList> list = ConfigInstance.ingredientList;
-        list.forEach(ingredient -> {
+        list.stream().filter(Predicate.isEqual(arg)).forEach(ingredient -> {
             String str =
                     "Eigenschaften der Zutat: "
-                    + "ID: " + ingredient.getIngredientID()
-                    + " / Name: " + ingredient.getIngredientName()
-                    + "\nEinheit: " + ingredient.getUnit() + ", "
-                    + "\nNettopreis: " + ingredient.getNettoprice() + ", "
-                    + "\nBestand: " + ingredient.getAmount() + ", "
-                    + "\nLieferant: " + ingredient.getSupplierID() + ", "
-                    + "\nKalorien: " + ingredient.getCalorie() + ", "
-                    + "\nKohlenhydrate: " + ingredient.getCarbohydrates() + ", "
-                    + "\nProtein: " + ingredient.getProtein();
+                            + "ID: " + ingredient.getIngredientID()
+                            + " / Name: " + ingredient.getIngredientName()
+                            + "\nEinheit: " + ingredient.getUnit() + ", "
+                            + "\nNettopreis: " + ingredient.getNettoprice() + ", "
+                            + "\nBestand: " + ingredient.getAmount() + ", "
+                            + "\nLieferant: " + ingredient.getSupplierID() + ", "
+                            + "\nKalorien: " + ingredient.getCalorie() + ", "
+                            + "\nKohlenhydrate: " + ingredient.getCarbohydrates() + ", "
+                            + "\nProtein: " + ingredient.getProtein();
             System.out.println(str);
             System.out.println(" ");
         });
