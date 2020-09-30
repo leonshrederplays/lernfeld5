@@ -81,8 +81,44 @@ public class Commander {
         System.exit(0);
     }
 
-    public void recipe() {
+    public void recipeDescription(String arg) {
         List<RecipeList> list = ConfigInstance.recipeList;
+        try {
+            int id = Integer.parseInt(arg);
+            list.stream().filter(recipe -> id == recipe.getRecipeID()).findAny().ifPresentOrElse(recipe -> {
+                String str =
+                        "Eigenschaften des Rezepts: "
+                                + "ID: " + recipe.getRecipeID()
+                                + " / Name: " + recipe.getRecipeName()
+                                + "\nKalorien: " + recipe.getRecipeCalories() + ", "
+                                + "\nKohlenhydrate: " + recipe.getRecipeCarbs() + ", "
+                                + "\nProtein: " + recipe.getRecipeProtein();
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Das Rezept: " + arg + " existiert nicht. Gebe recipe ein um alle Rezepte zu listen.");
+            });
+        } catch (NumberFormatException e) {
+            list.stream().filter(recipe -> arg.toLowerCase().equals(recipe.getRecipeName().toLowerCase())).findAny().ifPresentOrElse(recipe -> {
+                String str =
+                        "Eigenschaften des Rezeptes: "
+                                + "ID: " + recipe.getRecipeID()
+                                + " / Name: " + recipe.getRecipeID()
+                                + "\nKalorien: " + recipe.getRecipeCalories() + ", "
+                                + "\nKohlenhydrate: " + recipe.getRecipeCarbs() + ", "
+                                + "\nProtein: " + recipe.getRecipeProtein();
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Das Rezept: " + arg + " existiert nicht. Gebe recipe ein um alle Rezepte zu listen.");
+            });
+        }
+    }
 
+    public void recipe(){
+        List<RecipeList> list = ConfigInstance.recipeList;
+        list.forEach(recipe -> {
+            String str ="ID: " + recipe.getRecipeID()
+                    + " / Name: " + recipe.getRecipeName();
+            System.out.println(str);
+        });
     }
 }
