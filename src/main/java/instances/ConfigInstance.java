@@ -1,5 +1,6 @@
 package instances;
 
+import constructors.CustomerList;
 import constructors.IngredientList;
 import constructors.OrderList;
 import constructors.RecipeList;
@@ -16,5 +17,6 @@ public class ConfigInstance implements Serializable {
 
     public static List<IngredientList> ingredientList = new ArrayList<>();
     public static List<RecipeList> recipeList = new ArrayList<>();
+    public static List<CustomerList> customerList = new ArrayList<>();
     public static List<OrderList> orderList = new ArrayList<>();
 }

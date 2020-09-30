@@ -1,7 +1,9 @@
 package utils;
 
 
+import constructors.CustomerList;
 import constructors.IngredientList;
+import constructors.RecipeList;
 import constructors.OrderList;
 import instances.ConfigInstance;
 
@@ -75,6 +77,8 @@ public class DBUtils {
 
     public void selectData() {
         selectIngredients();
+        selectRecipe();
+        selectCustomer();
         selectOrder();
     }
 
@@ -128,6 +132,42 @@ public class DBUtils {
         }
         // Return the list which can be obtained by List<IngredientList> list = dbUtil.selectIngredients(); !!Dependency it needs to have DBUtils dbUtil = new DBUtils(); to be defined!!
         //return list;
+    }
+    public void selectRecipe() {
+        try (Connection conn = connector()) {
+            String sql = "SELECT * FROM REZEPT";
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        System.out.println("No results");
+                    } else {
+                        do {
+                            inst.recipeList.add(new RecipeList(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5)));
+                        } while (rs.next());
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    public void selectCustomer() {
+        try (Connection conn = connector()) {
+            String sql = "SELECT * FROM KUNDE";
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        System.out.println("No results");
+                    } else {
+                        do {
+                            inst.customerList.add(new CustomerList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8),rs.getString(9), rs.getString(10)));
+                        } while (rs.next());
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
     public /*List<OrderList>*/ void selectOrder() {
         // Define a List of Ingredients

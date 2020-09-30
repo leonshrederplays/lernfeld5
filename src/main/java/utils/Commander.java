@@ -1,6 +1,7 @@
 package utils;
 
 import com.sun.javafx.image.IntPixelGetter;
+import constructors.CustomerList;
 import constructors.IngredientList;
 import constructors.OrderList;
 import constructors.RecipeList;
@@ -37,7 +38,7 @@ public class Commander {
             System.out.println(str);
         });
     }
-
+    
     public void ingredientDescription(String arg) {
         List<IngredientList> list = ConfigInstance.ingredientList;
         try {
@@ -111,8 +112,94 @@ public class Commander {
         System.exit(0);
     }
 
-    public void recipe() {
+    public void recipeDescription(String arg) {
         List<RecipeList> list = ConfigInstance.recipeList;
+        try {
+            int id = Integer.parseInt(arg);
+            list.stream().filter(recipe -> id == recipe.getRecipeID()).findAny().ifPresentOrElse(recipe -> {
+                String str =
+                        "Eigenschaften des Rezepts: "
+                                + "ID: " + recipe.getRecipeID()
+                                + " / Name: " + recipe.getRecipeName()
+                                + "\nKalorien: " + recipe.getRecipeCalories() + ", "
+                                + "\nKohlenhydrate: " + recipe.getRecipeCarbs() + ", "
+                                + "\nProtein: " + recipe.getRecipeProtein();
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Das Rezept: " + arg + " existiert nicht. Gebe recipe ein um alle Rezepte zu listen.");
+            });
+        } catch (NumberFormatException e) {
+            list.stream().filter(recipe -> arg.toLowerCase().equals(recipe.getRecipeName().toLowerCase())).findAny().ifPresentOrElse(recipe -> {
+                String str =
+                        "Eigenschaften des Rezeptes: "
+                                + "ID: " + recipe.getRecipeID()
+                                + " / Name: " + recipe.getRecipeID()
+                                + "\nKalorien: " + recipe.getRecipeCalories() + ", "
+                                + "\nKohlenhydrate: " + recipe.getRecipeCarbs() + ", "
+                                + "\nProtein: " + recipe.getRecipeProtein();
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Das Rezept: " + arg + " existiert nicht. Gebe recipe ein um alle Rezepte zu listen.");
+            });
+        }
+    }
 
+    public void recipe(){
+        List<RecipeList> list = ConfigInstance.recipeList;
+        list.forEach(recipe -> {
+            String str ="ID: " + recipe.getRecipeID()
+                    + " / Name: " + recipe.getRecipeName();
+            System.out.println(str);
+        });
+    }
+    public void customer(){
+        List<CustomerList> list = ConfigInstance.customerList;
+        list.forEach(customer -> {
+            String str ="KundenNr: " + customer.getKUNDENNR()
+                    + " / Nachname: " + customer.getNACHNAME()
+                    + " Vorname: " + customer.getVORNAME();
+            System.out.println(str);
+        });
+    }
+    public void customerDescription(String arg) {
+        List<CustomerList> list = ConfigInstance.customerList;
+        try {
+            int id = Integer.parseInt(arg);
+            list.stream().filter(customer -> id == customer.getKUNDENNR()).findAny().ifPresentOrElse(customer -> {
+                String str =
+                        "Daten des Kunden: "
+                                + "KundenNr: " + customer.getKUNDENNR()
+                                + " / Nachname: " + customer.getNACHNAME()
+                                + "\nVorname: " + customer.getVORNAME() + ", "
+                                + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
+                                + "\nStrasse: " + customer.getSTRASSE() + ", "
+                                + "\nHausNr: " + customer.getHAUSNR() + ", "
+                                + "\nPLZ: " + customer.getPLZ() + ", "
+                                + "\nOrt: " + customer.getORT() + ", "
+                                + "\nTelefon: " + customer.getTELEFON() + ", "
+                                + "\nEmail: " + customer.getEMAIL();
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Der Kunde: " + arg + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
+            });
+        } catch (NumberFormatException e) {
+            list.stream().filter(customer -> arg.toLowerCase().equals(customer.getNACHNAME().toLowerCase())).findAny().ifPresentOrElse(customer -> {
+                String str =
+                        "Daten des Kunden: "
+                                + "KundenNr: " + customer.getKUNDENNR()
+                                + " / Nachname: " + customer.getNACHNAME()
+                                + "\nVorname: " + customer.getVORNAME() + ", "
+                                + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
+                                + "\nStrasse: " + customer.getSTRASSE() + ", "
+                                + "\nHausNr: " + customer.getHAUSNR() + ", "
+                                + "\nPLZ: " + customer.getPLZ() + ", "
+                                + "\nOrt: " + customer.getORT() + ", "
+                                + "\nTelefon: " + customer.getTELEFON() + ", "
+                                + "\nEmail: " + customer.getEMAIL();
+                System.out.println(str);
+            }, () -> {
+                System.out.println("Der Kunde: " + arg + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
+            });
+        }
     }
 }
