@@ -1,5 +1,6 @@
 package utils;
 
+import com.sun.javafx.image.IntPixelGetter;
 import constructors.IngredientList;
 import instances.ConfigInstance;
 
@@ -37,8 +38,9 @@ public class Commander {
 
     public void ingredientDescription(String arg) {
         List<IngredientList> list = ConfigInstance.ingredientList;
-        list.forEach(ingredient -> {
-            if(ingredient.getIngredientName().toLowerCase().equals(arg.toLowerCase())) {
+        try {
+            int id = Integer.parseInt(arg);
+            list.stream().filter(ingredient -> id == ingredient.getIngredientID()).findAny().ifPresentOrElse(ingredient -> {
                 String str =
                         "Eigenschaften der Zutat: "
                                 + "ID: " + ingredient.getIngredientID()
@@ -51,8 +53,25 @@ public class Commander {
                                 + "\nKohlenhydrate: " + ingredient.getCarbohydrates() + ", "
                                 + "\nProtein: " + ingredient.getProtein();
                 System.out.println(str);
-            }
-        });
+            }, () -> {
+                System.out.println("Die Zutat: " + arg + " existiert nicht.");
+            });
+        } catch (NumberFormatException e) {
+            list.stream().filter(ingredient -> arg.toLowerCase().equals(ingredient.getIngredientName().toLowerCase())).findAny().ifPresent(ingredient -> {
+                String str =
+                        "Eigenschaften der Zutat: "
+                                + "ID: " + ingredient.getIngredientID()
+                                + " / Name: " + ingredient.getIngredientName()
+                                + "\nEinheit: " + ingredient.getUnit() + ", "
+                                + "\nNettopreis: " + ingredient.getNettoprice() + ", "
+                                + "\nBestand: " + ingredient.getAmount() + ", "
+                                + "\nLieferant: " + ingredient.getSupplierID() + ", "
+                                + "\nKalorien: " + ingredient.getCalorie() + ", "
+                                + "\nKohlenhydrate: " + ingredient.getCarbohydrates() + ", "
+                                + "\nProtein: " + ingredient.getProtein();
+                System.out.println(str);
+            });
+        }
     }
 
     public void shutdown(){
