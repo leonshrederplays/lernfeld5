@@ -48,6 +48,7 @@ public class Commander {
                     + "\nKohlenhydrate: " + ingredient.getCarbohydrates() + ", "
                     + "\nProtein: " + ingredient.getProtein();
             System.out.println(str);
+            System.out.println(" ");
         });
     }
 
