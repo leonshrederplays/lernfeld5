@@ -54,7 +54,7 @@ public class Commander {
                                 + "\nProtein: " + ingredient.getProtein();
                 System.out.println(str);
             }, () -> {
-                System.out.println("Die Zutat: " + arg + " existiert nicht.");
+                System.out.println("Die Zutat: " + arg + " existiert nicht. Gebe ingreds ein um alle Zutaten zu listen.");
             });
         } catch (NumberFormatException e) {
             list.stream().filter(ingredient -> arg.toLowerCase().equals(ingredient.getIngredientName().toLowerCase())).findAny().ifPresentOrElse(ingredient -> {
@@ -71,7 +71,7 @@ public class Commander {
                                 + "\nProtein: " + ingredient.getProtein();
                 System.out.println(str);
             }, () -> {
-                System.out.println("Die Zutat: " + arg + " existiert nicht.");
+                System.out.println("Die Zutat: " + arg + " existiert nicht. Gebe ingreds ein um alle Zutaten zu listen.");
             });
         }
     }
