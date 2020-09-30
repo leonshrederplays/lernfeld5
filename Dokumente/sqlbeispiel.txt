@@ -1,0 +1,19 @@
+        try (Connection conn = connector()) {
+            // Hier SQL Befehl in den String schreiben.
+            String sql = "";
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                ps.setObject(1, "Hendrik");
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        System.out.println("No requests");
+                    } else {
+                        do {
+                            // rs.getObject or etc. And Column Number required.
+                            rs.getString(1);
+                        } while (rs.next());
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
