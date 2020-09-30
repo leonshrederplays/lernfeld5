@@ -90,8 +90,9 @@ public class Main /*extends Application*/ {
                     System.out.println(" ");
                     break;
                 case "recreate" :
+                    Scanner recreateInput = new Scanner(System.in);
                     System.out.println("This will reset the Database to its default state. Are you sure? (Y/N)");
-                    String confirm = input.next();
+                    String confirm = recreateInput.next();
                     if (confirm.equalsIgnoreCase("y")){
                         dbUtils.recreateSQL();
                         System.out.println("Database successfully recreated. Default values were restored.");
