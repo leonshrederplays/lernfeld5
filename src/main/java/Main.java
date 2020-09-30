@@ -2,6 +2,7 @@ import instances.ConfigInstance;
 import utils.Commander;
 import utils.DBUtils;
 
+import javax.swing.*;
 import java.util.Scanner;
 
 public class Main /*extends Application*/ {
@@ -26,7 +27,6 @@ public class Main /*extends Application*/ {
         do {
             System.out.println("Enter the command you want to execute: ");
             command = input.nextLine().split(" ");
-            System.out.println(command[0]);
             switch (command[0]) {
                 case "help":
                     commander.helper();
@@ -85,6 +85,20 @@ public class Main /*extends Application*/ {
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                    command = null;
+                    System.out.println(" ");
+                    break;
+                case "recreate" :
+                    System.out.println("This will reset the Database to its default state. Are you sure? (Y/N)");
+                    String confirm = input.next();
+                    if (confirm.equalsIgnoreCase("y")){
+                        dbUtils.recreateSQL();
+                        System.out.println("Database successfully recreated. Default values were restored.");
+                    } else if (confirm.equalsIgnoreCase("n")){
+                        System.out.println("Databse was not recreated.");
+                    } else {
+
                     }
                     command = null;
                     System.out.println(" ");

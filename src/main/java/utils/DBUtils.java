@@ -99,9 +99,23 @@ public class DBUtils {
         }
     }
 
-    public void recreateSQL(){
-
+    public void recreateSQL() {
+        // Get Connection to MySQL
+        try (Connection conn = firstBootConnector()) {
+            ScriptRunner sr = new ScriptRunner(conn, false, false);
+            // SQL-Skript
+            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL_recreate.sql")).replace("file:", "").replace("%20"," ");
+            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
+            // Das SQL-Skript ausführen.
+            // Datenbank und Tabellen erstellen.
+            sr.runScript(new BufferedReader(new FileReader(dbFile)));
+            // Testdaten erstellen.
+            sr.runScript(new BufferedReader(new FileReader(dataFile)));
+        } catch(SQLException | IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     public /*List<IngredientList>*/ void selectIngredients() {
         // Define a List of Ingredients
