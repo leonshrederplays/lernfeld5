@@ -26,7 +26,6 @@ public class Main /*extends Application*/ {
         do {
             System.out.println("Enter the command you want to execute: ");
             command = input.nextLine().split(" ");
-            System.out.println(command[0]);
             switch (command[0]) {
                 case "help":
                     commander.helper();
