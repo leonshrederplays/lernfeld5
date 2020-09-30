@@ -17,7 +17,7 @@ public class Commander {
         System.out.print("Here is a list of available commands\n" +
                 "\n" +
                 "help -- shows a list of all available commands\n" +
-                "ingreds / ingreds <ingredient name>/<ingredient ID> -- lists all available ingredients/lists the ingredients of a recipe\n" +
+                "ingreds / ingreds <ingredient name>/<ingredient ID> -- lists all available ingredients/lists the details of one ingredient\n" +
                 "exit -- exit the program\n\n");
     }
 

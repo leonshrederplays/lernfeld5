@@ -50,6 +50,10 @@ public class Main /*extends Application*/ {
                     command = null;
                     System.out.println(" ");
                     break;
+                case "recipe":
+                    commander.recipe();
+                    command = null;
+                    System.out.println(" ");
                 default:
                     System.out.println("YEET type help to get the command list.");
                     command = null;
