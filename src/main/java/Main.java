@@ -22,24 +22,24 @@ public class Main /*extends Application*/ {
         Commander commander = new Commander();
         Scanner input = new Scanner(System.in);
 
-        String command = null;
+        String[] command = null;
         do {
             System.out.println("Enter the command you want to execute: ");
-            command = input.next();
-            switch (command) {
+            command = input.nextLine().split(" ");
+            System.out.println(command[0]);
+            switch (command[0]) {
                 case "help":
                     commander.helper();
                     command = null;
                     break;
                 case "ingredients":
                     try {
-                        String arg = input.nextLine();
-                        if(arg.length() != 0) {
+                        if (command.length > 1) {
                             commander.ingredientDescription();
                         } else {
                             commander.ingredients();
                         }
-                    } catch(Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                     command = null;
@@ -53,10 +53,9 @@ public class Main /*extends Application*/ {
                 case "test":
                     commander.ingredientDescription();
                     command = null;
-                    System.out.println(" ");
+                    System.out.println("");
                     break;
                 default:
-                    System.out.println(command);
                     System.out.println("YEET type help to get the command list.");
                     command = null;
                     break;
