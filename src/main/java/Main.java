@@ -1,16 +1,9 @@
-import instances.ConfigInstance;
 import utils.Commander;
 import utils.DBUtils;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.net.URL;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class Main /*extends Application*/ {
@@ -108,15 +101,27 @@ public class Main /*extends Application*/ {
                     System.out.println(" ");
                     break;
                 case "customer":
-                    try {
-                        if (command.length > 1) {
-                            commander.customerDescription(command[1]);
+
+                    int attempts = 0;
+                    Scanner passwordInput = new Scanner(System.in);
+                    do{
+                        System.out.println("Enter the Password: ");
+                        String password = passwordInput.next();
+                        if (password.equals("Admin")){
+                            attempts = 5;
+                            try {
+                                if (command.length > 1) {
+                                    commander.customerDescription(command[1]);
+                                } else {
+                                    commander.customer();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         } else {
-                            commander.customer();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                            attempts++;
+                            System.out.println("Wrong password! You have " + (5 - attempts) + " tries left!");
+                    } } while (attempts < 5);
                     command = null;
                     System.out.println(" ");
                     break;
