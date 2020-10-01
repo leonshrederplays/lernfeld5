@@ -112,7 +112,11 @@ public class Main /*extends Application*/ {
                             attempts = 5;
                             try {
                                 if (command.length > 1) {
-                                    commander.customerDescription(command[1]);
+                                    if(command.length == 3) {
+                                        commander.customerDescription(command, true);
+                                    } else {
+                                        commander.customerDescription(command, false);
+                                    }
                                 } else {
                                     commander.customer();
                                 }
