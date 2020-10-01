@@ -1,8 +1,6 @@
-import instances.ConfigInstance;
 import utils.Commander;
 import utils.DBUtils;
 
-import javax.swing.*;
 import java.util.Scanner;
 
 public class Main /*extends Application*/ {
@@ -77,15 +75,27 @@ public class Main /*extends Application*/ {
                     System.out.println(" ");
                     break;
                 case "customer":
-                    try {
-                        if (command.length > 1) {
-                            commander.customerDescription(command[1]);
+
+                    int attempts = 0;
+                    Scanner passwordInput = new Scanner(System.in);
+                    do{
+                        System.out.println("Enter the Password: ");
+                        String password = passwordInput.next();
+                        if (password.equals("Admin")){
+                            attempts = 5;
+                            try {
+                                if (command.length > 1) {
+                                    commander.customerDescription(command[1]);
+                                } else {
+                                    commander.customer();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         } else {
-                            commander.customer();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                            attempts++;
+                            System.out.println("Wrong password! You have " + (5 - attempts) + " tries left!");
+                    } } while (attempts < 5);
                     command = null;
                     System.out.println(" ");
                     break;
