@@ -3,6 +3,14 @@ import utils.Commander;
 import utils.DBUtils;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.net.URL;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.Scanner;
 
 public class Main /*extends Application*/ {
@@ -12,14 +20,42 @@ public class Main /*extends Application*/ {
     public static void main(String[] args) {
         //Application.launch(args);
         DBUtils dbUtils = new DBUtils();
-        dbUtils.firstBootConnector();
-        dbUtils.createSQL();
+        String path = Main.class.getClassLoader().getResource("").toString().replace("file:", "").replace("%20", " ");
+        File file = new File(path+"config.ini");
         try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
+            if (file.createNewFile()) {
+                System.out.println("File created: " + file.getName());
+                FileWriter myWriter = new FileWriter(path+"config.ini");
+                myWriter.write("false");
+                myWriter.close();
+            } else {
+                System.out.println("File exists: " + file.getName());
+                Scanner reader = new Scanner(file);
+                while (reader.hasNextLine()) {
+                    String data = reader.nextLine();
+                    if (data.equals("false")) {
+                        dbUtils.firstBootConnector();
+                        dbUtils.createSQL();
+                        FileWriter newWriter = new FileWriter(path+"config.ini");
+                        newWriter.write("true");
+                        newWriter.close();
+                        boolean finished = ConfigInstance.isSQLfinished;
+                        do {
+                            if(finished) {
+                                dbUtils.selectData();
+                                break;
+                            }
+                        } while(true);
+                    } else if (data.equals("true")) {
+                        dbUtils.selectData();
+                    }
+                }
+                reader.close();
+            }
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        dbUtils.selectData();
+
         Commander commander = new Commander();
         Scanner input = new Scanner(System.in);
 
@@ -42,11 +78,6 @@ public class Main /*extends Application*/ {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    command = null;
-                    System.out.println(" ");
-                    break;
-                case "exit":
-                    commander.shutdown();
                     command = null;
                     System.out.println(" ");
                     break;
@@ -101,6 +132,11 @@ public class Main /*extends Application*/ {
                     } else {
 
                     }
+                    command = null;
+                    System.out.println(" ");
+                    break;
+                case "exit":
+                    commander.shutdown();
                     command = null;
                     System.out.println(" ");
                     break;
