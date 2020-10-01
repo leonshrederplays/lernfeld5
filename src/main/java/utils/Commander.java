@@ -161,45 +161,55 @@ public class Commander {
             System.out.println(str);
         });
     }
-    public void customerDescription(String arg) {
+    public void customerDescription(String[] arg, boolean isTwo) {
         List<CustomerList> list = ConfigInstance.customerList;
-        try {
-            int id = Integer.parseInt(arg);
-            list.stream().filter(customer -> id == customer.getKUNDENNR()).findAny().ifPresentOrElse(customer -> {
-                String str =
-                        "Daten des Kunden: "
-                                + "KundenNr: " + customer.getKUNDENNR()
-                                + " / Nachname: " + customer.getNACHNAME()
-                                + "\nVorname: " + customer.getVORNAME() + ", "
-                                + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
-                                + "\nStrasse: " + customer.getSTRASSE() + ", "
-                                + "\nHausNr: " + customer.getHAUSNR() + ", "
-                                + "\nPLZ: " + customer.getPLZ() + ", "
-                                + "\nOrt: " + customer.getORT() + ", "
-                                + "\nTelefon: " + customer.getTELEFON() + ", "
-                                + "\nEmail: " + customer.getEMAIL();
-                System.out.println(str);
+        if (isTwo) {
+            list.stream().filter(customer -> arg[1].toLowerCase().equals(customer.getNACHNAME().toLowerCase())).findAny().ifPresentOrElse(customer -> {
+                if(customer.getVORNAME().toLowerCase().equals(arg[2].toLowerCase())) {
+                    String str =
+                            "Daten des Kunden: "
+                                    + "KundenNr: " + customer.getKUNDENNR()
+                                    + " / Nachname: " + customer.getNACHNAME()
+                                    + "\nVorname: " + customer.getVORNAME() + ", "
+                                    + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
+                                    + "\nStrasse: " + customer.getSTRASSE() + ", "
+                                    + "\nHausNr: " + customer.getHAUSNR() + ", "
+                                    + "\nPLZ: " + customer.getPLZ() + ", "
+                                    + "\nOrt: " + customer.getORT() + ", "
+                                    + "\nTelefon: " + customer.getTELEFON() + ", "
+                                    + "\nEmail: " + customer.getEMAIL();
+                    System.out.println(str);
+                } else {
+                    System.out.println("Der Kunde mit dem Nachnamen: " + arg[1] + " und Vornamen: " + arg[2] + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
+                }
             }, () -> {
-                System.out.println("Der Kunde: " + arg + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
+                System.out.println("Der Kunde mit dem Nachnamen: " + arg[1] + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
             });
-        } catch (NumberFormatException e) {
-            list.stream().filter(customer -> arg.toLowerCase().equals(customer.getNACHNAME().toLowerCase())).findAny().ifPresentOrElse(customer -> {
-                String str =
-                        "Daten des Kunden: "
-                                + "KundenNr: " + customer.getKUNDENNR()
-                                + " / Nachname: " + customer.getNACHNAME()
-                                + "\nVorname: " + customer.getVORNAME() + ", "
-                                + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
-                                + "\nStrasse: " + customer.getSTRASSE() + ", "
-                                + "\nHausNr: " + customer.getHAUSNR() + ", "
-                                + "\nPLZ: " + customer.getPLZ() + ", "
-                                + "\nOrt: " + customer.getORT() + ", "
-                                + "\nTelefon: " + customer.getTELEFON() + ", "
-                                + "\nEmail: " + customer.getEMAIL();
-                System.out.println(str);
-            }, () -> {
-                System.out.println("Der Kunde: " + arg + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
-            });
+        } else {
+            try {
+                int id = Integer.parseInt(arg[1]);
+                list.stream().filter(customer -> id == customer.getKUNDENNR()).findAny().ifPresentOrElse(customer -> {
+                    String str =
+                            "Daten des Kunden: "
+                                    + "KundenNr: " + customer.getKUNDENNR()
+                                    + " / Nachname: " + customer.getNACHNAME()
+                                    + "\nVorname: " + customer.getVORNAME() + ", "
+                                    + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
+                                    + "\nStrasse: " + customer.getSTRASSE() + ", "
+                                    + "\nHausNr: " + customer.getHAUSNR() + ", "
+                                    + "\nPLZ: " + customer.getPLZ() + ", "
+                                    + "\nOrt: " + customer.getORT() + ", "
+                                    + "\nTelefon: " + customer.getTELEFON() + ", "
+                                    + "\nEmail: " + customer.getEMAIL();
+                    System.out.println(str);
+                }, () -> {
+                    System.out.println("Der Kunde: " + arg[1] + " existiert nicht. Gebe customer ein um alle Kunden zu listen.");
+                });
+            } catch (NumberFormatException e) {
+                System.out.println("Gib help ein um die benutzung des Befehls einzusehen do OPFER KEK.");
+
+            }
         }
+        
     }
 }
