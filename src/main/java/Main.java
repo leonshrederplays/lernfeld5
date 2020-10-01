@@ -1,3 +1,4 @@
+import instances.ConfigInstance;
 import utils.Commander;
 import utils.DBUtils;
 
