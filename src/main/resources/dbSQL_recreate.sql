@@ -1,3 +1,4 @@
+DROP DATABASE IF EXISTS krautundrueben;
 CREATE DATABASE IF NOT EXISTS krautundrueben;
 USE krautundrueben;
 
