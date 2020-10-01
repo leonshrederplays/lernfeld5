@@ -138,7 +138,7 @@ public class Commander {
                 String str =
                         "Eigenschaften des Rezeptes: "
                                 + "ID: " + recipe.getRecipeID()
-                                + " / Name: " + recipe.getRecipeID()
+                                + " | Name: " + recipe.getRecipeName()
                                 + "\nKalorien: " + recipe.getRecipeCalories() + ", "
                                 + "\nKohlenhydrate: " + recipe.getRecipeCarbs() + ", "
                                 + "\nProtein: " + recipe.getRecipeProtein();
@@ -207,4 +207,5 @@ public class Commander {
             });
         }
     }
+
 }
