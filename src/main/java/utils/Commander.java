@@ -32,7 +32,7 @@ public class Commander {
         List<IngredientList> list = ConfigInstance.ingredientList;
         list.forEach(ingredient -> {
             String str ="ID: " + ingredient.getIngredientID()
-                    + " / Name: " + ingredient.getIngredientName();
+                    + " | Name: " + ingredient.getIngredientName();
                     /*+ "Einheit: " + ingredient.getUnit() + ", "
                     + "Nettopreis: " + ingredient.getNettoprice() + ", "
                     + "Bestand: " + ingredient.getAmount() + ", "
@@ -52,7 +52,7 @@ public class Commander {
                 String str =
                         "Eigenschaften der Zutat: "
                                 + "ID: " + ingredient.getIngredientID()
-                                + " / Name: " + ingredient.getIngredientName()
+                                + " | Name: " + ingredient.getIngredientName()
                                 + "\nEinheit: " + ingredient.getUnit() + ", "
                                 + "\nNettopreis: " + ingredient.getNettoprice() + ", "
                                 + "\nBestand: " + ingredient.getAmount() + ", "
@@ -69,7 +69,7 @@ public class Commander {
                 String str =
                         "Eigenschaften der Zutat: "
                                 + "ID: " + ingredient.getIngredientID()
-                                + " / Name: " + ingredient.getIngredientName()
+                                + " | Name: " + ingredient.getIngredientName()
                                 + "\nEinheit: " + ingredient.getUnit() + ", "
                                 + "\nNettopreis: " + ingredient.getNettoprice() + ", "
                                 + "\nBestand: " + ingredient.getAmount() + ", "
@@ -125,7 +125,7 @@ public class Commander {
                 String str =
                         "Eigenschaften des Rezepts: "
                                 + "ID: " + recipe.getRecipeID()
-                                + " / Name: " + recipe.getRecipeName()
+                                + " | Name: " + recipe.getRecipeName()
                                 + "\nKalorien: " + recipe.getRecipeCalories() + ", "
                                 + "\nKohlenhydrate: " + recipe.getRecipeCarbs() + ", "
                                 + "\nProtein: " + recipe.getRecipeProtein();
@@ -153,7 +153,7 @@ public class Commander {
         List<RecipeList> list = ConfigInstance.recipeList;
         list.forEach(recipe -> {
             String str ="ID: " + recipe.getRecipeID()
-                    + " / Name: " + recipe.getRecipeName();
+                    + " | Name: " + recipe.getRecipeName();
             System.out.println(str);
         });
     }
@@ -161,7 +161,7 @@ public class Commander {
         List<CustomerList> list = ConfigInstance.customerList;
         list.forEach(customer -> {
             String str ="KundenNr: " + customer.getKUNDENNR()
-                    + " / Nachname: " + customer.getNACHNAME()
+                    + " | Nachname: " + customer.getNACHNAME()
                     + " Vorname: " + customer.getVORNAME();
             System.out.println(str);
         });
@@ -174,7 +174,7 @@ public class Commander {
                     String str =
                             "Daten des Kunden: "
                                     + "KundenNr: " + customer.getKUNDENNR()
-                                    + " / Nachname: " + customer.getNACHNAME()
+                                    + " | Nachname: " + customer.getNACHNAME()
                                     + "\nVorname: " + customer.getVORNAME() + ", "
                                     + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
                                     + "\nStrasse: " + customer.getSTRASSE() + ", "
@@ -197,8 +197,8 @@ public class Commander {
                     String str =
                             "Daten des Kunden: "
                                     + "KundenNr: " + customer.getKUNDENNR()
-                                    + " / Nachname: " + customer.getNACHNAME()
-                                    + "\nVorname: " + customer.getVORNAME() + ", "
+                                    + "\nNachname: " + customer.getNACHNAME()
+                                    + " Vorname: " + customer.getVORNAME() + ", "
                                     + "\nGeburtsdatum: " + customer.getGEBURTSDATUM() + ", "
                                     + "\nStrasse: " + customer.getSTRASSE() + ", "
                                     + "\nHausNr: " + customer.getHAUSNR() + ", "
