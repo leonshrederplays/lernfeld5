@@ -1,7 +1,10 @@
 package utils;
 
 
+import constructors.CustomerList;
 import constructors.IngredientList;
+import constructors.RecipeList;
+import constructors.OrderList;
 import instances.ConfigInstance;
 
 import java.io.BufferedReader;
@@ -74,6 +77,9 @@ public class DBUtils {
 
     public void selectData() {
         selectIngredients();
+        selectRecipe();
+        selectCustomer();
+        selectOrder();
     }
 
     public void createSQL() {
@@ -88,14 +94,29 @@ public class DBUtils {
             sr.runScript(new BufferedReader(new FileReader(dbFile)));
             // Testdaten erstellen.
             sr.runScript(new BufferedReader(new FileReader(dataFile)));
+            ConfigInstance.isSQLfinished = true;
         } catch(SQLException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void recreateSQL(){
-
+    public void recreateSQL() {
+        // Get Connection to MySQL
+        try (Connection conn = firstBootConnector()) {
+            ScriptRunner sr = new ScriptRunner(conn, false, false);
+            // SQL-Skript
+            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL_recreate.sql")).replace("file:", "").replace("%20"," ");
+            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
+            // Das SQL-Skript ausführen.
+            // Datenbank und Tabellen erstellen.
+            sr.runScript(new BufferedReader(new FileReader(dbFile)));
+            // Testdaten erstellen.
+            sr.runScript(new BufferedReader(new FileReader(dataFile)));
+        } catch(SQLException | IOException e) {
+            e.printStackTrace();
+        }
     }
+
 
     public /*List<IngredientList>*/ void selectIngredients() {
         // Define a List of Ingredients
@@ -116,7 +137,7 @@ public class DBUtils {
                         do {
                             // rs.getObject or etc. And Column Number required.
                             //list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getInt(9)));
-                            inst.ingredientList.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getInt(9)));
+                            inst.ingredientList.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getDouble(8), rs.getDouble(9)));
                         } while (rs.next());
                     }
                 }
@@ -127,4 +148,73 @@ public class DBUtils {
         // Return the list which can be obtained by List<IngredientList> list = dbUtil.selectIngredients(); !!Dependency it needs to have DBUtils dbUtil = new DBUtils(); to be defined!!
         //return list;
     }
+    public void selectRecipe() {
+        try (Connection conn = connector()) {
+            String sql = "SELECT * FROM REZEPT";
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        System.out.println("No results");
+                    } else {
+                        do {
+                            inst.recipeList.add(new RecipeList(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5)));
+                        } while (rs.next());
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    public void selectCustomer() {
+        try (Connection conn = connector()) {
+            String sql = "SELECT * FROM KUNDE";
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (!rs.next()) {
+                        System.out.println("No results");
+                    } else {
+                        do {
+                            inst.customerList.add(new CustomerList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8),rs.getString(9), rs.getString(10)));
+                        } while (rs.next());
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+    public /*List<OrderList>*/ void selectOrder() {
+        // Define a List of Ingredients
+        //List<OrderList> list = new ArrayList<>();
+        // Get Connection
+        try (Connection conn = connector()) {
+            // Pass your SQL in this String.
+            String sql = "SELECT * FROM BESTELLUNG";
+            // Make a preparedStatement and set Scroll to insensitive (both directions)
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                // Execute query and safe Result in rs
+                try (ResultSet rs = ps.executeQuery()) {
+                    // If no result do nothing
+                    if (!rs.next()) {
+                        System.out.println("No results");
+                    } else {
+                        // For Each result add it to IngredientList.
+                        do {
+                            // rs.getObject or etc. And Column Number required.
+                            //list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
+                            inst.orderList.add(new OrderList(rs.getInt(1), rs.getInt(2), rs.getDate(3), rs.getDouble(4)));
+                        } while (rs.next());
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        // Return the list which can be obtained by List<IngredientList> list = dbUtil.selectIngredients(); !!Dependency it needs to have DBUtils dbUtil = new DBUtils(); to be defined!!
+        //return list;
+    }
+
 }
+
+

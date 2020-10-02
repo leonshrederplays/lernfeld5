@@ -6,14 +6,14 @@ public class IngredientList implements Serializable {
     private int ingredientID;
     private String ingredientName;
     private String unit;
-    private int nettoprice;
+    private double nettoprice;
     private int amount;
     private int supplierID;
     private int calorie;
-    private int carbohydrates;
-    private int protein;
+    private double carbohydrates;
+    private double protein;
 
-    public IngredientList(int ingredientID, String ingredientName, String unit, int nettoprice, int amount, int supplierID, int calorie, int carbohydrates, int protein) {
+    public IngredientList(int ingredientID, String ingredientName, String unit, double nettoprice, int amount, int supplierID, int calorie, double carbohydrates, double protein) {
         this.ingredientID = ingredientID;
         this.ingredientName = ingredientName;
         this.unit = unit;
@@ -23,6 +23,14 @@ public class IngredientList implements Serializable {
         this.calorie = calorie;
         this.carbohydrates = carbohydrates;
         this.protein = protein;
+    }
+
+    public int getIngredientID() {
+        return ingredientID;
+    }
+
+    public void setIngredientID(int ingredientID) {
+        this.ingredientID = ingredientID;
     }
 
     public String getIngredientName() {
@@ -41,11 +49,11 @@ public class IngredientList implements Serializable {
         this.unit = unit;
     }
 
-    public int getNettoprice() {
+    public double getNettoprice() {
         return nettoprice;
     }
 
-    public void setNettoprice(int nettoprice) {
+    public void setNettoprice(double nettoprice) {
         this.nettoprice = nettoprice;
     }
 
@@ -73,28 +81,20 @@ public class IngredientList implements Serializable {
         this.calorie = calorie;
     }
 
-    public int getCarbohydrates() {
+    public double getCarbohydrates() {
         return carbohydrates;
     }
 
-    public void setCarbohydrates(int carbohydrates) {
+    public void setCarbohydrates(double carbohydrates) {
         this.carbohydrates = carbohydrates;
     }
 
-    public int getProtein() {
+    public double getProtein() {
         return protein;
     }
 
-    public void setProtein(int protein) {
+    public void setProtein(double protein) {
         this.protein = protein;
-    }
-
-    public int getIngredientID() {
-        return ingredientID;
-    }
-
-    public void setIngredientID(int ingredientID) {
-        this.ingredientID = ingredientID;
     }
 
 }
