@@ -17,7 +17,7 @@ public class Main /*extends Application*/ {
         DBUtils dbUtils = new DBUtils();
         // Define Filename
         File file = new File("config.ini");
-        dbUtils.error();
+        //dbUtils.error();
         try {
             // Try to create File and set DBInitialized to false
             if (file.createNewFile()) {
@@ -69,7 +69,6 @@ public class Main /*extends Application*/ {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("WARNING: TROLL IS THERE");
         Commander commander = new Commander();
         Scanner input = new Scanner(System.in);
 
