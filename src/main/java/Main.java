@@ -120,7 +120,7 @@ public class Main /*extends Application*/ {
                     command = null;
                     System.out.println(" ");
                     break;
-                case "customer":
+                case "customers":
                     Console console = System.console();
                     int attempts = 0;
                     if(console == null) {
