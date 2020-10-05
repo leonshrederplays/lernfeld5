@@ -2,6 +2,7 @@ import instances.ConfigInstance;
 import utils.Commander;
 import utils.DBUtils;
 
+import java.io.Console;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,19 +15,29 @@ public class Main /*extends Application*/ {
     public static void main(String[] args) {
         //Application.launch(args);
         DBUtils dbUtils = new DBUtils();
-        //String path = Main.class.getClassLoader().getResource("").toString().replace("file:", "").replace("%20", " ");
+        // Define Filename
         File file = new File("config.ini");
+        dbUtils.error();
         try {
+            // Try to create File and set DBInitialized to false
             if (file.createNewFile()) {
                 System.out.println("File created: " + file.getName());
+                // Open a FileWriter to write to this File
                 FileWriter myWriter = new FileWriter("config.ini");
+                // Connect without Database.
                 dbUtils.firstBootConnector();
+                // Create Database and test Data.
                 dbUtils.createSQL();
+                // Write DBInitialized true.
                 myWriter.write("true");
+                // CLose FileWriter.
                 myWriter.close();
+                // Get Boolean of DBInitialized.
                 boolean finished = ConfigInstance.isSQLfinished;
                 do {
+                    // Loop till the Database and test Data got created.
                     if(finished) {
+                        // Select all Data.
                         dbUtils.selectData();
                         break;
                     }
@@ -58,7 +69,7 @@ public class Main /*extends Application*/ {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        System.out.println("WARNING: TROLL IS THERE");
         Commander commander = new Commander();
         Scanner input = new Scanner(System.in);
 
@@ -111,48 +122,69 @@ public class Main /*extends Application*/ {
                     System.out.println(" ");
                     break;
                 case "customer":
-
+                    Console console = System.console();
                     int attempts = 0;
-                    Scanner passwordInput = new Scanner(System.in);
-                    do{
-                        System.out.println("Enter the Password: ");
-                        String password = passwordInput.next();
-                        if (password.equals("Admin")){
-                            attempts = 5;
-                            try {
-                                if (command.length > 1) {
-                                    if(command.length == 3) {
-                                        commander.customerDescription(command, true);
+                    if(console == null) {
+                        Scanner passwordInput = new Scanner(System.in);
+                        System.out.println("WARNING: The Console isnt initialized so the password will be visible!");
+                        do{
+                            System.out.println("Enter the Password:");
+                            String password = passwordInput.next();
+                            if (password.equals("Admin")){
+                                attempts = 3;
+                                try {
+                                    if (command.length > 1) {
+                                        if(command.length == 3) {
+                                            commander.customerDescription(command, true);
+                                        } else {
+                                            commander.customerDescription(command, false);
+                                        }
                                     } else {
-                                        commander.customerDescription(command, false);
+                                        commander.customer();
                                     }
-                                } else {
-                                    commander.customer();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
                                 }
-                            } catch (Exception e) {
-                                e.printStackTrace();
+                            } else {
+                                attempts++;
+                                System.out.println("Wrong password! You have " + (5 - attempts) + " tries left!");
                             }
-                        } else {
-                            attempts++;
-                            System.out.println("Wrong password! You have " + (5 - attempts) + " tries left!");
-                    } } while (attempts < 5);
+                        } while (attempts < 3);
+                    } else {
+                        char[] password = console.readPassword("Enter your Password:");
+                        do{
+                            if (new String(password).equals("Admin")){
+                                attempts = 3;
+                                try {
+                                    if (command.length > 1) {
+                                        if(command.length == 3) {
+                                            commander.customerDescription(command, true);
+                                        } else {
+                                            commander.customerDescription(command, false);
+                                        }
+                                    } else {
+                                        commander.customer();
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                attempts++;
+                                System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
+                            }
+                        } while (attempts < 3);
+                    }
+
                     command = null;
                     System.out.println(" ");
                     break;
                 case "recreate" :
-                    Scanner recreateInput = new Scanner(System.in);
-                    System.out.println("This will reset the Database to its default state. Are you sure? (Y/N)");
-                    String confirm = recreateInput.next();
-                    if (confirm.equalsIgnoreCase("y")){
-                        dbUtils.recreateSQL();
-                        System.out.println("Database successfully recreated. Default values were restored.");
-                    } else if (confirm.equalsIgnoreCase("n")){
-                        System.out.println("Databse was not recreated.");
-                    } else {
-
-                    }
+                    commander.recreate();
                     command = null;
                     System.out.println(" ");
+                    break;
+                case "reload":
+                    commander.reload();
                     break;
                 case "exit":
                     commander.shutdown();
@@ -160,7 +192,7 @@ public class Main /*extends Application*/ {
                     System.out.println(" ");
                     break;
                 default:
-                    System.out.println("YEET type help to get the command list.");
+                    System.out.println("YEET: " + command[0] +  " isnt a command type help to get the command list.");
                     command = null;
                     break;
             }

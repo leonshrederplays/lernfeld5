@@ -40,7 +40,6 @@ public class DBUtils {
             }
             // Dont push changes automatically to MySQL
             conn.setAutoCommit(false);
-            System.out.println(conn);
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -68,14 +67,38 @@ public class DBUtils {
             }
             // Dont push changes automatically to MySQL
             conn.setAutoCommit(false);
-            System.out.println(conn);
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         }
         return conn;
     }
 
+    public void error() {
+        // Some Trolls that i found.
+        String path = path = Commander.class.getClassLoader().getResource("utils/Commander.class").getPath();
+
+        System.err.println(path+":106:"+" error: ';' expected\n" + "                                + \"\\n\"Bestellnummer: \" + orders.getBESTELLNR()");
+        System.err.println(path+":112:"+" error: illegal start of expression\n" +
+                "            }, () -> {");
+
+        System.err.println(path+":138: error: ';' expected\n" + "                                + \"\\n\"ID: \" + recipe.getRecipeID()");
+        System.err.println(path+":144:"+" error: illegal start of expression\n" +
+                "            }, () -> {");
+
+        System.err.println(path+":182:"+" error: ';' expected\n" + "                                + \"\\n\"KundenNr: \" + customer.getKUNDENNR()");
+        System.err.println(path+":196:"+" error: illegal start of expression\n" +
+                "            }, () -> {");
+        System.exit(1);
+    }
+
     public void selectData() {
+        // Reinizialize of Lists.
+        inst.ingredientList = new ArrayList<>();
+        inst.recipeList = new ArrayList<>();
+        inst.customerList = new ArrayList<>();
+        inst.orderList = new ArrayList<>();
+
+        // Select everything and drop it in the list.
         selectIngredients();
         selectRecipe();
         selectCustomer();
@@ -94,6 +117,7 @@ public class DBUtils {
             sr.runScript(new BufferedReader(new FileReader(dbFile)));
             // Testdaten erstellen.
             sr.runScript(new BufferedReader(new FileReader(dataFile)));
+            // Set DBInitialized to true.
             ConfigInstance.isSQLfinished = true;
         } catch(SQLException | IOException e) {
             e.printStackTrace();
@@ -104,7 +128,7 @@ public class DBUtils {
         // Get Connection to MySQL
         try (Connection conn = firstBootConnector()) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
-            // SQL-Skript
+            // SQL-Skript Path
             String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL_recreate.sql")).replace("file:", "").replace("%20"," ");
             String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
             // Das SQL-Skript ausführen.
@@ -117,10 +141,7 @@ public class DBUtils {
         }
     }
 
-
-    public /*List<IngredientList>*/ void selectIngredients() {
-        // Define a List of Ingredients
-        //List<IngredientList> list = new ArrayList<>();
+    public void selectIngredients() {
         // Get Connection
         try (Connection conn = connector()) {
             // Pass your SQL in this String.
@@ -131,7 +152,7 @@ public class DBUtils {
                 try (ResultSet rs = ps.executeQuery()) {
                     // If no result do nothing
                     if (!rs.next()) {
-                        System.out.println("No results");
+                        System.out.println("Successfully got Data from Ingredients (no entries)");
                     } else {
                         // For Each result add it to IngredientList.
                         do {
@@ -139,14 +160,13 @@ public class DBUtils {
                             //list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getInt(9)));
                             inst.ingredientList.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getDouble(8), rs.getDouble(9)));
                         } while (rs.next());
+                        System.out.println("Successfully got Data from Ingredients");
                     }
                 }
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        // Return the list which can be obtained by List<IngredientList> list = dbUtil.selectIngredients(); !!Dependency it needs to have DBUtils dbUtil = new DBUtils(); to be defined!!
-        //return list;
     }
     public void selectRecipe() {
         try (Connection conn = connector()) {
@@ -154,11 +174,12 @@ public class DBUtils {
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     if (!rs.next()) {
-                        System.out.println("No results");
+                        System.out.println("Successfully got Data from Recipes (no entries)");
                     } else {
                         do {
                             inst.recipeList.add(new RecipeList(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getInt(4), rs.getInt(5)));
                         } while (rs.next());
+                        System.out.println("Successfully got Data from Recipes");
                     }
                 }
             }
@@ -172,11 +193,12 @@ public class DBUtils {
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     if (!rs.next()) {
-                        System.out.println("No results");
+                        System.out.println("Successfully got Data from Customers (no entries)");
                     } else {
                         do {
                             inst.customerList.add(new CustomerList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8),rs.getString(9), rs.getString(10)));
                         } while (rs.next());
+                        System.out.println("Successfully got Data from Customers");
                     }
                 }
             }
@@ -184,7 +206,7 @@ public class DBUtils {
             throwables.printStackTrace();
         }
     }
-    public /*List<OrderList>*/ void selectOrder() {
+    public void selectOrder() {
         // Define a List of Ingredients
         //List<OrderList> list = new ArrayList<>();
         // Get Connection
@@ -197,7 +219,7 @@ public class DBUtils {
                 try (ResultSet rs = ps.executeQuery()) {
                     // If no result do nothing
                     if (!rs.next()) {
-                        System.out.println("No results");
+                        System.out.println("Successfully got Data from Orders (no entries)");
                     } else {
                         // For Each result add it to IngredientList.
                         do {
@@ -205,6 +227,7 @@ public class DBUtils {
                             //list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
                             inst.orderList.add(new OrderList(rs.getInt(1), rs.getInt(2), rs.getDate(3), rs.getDouble(4)));
                         } while (rs.next());
+                        System.out.println("Successfully got Data from Orders");
                     }
                 }
             }

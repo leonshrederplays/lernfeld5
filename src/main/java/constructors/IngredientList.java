@@ -9,17 +9,19 @@ public class IngredientList implements Serializable {
     private double nettoprice;
     private int amount;
     private int supplierID;
+    private String supplierName;
     private int calorie;
     private double carbohydrates;
     private double protein;
 
-    public IngredientList(int ingredientID, String ingredientName, String unit, double nettoprice, int amount, int supplierID, int calorie, double carbohydrates, double protein) {
+    public IngredientList(int ingredientID, String ingredientName, String unit, double nettoprice, int amount, int supplierID, /*String supplierName,*/ int calorie, double carbohydrates, double protein) {
         this.ingredientID = ingredientID;
         this.ingredientName = ingredientName;
         this.unit = unit;
         this.nettoprice = nettoprice;
         this.amount = amount;
         this.supplierID = supplierID;
+        this.supplierName = supplierName;
         this.calorie = calorie;
         this.carbohydrates = carbohydrates;
         this.protein = protein;
@@ -71,6 +73,14 @@ public class IngredientList implements Serializable {
 
     public void setSupplierID(int supplierID) {
         this.supplierID = supplierID;
+    }
+
+    public String getSupplierName() {
+        return supplierName;
+    }
+
+    public void setSupplierName(String supplierName) {
+        this.supplierName = supplierName;
     }
 
     public int getCalorie() {
