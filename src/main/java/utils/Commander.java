@@ -1,6 +1,5 @@
 package utils;
 
-import com.sun.javafx.image.IntPixelGetter;
 import constructors.CustomerList;
 import constructors.IngredientList;
 import constructors.OrderList;
@@ -8,8 +7,7 @@ import constructors.RecipeList;
 import instances.ConfigInstance;
 
 import java.util.List;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.Scanner;
 
 public class Commander {
 
@@ -28,6 +26,8 @@ public class Commander {
                 "\n\n");
     }
 
+    // ===========================================================================
+    // Ingredient Commands
     public void ingredients(){
         List<IngredientList> list = ConfigInstance.ingredientList;
         list.forEach(ingredient -> {
@@ -43,7 +43,7 @@ public class Commander {
             System.out.println(str);
         });
     }
-    
+
     public void ingredientDescription(String arg) {
         List<IngredientList> list = ConfigInstance.ingredientList;
         try {
@@ -83,6 +83,9 @@ public class Commander {
             });
         }
     }
+
+    // ===========================================================================
+    // Order Commands
     public void orders(){
         List<OrderList> list = ConfigInstance.orderList;
         list.forEach(orders -> {
@@ -91,6 +94,7 @@ public class Commander {
             System.out.println(str);
         });
     }
+
 
     public void orderDescription(String arg) {
         List<OrderList> list = ConfigInstance.orderList;
@@ -113,8 +117,15 @@ public class Commander {
         }
     }
 
-    public void shutdown(){
-        System.exit(0);
+    // ===========================================================================
+    // Recipe Commands
+    public void recipe(){
+        List<RecipeList> list = ConfigInstance.recipeList;
+        list.forEach(recipe -> {
+            String str ="ID: " + recipe.getRecipeID()
+                    + " | Name: " + recipe.getRecipeName();
+            System.out.println(str);
+        });
     }
 
     public void recipeDescription(String arg) {
@@ -149,14 +160,8 @@ public class Commander {
         }
     }
 
-    public void recipe(){
-        List<RecipeList> list = ConfigInstance.recipeList;
-        list.forEach(recipe -> {
-            String str ="ID: " + recipe.getRecipeID()
-                    + " | Name: " + recipe.getRecipeName();
-            System.out.println(str);
-        });
-    }
+    // ===========================================================================
+    // Customer Commands
     public void customer(){
         List<CustomerList> list = ConfigInstance.customerList;
         list.forEach(customer -> {
@@ -166,6 +171,7 @@ public class Commander {
             System.out.println(str);
         });
     }
+
     public void customerDescription(String[] arg, boolean isTwo) {
         List<CustomerList> list = ConfigInstance.customerList;
         if (isTwo) {
@@ -216,6 +222,36 @@ public class Commander {
             }
         }
         
+    }
+
+    // ===========================================================================
+    // Recreate Command
+    public void recreate() {
+        Scanner recreateInput = new Scanner(System.in);
+        System.out.println("This will reset the Database to its default state. Are you sure? (Y/N)");
+        String confirm = recreateInput.next();
+        if (confirm.equalsIgnoreCase("y")){
+            dbUtil.recreateSQL();
+            dbUtil.selectData();
+            System.out.println("Database successfully recreated. Default values were restored.");
+        } else if (confirm.equalsIgnoreCase("n")){
+            System.out.println("Databse was not recreated.");
+        }
+    }
+    // ===========================================================================
+    // Reload Command
+    public void reload() {
+        try {
+            dbUtil.selectData();
+            System.out.println("Successfully reloaded all Lists");
+        } catch (Exception e) {
+            System.out.println("Something went wrong");
+        }
+    }
+    // ===========================================================================
+    // Shutdown Command
+    public void shutdown(){
+        System.exit(0);
     }
 
 }
