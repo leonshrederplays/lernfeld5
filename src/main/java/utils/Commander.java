@@ -8,6 +8,8 @@ import instances.ConfigInstance;
 
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class Commander {
 
@@ -126,28 +128,141 @@ public class Commander {
         List<RecipeList> list = ConfigInstance.recipeList;
         try {
             int id = Integer.parseInt(arg);
+            AtomicInteger ingredients = new AtomicInteger();
             list.stream().filter(recipe -> id == recipe.getRecipeID()).findAny().ifPresentOrElse(recipe -> {
+                AtomicReference<String> ingredsString = new AtomicReference<>("");
+                AtomicReference<Double> protein = new AtomicReference(0.0);
+                AtomicReference<Double> carbohydrates = new AtomicReference<>(0.0);
+                AtomicInteger calories = new AtomicInteger(0);
+                AtomicReference<Double> price = new AtomicReference<>(0.0);
+                recipe.getIngredients().forEach(ingredient -> {
+                    ConfigInstance.ingredientList.forEach(ingred -> {
+                        boolean isEqual = ingredient.equals(ingred.getIngredientID());
+                        if(ingred.getUnit().equals("Liter")) {
+                            if (isEqual) {
+                                if (ingredsString.get().isEmpty() || ingredsString.get().isBlank()) {
+                                    ingredsString.getAndSet(ingred.getIngredientName() + " " + recipe.getAmount().get(ingredients.get()) + "l");
+                                    carbohydrates.getAndUpdate(carbo -> carbo + (ingred.getCarbohydrates() * recipe.getAmount().get(ingredients.get())));
+                                    protein.getAndUpdate(prot -> prot + (ingred.getProtein() * recipe.getAmount().get(ingredients.get())));
+                                    calories.getAndUpdate(calorie -> calorie + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                                    price.getAndUpdate(pr -> pr + (ingred.getNettoprice() * recipe.getAmount().get(ingredients.get())));
+                                    ingredients.getAndIncrement();
+                                } else {
+                                    ingredsString.getAndUpdate(string -> string + ", " + ingred.getIngredientName() + " " + recipe.getAmount().get(ingredients.get()) + "l");
+                                    carbohydrates.getAndUpdate(carbo -> carbo + (ingred.getCarbohydrates() * recipe.getAmount().get(ingredients.get())));
+                                    protein.getAndUpdate(prot -> prot + (ingred.getProtein() * recipe.getAmount().get(ingredients.get())));
+                                    calories.getAndUpdate(calorie -> calorie + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                                    price.getAndUpdate(pr -> pr + (ingred.getNettoprice() * recipe.getAmount().get(ingredients.get())));
+                                    ingredients.getAndIncrement();
+                                }
+                            }
+                        } else {
+                            if(isEqual) {
+                                if(ingredsString.get().isEmpty() || ingredsString.get().isBlank()) {
+                                    ingredsString.getAndSet(ingred.getIngredientName() + " " + recipe.getAmount().get(ingredients.get()) + "x");
+                                    carbohydrates.getAndUpdate(carbo -> carbo + (ingred.getCarbohydrates() * recipe.getAmount().get(ingredients.get())));
+                                    protein.getAndUpdate(prot -> prot + (ingred.getProtein() * recipe.getAmount().get(ingredients.get())));
+                                    calories.getAndUpdate(calorie -> calorie + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                                    price.getAndUpdate(pr -> pr + (ingred.getNettoprice() * recipe.getAmount().get(ingredients.get())));
+                                    ingredients.getAndIncrement();
+                                } else {
+                                    ingredsString.getAndUpdate(string -> string + ", " + ingred.getIngredientName() + " " + recipe.getAmount().get(ingredients.get()) + "x");
+                                    carbohydrates.getAndUpdate(carbo -> carbo + (ingred.getCarbohydrates() * recipe.getAmount().get(ingredients.get())));
+                                    protein.getAndUpdate(prot -> prot + (ingred.getProtein() * recipe.getAmount().get(ingredients.get())));
+                                    calories.getAndUpdate(calorie -> calorie + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                                    price.getAndUpdate(pr -> pr + (ingred.getNettoprice() * recipe.getAmount().get(ingredients.get())));
+                                    ingredients.getAndIncrement();
+                                }
+                            }
+                        }
+                    });
+                });
                 String str =
                         "Properties of this Recipe: "
                                 + "ID: " + recipe.getRecipeID()
                                 + " | Name: " + recipe.getRecipeName()
-                                + "\nCalories: " + recipe.getRecipeCalories() + ", "
-                                + "\nCarbohydrates: " + recipe.getRecipeCarbs() + ", "
-                                + "\nProtein: " + recipe.getRecipeProtein();
+                                + "\nCalories: " + calories + ", "
+                                + "\nCarbohydrates: " + carbohydrates+ ", "
+                                + "\nProtein: " + protein + ", "
+                                + "\nIngredients: " + ingredsString
+                                + "\nPrice: " + price+"$";
                 System.out.println(str);
+                ingredients.set(0);
+                calories.set(0);
+                carbohydrates.set(0.0);
+                protein.set(0.0);
+                price.set(0.0);
+                ingredsString.set("");
             }, () -> {
                 System.out.println("The Recipe: " + arg + " does not exist. type recipe to list all recipes.");
             });
         } catch (NumberFormatException e) {
             list.stream().filter(recipe -> arg.toLowerCase().equals(recipe.getRecipeName().toLowerCase())).findAny().ifPresentOrElse(recipe -> {
+                AtomicReference<String> ingredsString = new AtomicReference<>("");
+                AtomicInteger ingredients = new AtomicInteger();
+                AtomicReference<Double> protein = new AtomicReference(0.0);
+                AtomicReference<Double> carbohydrates = new AtomicReference<>(0.0);
+                AtomicInteger calories = new AtomicInteger(0);
+                AtomicReference<Double> price = new AtomicReference<>(0.0);
+
+                recipe.getIngredients().forEach(ingredient -> {
+                    ConfigInstance.ingredientList.forEach(ingred -> {
+                        boolean isEqual = ingredient.equals(ingred.getIngredientID());
+                        if(ingred.getUnit().equals("Liter")) {
+                            if (isEqual) {
+                                if (ingredsString.get().isEmpty() || ingredsString.get().isBlank()) {
+                                    ingredsString.getAndSet(ingred.getIngredientName() + " " + recipe.getAmount().get(ingredients.get()) + "l");
+                                    carbohydrates.getAndUpdate(carbo -> carbo + (ingred.getCarbohydrates() * recipe.getAmount().get(ingredients.get())));
+                                    protein.getAndUpdate(prot -> prot + (ingred.getProtein() * recipe.getAmount().get(ingredients.get())));
+                                    calories.getAndUpdate(calorie -> calorie + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                                    price.getAndUpdate(pr -> pr + (ingred.getNettoprice() * recipe.getAmount().get(ingredients.get())));
+                                    ingredients.getAndIncrement();
+                                } else {
+                                    ingredsString.getAndUpdate(string -> string + ", " + ingred.getIngredientName() + " " + recipe.getAmount().get(ingredients.get()) + "l");
+                                    carbohydrates.getAndUpdate(carbo -> carbo + (ingred.getCarbohydrates() * recipe.getAmount().get(ingredients.get())));
+                                    protein.getAndUpdate(prot -> prot + (ingred.getProtein() * recipe.getAmount().get(ingredients.get())));
+                                    calories.getAndUpdate(calorie -> calorie + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                                    price.getAndUpdate(pr -> pr + (ingred.getNettoprice() * recipe.getAmount().get(ingredients.get())));
+                                    ingredients.getAndIncrement();
+                                }
+                            }
+                        } else {
+                            if(isEqual) {
+                                if(ingredsString.get().isEmpty() || ingredsString.get().isBlank()) {
+                                    ingredsString.getAndSet(ingred.getIngredientName() + " " + recipe.getAmount().get(ingredients.get()) + "x");
+                                    carbohydrates.getAndUpdate(carbo -> carbo + (ingred.getCarbohydrates() * recipe.getAmount().get(ingredients.get())));
+                                    protein.getAndUpdate(prot -> prot + (ingred.getProtein() * recipe.getAmount().get(ingredients.get())));
+                                    calories.getAndUpdate(calorie -> calorie + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                                    price.getAndUpdate(pr -> pr + (ingred.getNettoprice() * recipe.getAmount().get(ingredients.get())));
+                                    ingredients.getAndIncrement();
+                                } else {
+                                    ingredsString.getAndUpdate(string -> string + ", " + ingred.getIngredientName() + " " + recipe.getAmount().get(ingredients.get()) + "x");
+                                    carbohydrates.getAndUpdate(carbo -> carbo + (ingred.getCarbohydrates() * recipe.getAmount().get(ingredients.get())));
+                                    protein.getAndUpdate(prot -> prot + (ingred.getProtein() * recipe.getAmount().get(ingredients.get())));
+                                    calories.getAndUpdate(calorie -> calorie + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                                    price.getAndUpdate(pr -> pr + (ingred.getNettoprice() * recipe.getAmount().get(ingredients.get())));
+                                    ingredients.getAndIncrement();
+                                }
+                            }
+                        }
+                    });
+                });
                 String str =
                         "Properties of this Recipe: "
                                 + "ID: " + recipe.getRecipeID()
                                 + " | Name: " + recipe.getRecipeName()
-                                + "\nCalories: " + recipe.getRecipeCalories() + ", "
-                                + "\nCarbohydrates: " + recipe.getRecipeCarbs() + ", "
-                                + "\nProtein: " + recipe.getRecipeProtein();
+                                + "\nCalories: " + calories + ", "
+                                + "\nCarbohydrates: " + carbohydrates+ ", "
+                                + "\nProtein: " + protein + ", "
+                                + "\nIngredients: " + ingredsString
+                                + "\nPrice: " + price+"$";
                 System.out.println(str);
+                ingredients.set(0);
+                calories.set(0);
+                carbohydrates.set(0.0);
+                protein.set(0.0);
+                price.set(0.0);
+                ingredsString.set("");
             }, () -> {
                 System.out.println("The Recipe: " + arg + " does not exist. type recipe to list all recipes.");
             });
