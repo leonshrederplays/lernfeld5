@@ -15,6 +15,7 @@ public class Main /*extends Application*/ {
     public static void main(String[] args) {
         //Application.launch(args);
         DBUtils dbUtils = new DBUtils();
+        ConfigInstance conf = new ConfigInstance();
         // Define Filename
         File file = new File("config.ini");
         //dbUtils.error();
@@ -123,56 +124,77 @@ public class Main /*extends Application*/ {
                 case "customers":
                     Console console = System.console();
                     int attempts = 0;
-                    if(console == null) {
-                        Scanner passwordInput = new Scanner(System.in);
-                        System.out.println("WARNING: The Console isnt initialized so the password will be visible!");
-                        do{
-                            System.out.println("Enter the Password:");
-                            String password = passwordInput.next();
-                            if (password.equals("Admin")){
-                                attempts = 3;
-                                try {
-                                    if (command.length > 1) {
-                                        if(command.length == 3) {
-                                            commander.customerDescription(command, true);
-                                        } else {
-                                            commander.customerDescription(command, false);
-                                        }
-                                    } else {
-                                        commander.customer();
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                    if(ConfigInstance.isAdminPassed) {
+                        try {
+                            if (command.length > 1) {
+                                if(command.length == 3) {
+                                    commander.customerDescription(command, true);
+                                } else {
+                                    commander.customerDescription(command, false);
                                 }
                             } else {
-                                attempts++;
-                                System.out.println("Wrong password! You have " + (5 - attempts) + " tries left!");
+                                commander.customer();
                             }
-                        } while (attempts < 3);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
-                        char[] password = console.readPassword("Enter your Password:");
-                        do{
-                            if (new String(password).equals("Admin")){
-                                attempts = 3;
-                                try {
-                                    if (command.length > 1) {
-                                        if(command.length == 3) {
-                                            commander.customerDescription(command, true);
+                        if(console == null) {
+                            Scanner passwordInput = new Scanner(System.in);
+                            System.out.println("WARNING: The Console isnt initialized so the password will be visible!");
+                            do{
+                                System.out.println("Enter the Password:");
+                                String password = passwordInput.next();
+                                if (password.equals("Admin")){
+                                    conf.lockCustomers();
+                                    conf.isAdminPassed = true;
+                                    attempts = 3;
+                                    try {
+                                        if (command.length > 1) {
+                                            if(command.length == 3) {
+                                                commander.customerDescription(command, true);
+                                            } else {
+                                                commander.customerDescription(command, false);
+                                            }
                                         } else {
-                                            commander.customerDescription(command, false);
+                                            commander.customer();
                                         }
-                                    } else {
-                                        commander.customer();
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
                                     }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
+                                } else {
+                                    attempts++;
+                                    System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
                                 }
-                            } else {
-                                attempts++;
-                                System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
-                            }
-                        } while (attempts < 3);
+                            } while (attempts < 3);
+                        } else {
+                            do{
+                                char[] password = console.readPassword("Enter your Password:");
+                                if (new String(password).equals("Admin")){
+                                    conf.lockCustomers();
+                                    conf.isAdminPassed = true;
+                                    attempts = 3;
+                                    try {
+                                        if (command.length > 1) {
+                                            if(command.length == 3) {
+                                                commander.customerDescription(command, true);
+                                            } else {
+                                                commander.customerDescription(command, false);
+                                            }
+                                        } else {
+                                            commander.customer();
+                                        }
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                } else {
+                                    attempts++;
+                                    System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
+                                }
+                            } while (attempts < 3);
+                        }
                     }
+
 
                     command = null;
                     System.out.println(" ");

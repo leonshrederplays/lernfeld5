@@ -20,4 +20,19 @@ public class ConfigInstance implements Serializable {
     public static List<CustomerList> customerList = new ArrayList<>();
     public static List<OrderList> orderList = new ArrayList<>();
     public static boolean isSQLfinished = false;
+    public static boolean isAdminPassed = false;
+
+    public void lockCustomers() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(300000);
+                    isAdminPassed = false;
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+    }
 }
