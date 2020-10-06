@@ -1,6 +1,7 @@
 package constructors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class IngredientList implements Serializable {
     private int ingredientID;
@@ -12,9 +13,9 @@ public class IngredientList implements Serializable {
     private String supplierName;
     private int calorie;
     private double carbohydrates;
-    private double protein;
+    private BigDecimal protein;
 
-    public IngredientList(int ingredientID, String ingredientName, String unit, double nettoprice, int amount, int supplierID, /*String supplierName,*/ int calorie, double carbohydrates, double protein) {
+    public IngredientList(int ingredientID, String ingredientName, String unit, double nettoprice, int amount, int supplierID, /*String supplierName,*/ int calorie, double carbohydrates, BigDecimal protein) {
         this.ingredientID = ingredientID;
         this.ingredientName = ingredientName;
         this.unit = unit;
@@ -99,11 +100,11 @@ public class IngredientList implements Serializable {
         this.carbohydrates = carbohydrates;
     }
 
-    public double getProtein() {
+    public BigDecimal getProtein() {
         return protein;
     }
 
-    public void setProtein(double protein) {
+    public void setProtein(BigDecimal protein) {
         this.protein = protein;
     }
 
