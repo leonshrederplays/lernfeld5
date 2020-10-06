@@ -15,7 +15,7 @@ public class IngredientList implements Serializable {
     private double carbohydrates;
     private BigDecimal protein;
 
-    public IngredientList(int ingredientID, String ingredientName, String unit, double nettoprice, int amount, int supplierID, /*String supplierName,*/ int calorie, double carbohydrates, BigDecimal protein) {
+    public IngredientList(int ingredientID, String ingredientName, String unit, double nettoprice, int amount, int supplierID, String supplierName, int calorie, double carbohydrates, BigDecimal protein) {
         this.ingredientID = ingredientID;
         this.ingredientName = ingredientName;
         this.unit = unit;

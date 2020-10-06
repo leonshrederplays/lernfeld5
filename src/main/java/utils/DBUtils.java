@@ -145,7 +145,7 @@ public class DBUtils {
         // Get Connection
         try (Connection conn = connector()) {
             // Pass your SQL in this String.
-            String sql = "SELECT * FROM ZUTAT";
+            String sql = "SELECT ZUTAT.*, LIEFERANT.LIEFERANTENNAME FROM ZUTAT LEFT JOIN LIEFERANT ON ZUTAT.LIEFERANTENNR = LIEFERANT.LIEFERANTENNR";
             // Make a preparedStatement and set Scroll to insensitive (both directions)
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 // Execute query and safe Result in rs
@@ -158,7 +158,7 @@ public class DBUtils {
                         do {
                             // rs.getObject or etc. And Column Number required.
                             //list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getInt(9)));
-                            inst.ingredientList.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getDouble(8), rs.getBigDecimal(9)));
+                            inst.ingredientList.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getInt(5), rs.getInt(6), rs.getString(10), rs.getInt(7), rs.getDouble(8), rs.getBigDecimal(9)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Ingredients");
                     }
@@ -181,6 +181,20 @@ public class DBUtils {
                     "LEFT JOIN KATEGORIE\n" +
                     "ON REZEPT.REZEPTNR = KATEGORIE.REZEPTNR\n" +
                     "ORDER BY REZEPT.REZEPTNR";
+
+
+            /*
+                SELECT REZEPT.*, ALLERGENE.ALLERGENE, KATEGORIE.KATEGORIE
+                FROM REZEPT
+                INNER JOIN REZEPTZUTAT
+                ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR
+                LEFT JOIN ALLERGENE
+                ON REZEPT.REZEPTNR = ALLERGENE.REZEPTNR
+                LEFT JOIN KATEGORIE
+                ON REZEPT.REZEPTNR = KATEGORIE.REZEPTNR
+                ORDER BY REZEPT.REZEPTNR
+             */
+            
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     if (!rs.next()) {

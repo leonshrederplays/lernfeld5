@@ -27,7 +27,8 @@ public class Ingredients {
                                 + "\nUnit: " + ingredient.getUnit() + ", "
                                 + "\nNetprice: " + ingredient.getNettoprice() + ", "
                                 + "\nIn Stock: " + ingredient.getAmount() + ", "
-                                + "\nSupplier: " + ingredient.getSupplierID() + ", "
+                                + "\nSupplierID: " + ingredient.getSupplierID() + ", "
+                                + "\nSupplier-Name: " + ingredient.getSupplierName() + ", "
                                 + "\nCalories: " + ingredient.getCalorie() + ", "
                                 + "\nCarbohydrates: " + ingredient.getCarbohydrates() + ", "
                                 + "\nProtein: " + ingredient.getProtein();
@@ -44,7 +45,8 @@ public class Ingredients {
                                 + "\nUnit: " + ingredient.getUnit() + ", "
                                 + "\nNetprice: " + ingredient.getNettoprice() + ", "
                                 + "\nIn Stock: " + ingredient.getAmount() + ", "
-                                + "\nSupplier: " + ingredient.getSupplierID() + ", "
+                                + "\nSupplierID: " + ingredient.getSupplierID() + ", "
+                                + "\nSupplier-Name: " + ingredient.getSupplierName() + ", "
                                 + "\nCalories: " + ingredient.getCalorie() + ", "
                                 + "\nCarbohydrates: " + ingredient.getCarbohydrates() + ", "
                                 + "\nProtein: " + ingredient.getProtein();
