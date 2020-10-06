@@ -17,9 +17,9 @@ import java.util.List;
 public class DBUtils {
 
 
-    private ConfigInstance inst = new ConfigInstance();
+    private static ConfigInstance inst = new ConfigInstance();
 
-    public Connection firstBootConnector() {
+    public static Connection firstBootConnector() {
         Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -46,7 +46,7 @@ public class DBUtils {
         return conn;
     }
 
-    public Connection connector() {
+    public static Connection connector() {
         Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -75,7 +75,7 @@ public class DBUtils {
 
     public void error() {
         // Some Trolls that i found.
-        String path = path = Commander.class.getClassLoader().getResource("utils/Commander.class").getPath();
+        String path = path = DBUtils.class.getClassLoader().getResource("utils/Commander.class").getPath();
 
         System.err.println(path+":106:"+" error: ';' expected\n" + "                                + \"\\n\"Bestellnummer: \" + orders.getBESTELLNR()");
         System.err.println(path+":112:"+" error: illegal start of expression\n" +
@@ -91,7 +91,7 @@ public class DBUtils {
         System.exit(1);
     }
 
-    public void selectData() {
+    public static void selectData() {
         // Reinizialize of Lists.
         inst.ingredientList = new ArrayList<>();
         inst.recipeList = new ArrayList<>();
@@ -124,13 +124,13 @@ public class DBUtils {
         }
     }
 
-    public void recreateSQL() {
+    public static void recreateSQL() {
         // Get Connection to MySQL
         try (Connection conn = firstBootConnector()) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
             // SQL-Skript Path
-            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL_recreate.sql")).replace("file:", "").replace("%20"," ");
-            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
+            String dbFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dbSQL_recreate.sql")).replace("file:", "").replace("%20"," ");
+            String dataFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
             // Das SQL-Skript ausführen.
             // Datenbank und Tabellen erstellen.
             sr.runScript(new BufferedReader(new FileReader(dbFile)));
@@ -141,7 +141,7 @@ public class DBUtils {
         }
     }
 
-    public void selectIngredients() {
+    public static void selectIngredients() {
         // Get Connection
         try (Connection conn = connector()) {
             // Pass your SQL in this String.
@@ -168,7 +168,7 @@ public class DBUtils {
             throwables.printStackTrace();
         }
     }
-    public void selectRecipe() {
+    public static void selectRecipe() {
         List<Integer> recipeNr = new ArrayList<>();
         try (Connection conn = connector()) {
             String sql =
@@ -244,7 +244,7 @@ public class DBUtils {
             throwables.printStackTrace();
         }
     }
-    public void selectCustomer() {
+    public static void selectCustomer() {
         try (Connection conn = connector()) {
             String sql = "SELECT * FROM KUNDE";
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
@@ -263,7 +263,7 @@ public class DBUtils {
             throwables.printStackTrace();
         }
     }
-    public void selectOrder() {
+    public static void selectOrder() {
         // Define a List of Ingredients
         //List<OrderList> list = new ArrayList<>();
         // Get Connection
