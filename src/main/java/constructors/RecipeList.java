@@ -11,8 +11,10 @@ public class RecipeList implements Serializable {
     private double recipeProtein;
     private List<Integer> ingredients;
     private List<Integer> amount;
+    private List<String> allergens;
+    private List<String> categories;
 
-    public RecipeList(int recipeID, String recipeName, int recipeCalories, double recipeCarbs, double recipeProtein, List<Integer> ingredients, List<Integer> amount){
+    public RecipeList(int recipeID, String recipeName, int recipeCalories, double recipeCarbs, double recipeProtein, List<Integer> ingredients, List<Integer> amount, List<String> allergens, List<String> categories){
         this.recipeID = recipeID;
         this.recipeName = recipeName;
         this.recipeCalories = recipeCalories;
@@ -20,6 +22,8 @@ public class RecipeList implements Serializable {
         this.recipeProtein = recipeProtein;
         this.ingredients = ingredients;
         this.amount = amount;
+        this.allergens = allergens;
+        this.categories = categories;
     }
 
     public int getRecipeID() {
@@ -85,4 +89,21 @@ public class RecipeList implements Serializable {
     public void setRecipeProtein(int recipeProtein) {
         this.recipeProtein = recipeProtein;
     }
+
+    public List<String> getAllergens() {
+        return allergens;
+    }
+
+    public void setAllergens(List<String> allergens) {
+        this.allergens = allergens;
+    }
+
+    public List<String> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<String> categories) {
+        this.categories = categories;
+    }
+
 }

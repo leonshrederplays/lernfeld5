@@ -171,7 +171,16 @@ public class DBUtils {
     public void selectRecipe() {
         List<Integer> recipeNr = new ArrayList<>();
         try (Connection conn = connector()) {
-            String sql = "SELECT * FROM REZEPT INNER JOIN REZEPTZUTAT ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR";
+            String sql =
+                    "SELECT * \n" +
+                    "FROM REZEPT\n" +
+                    "INNER JOIN REZEPTZUTAT \n" +
+                    "ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR\n" +
+                    "LEFT JOIN ALLERGENE\n" +
+                    "ON REZEPT.REZEPTNR = ALLERGENE.REZEPTNR\n" +
+                    "LEFT JOIN KATEGORIE\n" +
+                    "ON REZEPT.REZEPTNR = KATEGORIE.REZEPTNR\n" +
+                    "ORDER BY REZEPT.REZEPTNR";
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     if (!rs.next()) {
@@ -183,32 +192,48 @@ public class DBUtils {
                                 int recipeID = rs.getInt(1);
 
                                 inst.recipeList.stream().filter(recipeList -> recipeList.getRecipeID() == recipeID).findAny().ifPresent(recipe -> {
-                                    int ingredAmount = 0;
-                                    try {
-                                        ingredAmount = rs.getInt(8);
-                                    } catch (SQLException throwables) {
-                                        throwables.printStackTrace();
-                                    }
-                                    int ingredient = 0;
-                                    try {
-                                        ingredient = rs.getInt(7);
-                                    } catch (SQLException throwables) {
-                                        throwables.printStackTrace();
-                                    }
                                     List<Integer> ingreds = recipe.getIngredients();
                                     List<Integer> amount = recipe.getAmount();
-                                    ingreds.add(ingredient);
-                                    amount.add(ingredAmount);
-                                    recipe.setAmount(amount);
-                                    recipe.setIngredients(ingreds);
+                                    List<String> allergens = recipe.getAllergens();
+                                    List<String> categories = recipe.getCategories();
+                                    int ingredAmount = 0;
+                                    int ingredient = 0;
+                                    String allergen = null;
+                                    String category = null;
+                                    try {
+                                        ingredAmount = rs.getInt(8);
+                                        ingredient = rs.getInt(7);
+                                        allergen = rs.getString(10);
+                                        category = rs.getString(12);
+                                    } catch (SQLException throwables) {
+                                        throwables.printStackTrace();
+                                    }
+                                    if(allergen != null && !allergens.contains(allergen)) {
+                                        allergens.add(allergen);
+                                    }
+
+                                    if(category != null && !categories.contains(category)) {
+                                        categories.add(category);
+                                    }
+
+                                    if(ingredient != 0 && !ingreds.contains(ingredient)) {
+                                        ingreds.add(ingredient);
+                                        amount.add(ingredAmount);
+                                        recipe.setAmount(amount);
+                                        recipe.setIngredients(ingreds);
+                                    }
                                 });
                             } else {
                                 List<Integer> ingredient = new ArrayList<>();
                                 ingredient.add(rs.getInt(7));
                                 List<Integer> amount = new ArrayList<>();
                                 amount.add(rs.getInt(8));
+                                List<String> allergens = new ArrayList<>();
+                                allergens.add(rs.getString(10));
+                                List<String> categories = new ArrayList<>();
+                                categories.add(rs.getString(12));
                                 recipeNr.add(rs.getInt(1));
-                                inst.recipeList.add(new RecipeList(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getDouble(4), rs.getDouble(5), ingredient, amount));
+                                inst.recipeList.add(new RecipeList(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getDouble(4), rs.getDouble(5), ingredient, amount, allergens, categories));
                             }
                         } while (rs.next());
                         System.out.println("Successfully got Data from Recipes");
