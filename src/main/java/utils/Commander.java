@@ -135,6 +135,12 @@ public class Commander {
                 AtomicReference<Double> carbohydrates = new AtomicReference<>(0.0);
                 AtomicInteger calories = new AtomicInteger(0);
                 AtomicReference<Double> price = new AtomicReference<>(0.0);
+                recipe.getIngredients().forEach(recipeIngredient -> {
+                    ConfigInstance.ingredientList.stream().filter(ingredient -> recipeIngredient == ingredient.getIngredientID()).findAny().ifPresentOrElse(ingred -> {
+                    }, () -> {
+                        System.out.println("WRONG");
+                    });
+                });
                 recipe.getIngredients().forEach(ingredient -> {
                     ConfigInstance.ingredientList.forEach(ingred -> {
                         boolean isEqual = ingredient.equals(ingred.getIngredientID());
