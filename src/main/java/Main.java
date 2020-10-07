@@ -107,6 +107,9 @@ public class Main /*extends Application*/ {
                     command = null;
                     System.out.println(" ");
                     break;
+                case "addrecipe":
+                    AddRecipe.addRecipe();
+                    break;
                 case "orders":
                     try {
                         if (command.length > 1) {

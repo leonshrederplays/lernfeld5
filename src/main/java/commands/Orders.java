@@ -3,6 +3,7 @@ package commands;
 import constructors.OrderList;
 import instances.ConfigInstance;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Orders {
@@ -20,7 +21,7 @@ public class Orders {
         List<OrderList> list = ConfigInstance.orderList;
         try {
             int id = Integer.parseInt(arg);
-            list.stream().filter(orders -> id == orders.getBESTELLNR()).findAny().ifPresentOrElse(orders -> {
+            list.stream().filter(orders -> new BigDecimal(id).equals(orders.getBESTELLNR())).findAny().ifPresentOrElse(orders -> {
                 String str =
                         "Properties of this Order: "
                                 + "\nOrdering-Number: " + orders.getBESTELLNR()

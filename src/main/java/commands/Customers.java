@@ -3,6 +3,7 @@ package commands;
 import constructors.CustomerList;
 import instances.ConfigInstance;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Customers {
@@ -44,7 +45,7 @@ public class Customers {
         } else {
             try {
                 int id = Integer.parseInt(arg[1]);
-                list.stream().filter(customer -> id == customer.getKUNDENNR()).findAny().ifPresentOrElse(customer -> {
+                list.stream().filter(customer -> new BigDecimal(id).equals(customer.getKUNDENNR())).findAny().ifPresentOrElse(customer -> {
                     String str =
                             "Data of Customer: "
                                     + "Customer-Number: " + customer.getKUNDENNR()

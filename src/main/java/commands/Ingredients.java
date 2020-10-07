@@ -3,6 +3,7 @@ package commands;
 import constructors.IngredientList;
 import instances.ConfigInstance;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public class Ingredients {
@@ -19,7 +20,7 @@ public class Ingredients {
         List<IngredientList> list = ConfigInstance.ingredientList;
         try {
             int id = Integer.parseInt(arg);
-            list.stream().filter(ingredient -> id == ingredient.getIngredientID()).findAny().ifPresentOrElse(ingredient -> {
+            list.stream().filter(ingredient -> new BigDecimal(id).equals(ingredient.getIngredientID())).findAny().ifPresentOrElse(ingredient -> {
                 String str =
                         "Properties of the Ingredient: "
                                 + "ID: " + ingredient.getIngredientID() + " | Name: " + ingredient.getIngredientName()

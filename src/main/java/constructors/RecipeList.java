@@ -1,20 +1,21 @@
 package constructors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class RecipeList implements Serializable {
-    private int recipeID;
+    private BigDecimal recipeID;
     private String recipeName;
-    private int recipeCalories;
-    private double recipeCarbs;
-    private double recipeProtein;
-    private List<Integer> ingredients;
+    private BigDecimal recipeCalories;
+    private BigDecimal recipeCarbs;
+    private BigDecimal recipeProtein;
+    private List<BigDecimal> ingredients;
     private List<Integer> amount;
     private List<String> allergens;
     private List<String> categories;
 
-    public RecipeList(int recipeID, String recipeName, int recipeCalories, double recipeCarbs, double recipeProtein, List<Integer> ingredients, List<Integer> amount, List<String> allergens, List<String> categories){
+    public RecipeList(BigDecimal recipeID, String recipeName, BigDecimal recipeCalories, BigDecimal recipeCarbs, BigDecimal recipeProtein, List<BigDecimal> ingredients, List<Integer> amount, List<String> allergens, List<String> categories){
         this.recipeID = recipeID;
         this.recipeName = recipeName;
         this.recipeCalories = recipeCalories;
@@ -26,35 +27,11 @@ public class RecipeList implements Serializable {
         this.categories = categories;
     }
 
-    public int getRecipeID() {
+    public BigDecimal getRecipeID() {
         return recipeID;
     }
 
-    public List<Integer> getIngredients() {
-        return ingredients;
-    }
-
-    public void setRecipeCarbs(double recipeCarbs) {
-        this.recipeCarbs = recipeCarbs;
-    }
-
-    public void setRecipeProtein(double recipeProtein) {
-        this.recipeProtein = recipeProtein;
-    }
-
-    public void setIngredients(List<Integer> ingredients) {
-        this.ingredients = ingredients;
-    }
-
-    public void setAmount(List<Integer> amount) {
-        this.amount = amount;
-    }
-
-    public List<Integer> getAmount() {
-        return amount;
-    }
-
-    public void setRecipeID(int recipeID) {
+    public void setRecipeID(BigDecimal recipeID) {
         this.recipeID = recipeID;
     }
 
@@ -66,28 +43,44 @@ public class RecipeList implements Serializable {
         this.recipeName = recipeName;
     }
 
-    public int getRecipeCalories() {
+    public BigDecimal getRecipeCalories() {
         return recipeCalories;
     }
 
-    public void setRecipeCalories(int recipeCalories) {
+    public void setRecipeCalories(BigDecimal recipeCalories) {
         this.recipeCalories = recipeCalories;
     }
 
-    public double getRecipeCarbs() {
+    public BigDecimal getRecipeCarbs() {
         return recipeCarbs;
     }
 
-    public void setRecipeCarbs(int recipeCarbs) {
+    public void setRecipeCarbs(BigDecimal recipeCarbs) {
         this.recipeCarbs = recipeCarbs;
     }
 
-    public double getRecipeProtein() {
+    public BigDecimal getRecipeProtein() {
         return recipeProtein;
     }
 
-    public void setRecipeProtein(int recipeProtein) {
+    public void setRecipeProtein(BigDecimal recipeProtein) {
         this.recipeProtein = recipeProtein;
+    }
+
+    public List<BigDecimal> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<BigDecimal> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<Integer> getAmount() {
+        return amount;
+    }
+
+    public void setAmount(List<Integer> amount) {
+        this.amount = amount;
     }
 
     public List<String> getAllergens() {
@@ -105,5 +98,4 @@ public class RecipeList implements Serializable {
     public void setCategories(List<String> categories) {
         this.categories = categories;
     }
-
 }

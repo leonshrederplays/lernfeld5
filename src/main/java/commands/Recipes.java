@@ -28,24 +28,23 @@ public class Recipes {
         try {
             id = Integer.parseInt(arg);
             int finalId = id;
-            isIDValid = list.stream().filter(recipe -> finalId == recipe.getRecipeID()).findAny().isPresent();
+            isIDValid = list.stream().filter(recipe -> new BigDecimal(finalId).equals(recipe.getRecipeID())).findAny().isPresent();
         } catch (NumberFormatException e) { }
         boolean isNameValid = list.stream().filter(recipe -> arg.toLowerCase().equals(recipe.getRecipeName().toLowerCase())).findAny().isPresent();
 
         if(isIDValid || isNameValid) {
             int finalId1 = id;
-            list.stream().filter(recipe -> recipe.getRecipeID() == finalId1 || arg.toLowerCase().equals(recipe.getRecipeName().toLowerCase() )).findAny().ifPresentOrElse(recipe -> {
+            list.stream().filter(recipe -> recipe.getRecipeID().equals(new BigDecimal(finalId1)) || arg.toLowerCase().equals(recipe.getRecipeName().toLowerCase() )).findAny().ifPresentOrElse(recipe -> {
                 List<String> ingredsList = new ArrayList<>();
                 // Defining Atomics cuz in lambda this is needed.
                 AtomicInteger ingredients = new AtomicInteger();
-                AtomicInteger calories = new AtomicInteger();
+                AtomicReference<BigDecimal> calories = new AtomicReference<>(BigDecimal.ZERO);
                 AtomicReference<BigDecimal> protein = new AtomicReference<>(BigDecimal.ZERO);
                 AtomicReference<BigDecimal> carbohydrates = new AtomicReference<>(BigDecimal.ZERO);
                 AtomicReference<BigDecimal> price = new AtomicReference<>(BigDecimal.ZERO);
-
                 recipe.getIngredients().forEach(recipeIngredient -> {
                     // Search for the ingredient and do stuff.
-                    ConfigInstance.ingredientList.stream().filter(ingredient -> recipeIngredient == ingredient.getIngredientID()).findAny().ifPresentOrElse(ingred -> {
+                    ConfigInstance.ingredientList.stream().filter(ingredient -> new BigDecimal(String.valueOf(recipeIngredient)).equals(ingredient.getIngredientID())).findAny().ifPresentOrElse(ingred -> {
                         // If ingredient unit is "Liter" hang an l on it else an x.
                         if(ingred.getUnit().equals("Liter")) {
                             // Add ingredient and amount to string list.
@@ -57,7 +56,7 @@ public class Recipes {
                         // Define the amount of the ingredient.
                         BigDecimal amount = new BigDecimal(recipe.getAmount().get(ingredients.get()));
                         // Add calorien multiplied by amount to calories.
-                        calories.getAndUpdate(update -> update + (ingred.getCalorie() * recipe.getAmount().get(ingredients.get())));
+                        calories.getAndUpdate(update -> update.add(ingred.getCalorie().multiply(new BigDecimal(recipe.getAmount().get(ingredients.get())))));
                         // Add protein multiplied by amount to protein.
                         protein.getAndUpdate(update -> update.add(new BigDecimal("" + ingred.getProtein()).multiply(amount).setScale(2, RoundingMode.HALF_EVEN)));
                         // Add carbohydrates multiplied by amount to carbohydrates.

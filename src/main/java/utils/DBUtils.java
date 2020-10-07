@@ -10,6 +10,7 @@ import instances.ConfigInstance;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -157,8 +158,8 @@ public class DBUtils {
                         // For Each result add it to IngredientList.
                         do {
                             // rs.getObject or etc. And Column Number required.
-                            //list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4), rs.getInt(5), rs.getInt(6), rs.getInt(7), rs.getInt(8), rs.getInt(9)));
-                            inst.ingredientList.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getDouble(4), rs.getInt(5), rs.getInt(6), rs.getString(10), rs.getInt(7), rs.getDouble(8), rs.getBigDecimal(9)));
+                            // 1: ID (BigDecimal), 2: Bezeichnung (String), 3: Einheit (String), 4: Nettopreis (BigDecimal), 5: Menge (Integer), 6: LieferantenNr (BigDecimal), 7: Kalorien (BigDecimal), 8: Kohlenhydrate (BigDecimal), 9: Protein (BigDecimal), 10: Lieferanten-Name (String)
+                            inst.ingredientList.add(new IngredientList(rs.getBigDecimal(1), rs.getString(2), rs.getString(3), rs.getBigDecimal(4), rs.getInt(5), rs.getBigDecimal(6), rs.getString(10), rs.getBigDecimal(7), rs.getBigDecimal(8), rs.getBigDecimal(9)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Ingredients");
                     }
@@ -192,18 +193,18 @@ public class DBUtils {
                             if(hasID) {
                                 int recipeID = rs.getInt(1);
 
-                                inst.recipeList.stream().filter(recipeList -> recipeList.getRecipeID() == recipeID).findAny().ifPresent(recipe -> {
-                                    List<Integer> ingreds = recipe.getIngredients();
+                                inst.recipeList.stream().filter(recipeList -> recipeList.getRecipeID().equals(new BigDecimal(recipeID))).findAny().ifPresent(recipe -> {
+                                    List<BigDecimal> ingreds = recipe.getIngredients();
                                     List<Integer> amount = recipe.getAmount();
                                     List<String> allergens = recipe.getAllergens();
                                     List<String> categories = recipe.getCategories();
                                     int ingredAmount = 0;
-                                    int ingredient = 0;
+                                    BigDecimal ingredient = BigDecimal.ZERO;
                                     String allergen = null;
                                     String category = null;
                                     try {
                                         ingredAmount = rs.getInt(7);
-                                        ingredient = rs.getInt(6);
+                                        ingredient = rs.getBigDecimal(6);
                                         allergen = rs.getString(8);
                                         category = rs.getString(9);
                                     } catch (SQLException throwables) {
@@ -217,7 +218,7 @@ public class DBUtils {
                                         categories.add(category);
                                     }
 
-                                    if(ingredient != 0 && !ingreds.contains(ingredient)) {
+                                    if(!ingredient.equals(0) && !ingreds.contains(ingredient)) {
                                         ingreds.add(ingredient);
                                         amount.add(ingredAmount);
                                         recipe.setAmount(amount);
@@ -225,8 +226,8 @@ public class DBUtils {
                                     }
                                 });
                             } else {
-                                List<Integer> ingredient = new ArrayList<>();
-                                ingredient.add(rs.getInt(6));
+                                List<BigDecimal> ingredient = new ArrayList<>();
+                                ingredient.add(rs.getBigDecimal(6));
                                 List<Integer> amount = new ArrayList<>();
                                 amount.add(rs.getInt(7));
                                 List<String> allergens = new ArrayList<>();
@@ -234,7 +235,9 @@ public class DBUtils {
                                 List<String> categories = new ArrayList<>();
                                 categories.add(rs.getString(9));
                                 recipeNr.add(rs.getInt(1));
-                                inst.recipeList.add(new RecipeList(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getDouble(4), rs.getDouble(5), ingredient, amount, allergens, categories));
+                                // Ingredient (Integer-Liste), Amount (Integer-Liste), Allergens (String-List), Categories (String-List)
+                                // 1: ID (BigDecimal), 2: Rezeptname (String), 3: Gesamtkalorien (BigDecimal), 4: Gesamtkohlenhydrate (BigDecimal), 5: Gesamtprotein (BigDecimal), 6: Gesamtpreis (BigDecimal)
+                                inst.recipeList.add(new RecipeList(rs.getBigDecimal(1), rs.getString(2), rs.getBigDecimal(3), rs.getBigDecimal(4), rs.getBigDecimal(5), ingredient, amount, allergens, categories));
                             }
                         } while (rs.next());
                         System.out.println("Successfully got Data from Recipes");
@@ -245,6 +248,7 @@ public class DBUtils {
             throwables.printStackTrace();
         }
     }
+
     public static void selectCustomer() {
         try (Connection conn = connector()) {
             String sql = "SELECT * FROM KUNDE";
@@ -254,7 +258,8 @@ public class DBUtils {
                         System.out.println("Successfully got Data from Customers (no entries)");
                     } else {
                         do {
-                            inst.customerList.add(new CustomerList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8),rs.getString(9), rs.getString(10)));
+                            // 1: KundenNr (BigDecimal), 2: Nachname (String), 3: Vorname (String), 4: Geburtsdatum (Date), 5: Strasse (String), 6: HausNr (Integer), 7: PLZ (Integer), 8: Ort (String), 9: Telefon (String), 10: E-Mail (String)
+                            inst.customerList.add(new CustomerList(rs.getBigDecimal(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8),rs.getString(9), rs.getString(10)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Customers");
                     }
@@ -264,6 +269,7 @@ public class DBUtils {
             throwables.printStackTrace();
         }
     }
+
     public static void selectOrder() {
         // Define a List of Ingredients
         //List<OrderList> list = new ArrayList<>();
@@ -281,9 +287,8 @@ public class DBUtils {
                     } else {
                         // For Each result add it to IngredientList.
                         do {
-                            // rs.getObject or etc. And Column Number required.
-                            //list.add(new IngredientList(rs.getInt(1), rs.getString(2), rs.getString(3), rs.getInt(4)));
-                            inst.orderList.add(new OrderList(rs.getInt(1), rs.getInt(2), rs.getDate(3), rs.getDouble(4)));
+                            // 1: BestellNr (BigDecimal), 2: KundenNr (BigDecimal), 3: Bestelldatum (Date), 4: Rechnungsbetrag (BigDecimal)
+                            inst.orderList.add(new OrderList(rs.getBigDecimal(1), rs.getBigDecimal(2), rs.getDate(3), rs.getBigDecimal(4)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Orders");
                     }

@@ -1,16 +1,17 @@
 package constructors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.sql.Date;
 
 public class OrderList implements Serializable {
 
-    private int BESTELLNR;
-    private int KUNDENNR;
+    private BigDecimal BESTELLNR;
+    private BigDecimal KUNDENNR;
     private Date BESTELLDATUM;
-    private double RECHNUNGSBETRAG;
+    private BigDecimal RECHNUNGSBETRAG;
 
-    public OrderList(int BESTELLNR, int KUNDENNR, Date BESTELLDATUM, double RECHNUNGSBETRAG) {
+    public OrderList(BigDecimal BESTELLNR, BigDecimal KUNDENNR, Date BESTELLDATUM, BigDecimal RECHNUNGSBETRAG) {
 
         this.BESTELLNR = BESTELLNR;
         this.KUNDENNR = KUNDENNR;
@@ -18,19 +19,19 @@ public class OrderList implements Serializable {
         this.RECHNUNGSBETRAG = RECHNUNGSBETRAG;
     }
 
-    public int getBESTELLNR() {
+    public BigDecimal getBESTELLNR() {
         return BESTELLNR;
     }
 
-    public void setBESTELLNR(int BESTELLNR) {
+    public void setBESTELLNR(BigDecimal BESTELLNR) {
         this.BESTELLNR = BESTELLNR;
     }
 
-    public int getKUNDENNR() {
+    public BigDecimal getKUNDENNR() {
         return KUNDENNR;
     }
 
-    public void setKUNDENNR(int KUNDENNR) {
+    public void setKUNDENNR(BigDecimal KUNDENNR) {
         this.KUNDENNR = KUNDENNR;
     }
 
@@ -42,11 +43,11 @@ public class OrderList implements Serializable {
         this.BESTELLDATUM = BESTELLDATUM;
     }
 
-    public double getRECHNUNGSBETRAG() {
+    public BigDecimal getRECHNUNGSBETRAG() {
         return RECHNUNGSBETRAG;
     }
 
-    public void setRECHNUNGSBETRAG(double RECHNUNGSBETRAG) {
+    public void setRECHNUNGSBETRAG(BigDecimal RECHNUNGSBETRAG) {
         this.RECHNUNGSBETRAG = RECHNUNGSBETRAG;
     }
 }
