@@ -1,5 +1,5 @@
+import commands.*;
 import instances.ConfigInstance;
-import utils.Commander;
 import utils.DBUtils;
 
 import java.io.Console;
@@ -70,24 +70,23 @@ public class Main /*extends Application*/ {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Commander commander = new Commander();
-        Scanner input = new Scanner(System.in);
 
+        Scanner input = new Scanner(System.in);
         String[] command = null;
         do {
             System.out.println("Enter the command you want to execute: ");
             command = input.nextLine().split(" ");
             switch (command[0]) {
                 case "help":
-                    commander.helper();
+                    Help.helper();
                     command = null;
                     break;
                 case "ingreds":
                     try {
                         if (command.length > 1) {
-                            commander.ingredientDescription(command[1]);
+                            Ingredients.ingredientDescription(command[1]);
                         } else {
-                            commander.ingredients();
+                            Ingredients.ingredient();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -98,9 +97,9 @@ public class Main /*extends Application*/ {
                 case "recipe":
                     try {
                         if (command.length > 1) {
-                            commander.recipeDescription(command[1]);
+                            Recipes.recipeDescription(command[1]);
                         } else {
-                            commander.recipe();
+                            Recipes.recipe();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -111,9 +110,9 @@ public class Main /*extends Application*/ {
                 case "orders":
                     try {
                         if (command.length > 1) {
-                            commander.orderDescription(command[1]);
+                            Orders.orderDescription(command[1]);
                         } else {
-                            commander.orders();
+                            Orders.orders();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -128,12 +127,12 @@ public class Main /*extends Application*/ {
                         try {
                             if (command.length > 1) {
                                 if(command.length == 3) {
-                                    commander.customerDescription(command, true);
+                                    Customers.customerDescription(command, true);
                                 } else {
-                                    commander.customerDescription(command, false);
+                                    Customers.customerDescription(command, false);
                                 }
                             } else {
-                                commander.customer();
+                                Customers.customer();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -152,12 +151,12 @@ public class Main /*extends Application*/ {
                                     try {
                                         if (command.length > 1) {
                                             if(command.length == 3) {
-                                                commander.customerDescription(command, true);
+                                                Customers.customerDescription(command, true);
                                             } else {
-                                                commander.customerDescription(command, false);
+                                                Customers.customerDescription(command, false);
                                             }
                                         } else {
-                                            commander.customer();
+                                            Customers.customer();
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -177,12 +176,12 @@ public class Main /*extends Application*/ {
                                     try {
                                         if (command.length > 1) {
                                             if(command.length == 3) {
-                                                commander.customerDescription(command, true);
+                                                Customers.customerDescription(command, true);
                                             } else {
-                                                commander.customerDescription(command, false);
+                                                Customers.customerDescription(command, false);
                                             }
                                         } else {
-                                            commander.customer();
+                                            Customers.customer();
                                         }
                                     } catch (Exception e) {
                                         e.printStackTrace();
@@ -200,15 +199,15 @@ public class Main /*extends Application*/ {
                     System.out.println(" ");
                     break;
                 case "recreate" :
-                    commander.recreate();
+                    Recreate.recreate();
                     command = null;
                     System.out.println(" ");
                     break;
                 case "reload":
-                    commander.reload();
+                    Reload.reload();
                     break;
                 case "exit":
-                    commander.shutdown();
+                    Shutdown.shutdown();
                     command = null;
                     System.out.println(" ");
                     break;
