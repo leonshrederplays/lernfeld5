@@ -26,7 +26,7 @@ public class Orders {
                                 + "\nOrdering-Number: " + orders.getBESTELLNR()
                                 + "\nCustomer-Number: " + orders.getKUNDENNR()
                                 + "\nOrder date: " + orders.getBESTELLDATUM()
-                                + "\nInvoice amount: " + orders.getRECHNUNGSBETRAG();
+                                + "\nInvoice amount: " + orders.getRECHNUNGSBETRAG() + "$";
 
                 System.out.println(str);
             }, () -> {

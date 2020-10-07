@@ -172,28 +172,15 @@ public class DBUtils {
         List<Integer> recipeNr = new ArrayList<>();
         try (Connection conn = connector()) {
             String sql =
-                    "SELECT * \n" +
+                    "SELECT REZEPT.*, REZEPTZUTAT.ZUTATENNR, REZEPTZUTAT.MENGE, ALLERGENE.ALLERGENE, KATEGORIE.KATEGORIE\n" +
                     "FROM REZEPT\n" +
-                    "INNER JOIN REZEPTZUTAT \n" +
+                    "INNER JOIN REZEPTZUTAT\n" +
                     "ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR\n" +
                     "LEFT JOIN ALLERGENE\n" +
                     "ON REZEPT.REZEPTNR = ALLERGENE.REZEPTNR\n" +
                     "LEFT JOIN KATEGORIE\n" +
                     "ON REZEPT.REZEPTNR = KATEGORIE.REZEPTNR\n" +
                     "ORDER BY REZEPT.REZEPTNR";
-
-
-            /*
-                SELECT REZEPT.*, ALLERGENE.ALLERGENE, KATEGORIE.KATEGORIE
-                FROM REZEPT
-                INNER JOIN REZEPTZUTAT
-                ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR
-                LEFT JOIN ALLERGENE
-                ON REZEPT.REZEPTNR = ALLERGENE.REZEPTNR
-                LEFT JOIN KATEGORIE
-                ON REZEPT.REZEPTNR = KATEGORIE.REZEPTNR
-                ORDER BY REZEPT.REZEPTNR
-             */
             
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 try (ResultSet rs = ps.executeQuery()) {
@@ -215,10 +202,10 @@ public class DBUtils {
                                     String allergen = null;
                                     String category = null;
                                     try {
-                                        ingredAmount = rs.getInt(8);
-                                        ingredient = rs.getInt(7);
-                                        allergen = rs.getString(10);
-                                        category = rs.getString(12);
+                                        ingredAmount = rs.getInt(7);
+                                        ingredient = rs.getInt(6);
+                                        allergen = rs.getString(8);
+                                        category = rs.getString(9);
                                     } catch (SQLException throwables) {
                                         throwables.printStackTrace();
                                     }
@@ -239,13 +226,13 @@ public class DBUtils {
                                 });
                             } else {
                                 List<Integer> ingredient = new ArrayList<>();
-                                ingredient.add(rs.getInt(7));
+                                ingredient.add(rs.getInt(6));
                                 List<Integer> amount = new ArrayList<>();
-                                amount.add(rs.getInt(8));
+                                amount.add(rs.getInt(7));
                                 List<String> allergens = new ArrayList<>();
-                                allergens.add(rs.getString(10));
+                                allergens.add(rs.getString(8));
                                 List<String> categories = new ArrayList<>();
-                                categories.add(rs.getString(12));
+                                categories.add(rs.getString(9));
                                 recipeNr.add(rs.getInt(1));
                                 inst.recipeList.add(new RecipeList(rs.getInt(1), rs.getString(2), rs.getInt(3), rs.getDouble(4), rs.getDouble(5), ingredient, amount, allergens, categories));
                             }

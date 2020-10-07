@@ -81,12 +81,12 @@ public class Recipes {
                         "Properties of this Recipe: "
                                 + "ID: " + recipe.getRecipeID()
                                 + " | Name: " + recipe.getRecipeName()
-                                + "\nCalories: " + calories + ", "
-                                + "\nCarbohydrates: " + carbohydrates + ", "
-                                + "\nProtein: " + protein + ", "
-                                + "\nIngredients: " + ingreds + ", "
-                                + "\nPrice: " + price +"$" + ","
-                                + "\nAllergens: " + allergens + ", "
+                                + "\nCalories: " + calories 
+                                + "\nCarbohydrates: " + carbohydrates 
+                                + "\nProtein: " + protein 
+                                + "\nIngredients: " + ingreds 
+                                + "\nPrice: " + price +"$"
+                                + "\nAllergens: " + allergens 
                                 + "\nCategroies: " + categories;
                 System.out.println(str);
             }, () -> {

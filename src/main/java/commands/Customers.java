@@ -26,13 +26,13 @@ public class Customers {
                             "Data of Customer: "
                                     + "Customer-Number: " + customer.getKUNDENNR()
                                     + " | Last name: " + customer.getNACHNAME()
-                                    + "\nFirst name: " + customer.getVORNAME() + ", "
-                                    + "\nDate of birth: " + customer.getGEBURTSDATUM() + ", "
-                                    + "\nStreet: " + customer.getSTRASSE() + ", "
-                                    + "\nHouse-Number: " + customer.getHAUSNR() + ", "
-                                    + "\nZIP-Code: " + customer.getPLZ() + ", "
-                                    + "\nLocation: " + customer.getORT() + ", "
-                                    + "\nPhone: " + customer.getTELEFON() + ", "
+                                    + "\nFirst name: " + customer.getVORNAME() 
+                                    + "\nDate of birth: " + customer.getGEBURTSDATUM() 
+                                    + "\nStreet: " + customer.getSTRASSE() 
+                                    + "\nHouse-Number: " + customer.getHAUSNR() 
+                                    + "\nZIP-Code: " + customer.getPLZ() 
+                                    + "\nLocation: " + customer.getORT() 
+                                    + "\nPhone: " + customer.getTELEFON() 
                                     + "\nE-Mail: " + customer.getEMAIL();
                     System.out.println(str);
                 } else {
@@ -49,13 +49,13 @@ public class Customers {
                             "Data of Customer: "
                                     + "Customer-Number: " + customer.getKUNDENNR()
                                     + " | Last name: " + customer.getNACHNAME()
-                                    + "\nFirst name: " + customer.getVORNAME() + ", "
-                                    + "\nDate of birth: " + customer.getGEBURTSDATUM() + ", "
-                                    + "\nStreet: " + customer.getSTRASSE() + ", "
-                                    + "\nHouse-Number: " + customer.getHAUSNR() + ", "
-                                    + "\nZIP-Code: " + customer.getPLZ() + ", "
-                                    + "\nLocation: " + customer.getORT() + ", "
-                                    + "\nPhone: " + customer.getTELEFON() + ", "
+                                    + "\nFirst name: " + customer.getVORNAME() 
+                                    + "\nDate of birth: " + customer.getGEBURTSDATUM() 
+                                    + "\nStreet: " + customer.getSTRASSE() 
+                                    + "\nHouse-Number: " + customer.getHAUSNR() 
+                                    + "\nZIP-Code: " + customer.getPLZ() 
+                                    + "\nLocation: " + customer.getORT() 
+                                    + "\nPhone: " + customer.getTELEFON() 
                                     + "\nE-Mail: " + customer.getEMAIL();
                     System.out.println(str);
                 }, () -> {
