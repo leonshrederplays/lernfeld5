@@ -171,6 +171,8 @@ public class DBUtils {
 
     public static void selectRecipe() {
         List<Integer> recipeNr = new ArrayList<>();
+        List<BigDecimal> allergenBig = new ArrayList<>();
+        List<BigDecimal> categoriesBig = new ArrayList<>();
         try (Connection conn = connector()) {
             String sql =
                     "SELECT REZEPT.*, REZEPTZUTAT.ZUTATENNR, REZEPTZUTAT.MENGE, REZEPTALLERGENE.ALLERGENNR, REZEPTKATEGORIEN.KATEGORIENR\n" +
@@ -196,26 +198,28 @@ public class DBUtils {
                                 inst.recipeList.stream().filter(recipeList -> recipeList.getRecipeID().equals(new BigDecimal(recipeID))).findAny().ifPresent(recipe -> {
                                     List<BigDecimal> ingreds = recipe.getIngredients();
                                     List<Integer> amount = recipe.getAmount();
-                                    List<String> allergens = recipe.getAllergens();
-                                    List<String> categories = recipe.getCategories();
+                                    List<BigDecimal> allergens = recipe.getAllergens();
+                                    List<BigDecimal> categories = recipe.getCategories();
                                     int ingredAmount = 0;
                                     BigDecimal ingredient = BigDecimal.ZERO;
-                                    String allergen = null;
-                                    String category = null;
+                                    BigDecimal allergen = BigDecimal.ZERO;
+                                    BigDecimal category = BigDecimal.ZERO;
                                     try {
-                                        ingredAmount = rs.getInt(7);
-                                        ingredient = rs.getBigDecimal(6);
-                                        allergen = rs.getString(8);
-                                        category = rs.getString(9);
+                                        ingredAmount = rs.getInt(8);
+                                        ingredient = rs.getBigDecimal(7);
+                                        allergen = rs.getBigDecimal(9);
+                                        category = rs.getBigDecimal(10);
                                     } catch (SQLException throwables) {
                                         throwables.printStackTrace();
                                     }
-                                    if(allergen != null && !allergens.contains(allergen)) {
-                                        allergens.add(allergen);
+                                    if(allergen != null && !allergenBig.contains(allergen)) {
+                                        allergens.add(new BigDecimal(String.valueOf(allergen)));
+                                        allergenBig.add(new BigDecimal(String.valueOf(allergen)));
                                     }
 
-                                    if(category != null && !categories.contains(category)) {
-                                        categories.add(category);
+                                    if(category != null && !categoriesBig.contains(category)) {
+                                        categories.add(new BigDecimal(String.valueOf(category)));
+                                        categoriesBig.add(new BigDecimal(String.valueOf(category)));
                                     }
 
                                     if(!ingredient.equals(0) && !ingreds.contains(ingredient)) {
@@ -227,13 +231,15 @@ public class DBUtils {
                                 });
                             } else {
                                 List<BigDecimal> ingredient = new ArrayList<>();
-                                ingredient.add(rs.getBigDecimal(6));
+                                ingredient.add(rs.getBigDecimal(7));
                                 List<Integer> amount = new ArrayList<>();
-                                amount.add(rs.getInt(7));
-                                List<String> allergens = new ArrayList<>();
-                                allergens.add(rs.getString(8));
-                                List<String> categories = new ArrayList<>();
-                                categories.add(rs.getString(9));
+                                amount.add(rs.getInt(8));
+                                List<BigDecimal> allergens = new ArrayList<>();
+                                allergens.add(rs.getBigDecimal(9));
+                                List<BigDecimal> categories = new ArrayList<>();
+                                categories.add(rs.getBigDecimal(10));
+                                allergenBig.add(rs.getBigDecimal(9));
+                                categoriesBig.add(rs.getBigDecimal(10));
                                 recipeNr.add(rs.getInt(1));
                                 // Ingredient (Integer-Liste), Amount (Integer-Liste), Allergens (String-List), Categories (String-List)
                                 // 1: ID (BigDecimal), 2: Rezeptname (String), 3: Gesamtkalorien (BigDecimal), 4: Gesamtkohlenhydrate (BigDecimal), 5: Gesamtprotein (BigDecimal), 6: Gesamtpreis (BigDecimal)
