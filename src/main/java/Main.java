@@ -81,6 +81,7 @@ public class Main /*extends Application*/ {
                     Help.helper();
                     command = null;
                     break;
+
                 case "ingreds":
                     try {
                         if (command.length > 1) {
@@ -94,6 +95,7 @@ public class Main /*extends Application*/ {
                     command = null;
                     System.out.println(" ");
                     break;
+
                 case "recipe":
                     try {
                         if (command.length > 1) {
@@ -107,9 +109,11 @@ public class Main /*extends Application*/ {
                     command = null;
                     System.out.println(" ");
                     break;
+
                 case "addrecipe":
                     AddRecipe.addRecipe();
                     break;
+
                 case "orders":
                     try {
                         if (command.length > 1) {
@@ -123,97 +127,37 @@ public class Main /*extends Application*/ {
                     command = null;
                     System.out.println(" ");
                     break;
+
                 case "customers":
-                    Console console = System.console();
-                    int attempts = 0;
-                    if(ConfigInstance.isAdminPassed) {
-                        try {
-                            if (command.length > 1) {
-                                if(command.length == 3) {
-                                    Customers.customerDescription(command, true);
-                                } else {
-                                    Customers.customerDescription(command, false);
-                                }
-                            } else {
-                                Customers.customer();
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        if(console == null) {
-                            Scanner passwordInput = new Scanner(System.in);
-                            System.out.println("WARNING: The Console isnt initialized so the password will be visible!");
-                            do{
-                                System.out.println("Enter the Password:");
-                                String password = passwordInput.next();
-                                if (password.equals("Admin")){
-                                    conf.lockCustomers();
-                                    conf.isAdminPassed = true;
-                                    attempts = 3;
-                                    try {
-                                        if (command.length > 1) {
-                                            if(command.length == 3) {
-                                                Customers.customerDescription(command, true);
-                                            } else {
-                                                Customers.customerDescription(command, false);
-                                            }
-                                        } else {
-                                            Customers.customer();
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                    attempts++;
-                                    System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
-                                }
-                            } while (attempts < 3);
-                        } else {
-                            do{
-                                char[] password = console.readPassword("Enter your Password:");
-                                if (new String(password).equals("Admin")){
-                                    conf.lockCustomers();
-                                    conf.isAdminPassed = true;
-                                    attempts = 3;
-                                    try {
-                                        if (command.length > 1) {
-                                            if(command.length == 3) {
-                                                Customers.customerDescription(command, true);
-                                            } else {
-                                                Customers.customerDescription(command, false);
-                                            }
-                                        } else {
-                                            Customers.customer();
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                } else {
-                                    attempts++;
-                                    System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
-                                }
-                            } while (attempts < 3);
-                        }
-                    }
-
-
+                    Customers.passwordManager(command);
                     command = null;
                     System.out.println(" ");
                     break;
+
+                case "categories":
+                    Categories.categories();
+                    break;
+
+                case "allergens":
+                    Allergens.allergens();
+                    break;
+
                 case "recreate" :
                     Recreate.recreate();
                     command = null;
                     System.out.println(" ");
                     break;
+
                 case "reload":
                     Reload.reload();
                     break;
+
                 case "exit":
                     Shutdown.shutdown();
                     command = null;
                     System.out.println(" ");
                     break;
+
                 default:
                     System.out.println("YEET: " + command[0] +  " isnt a command type help to get the command list.");
                     command = null;

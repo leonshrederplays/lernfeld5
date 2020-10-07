@@ -3,10 +3,88 @@ package commands;
 import constructors.CustomerList;
 import instances.ConfigInstance;
 
+import java.io.Console;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Scanner;
 
 public class Customers {
+
+    public static void passwordManager(String[] command) {
+        ConfigInstance conf = new ConfigInstance();
+        Console console = System.console();
+        int attempts = 0;
+        if(ConfigInstance.isAdminPassed) {
+            try {
+                if (command.length > 1) {
+                    if(command.length == 3) {
+                        Customers.customerDescription(command, true);
+                    } else {
+                        Customers.customerDescription(command, false);
+                    }
+                } else {
+                    Customers.customer();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            if(console == null) {
+                Scanner passwordInput = new Scanner(System.in);
+                System.out.println("WARNING: The Console isnt initialized so the password will be visible!");
+                do{
+                    System.out.println("Enter the Password:");
+                    String password = passwordInput.next();
+                    if (password.equals("Admin")){
+                        conf.lockCustomers();
+                        conf.isAdminPassed = true;
+                        attempts = 3;
+                        try {
+                            if (command.length > 1) {
+                                if(command.length == 3) {
+                                    Customers.customerDescription(command, true);
+                                } else {
+                                    Customers.customerDescription(command, false);
+                                }
+                            } else {
+                                Customers.customer();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        attempts++;
+                        System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
+                    }
+                } while (attempts < 3);
+            } else {
+                do{
+                    char[] password = console.readPassword("Enter your Password:");
+                    if (new String(password).equals("Admin")){
+                        conf.lockCustomers();
+                        conf.isAdminPassed = true;
+                        attempts = 3;
+                        try {
+                            if (command.length > 1) {
+                                if(command.length == 3) {
+                                    Customers.customerDescription(command, true);
+                                } else {
+                                    Customers.customerDescription(command, false);
+                                }
+                            } else {
+                                Customers.customer();
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        attempts++;
+                        System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
+                    }
+                } while (attempts < 3);
+            }
+        }
+    }
 
     public static void customer(){
         List<CustomerList> list = ConfigInstance.customerList;

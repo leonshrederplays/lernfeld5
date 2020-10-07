@@ -1,9 +1,6 @@
 package instances;
 
-import constructors.CustomerList;
-import constructors.IngredientList;
-import constructors.OrderList;
-import constructors.RecipeList;
+import constructors.*;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -19,6 +16,8 @@ public class ConfigInstance implements Serializable {
     public static List<RecipeList> recipeList = new ArrayList<>();
     public static List<CustomerList> customerList = new ArrayList<>();
     public static List<OrderList> orderList = new ArrayList<>();
+    public static List<CategoriesList> categoriesList = new ArrayList<>();
+    public static List<AllergensList> allergensList = new ArrayList<>();
     public static boolean isSQLfinished = false;
     public static boolean isAdminPassed = false;
 

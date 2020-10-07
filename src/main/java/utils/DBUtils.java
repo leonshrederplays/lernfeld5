@@ -1,10 +1,7 @@
 package utils;
 
 
-import constructors.CustomerList;
-import constructors.IngredientList;
-import constructors.RecipeList;
-import constructors.OrderList;
+import constructors.*;
 import instances.ConfigInstance;
 
 import java.io.BufferedReader;
@@ -104,6 +101,8 @@ public class DBUtils {
         selectRecipe();
         selectCustomer();
         selectOrder();
+        selectCategories();
+        selectAllergens();
     }
 
     public void createSQL() {
@@ -169,18 +168,19 @@ public class DBUtils {
             throwables.printStackTrace();
         }
     }
+
     public static void selectRecipe() {
         List<Integer> recipeNr = new ArrayList<>();
         try (Connection conn = connector()) {
             String sql =
-                    "SELECT REZEPT.*, REZEPTZUTAT.ZUTATENNR, REZEPTZUTAT.MENGE, ALLERGENE.ALLERGENE, KATEGORIE.KATEGORIE\n" +
+                    "SELECT REZEPT.*, REZEPTZUTAT.ZUTATENNR, REZEPTZUTAT.MENGE, REZEPTALLERGENE.ALLERGENNR, REZEPTKATEGORIEN.KATEGORIENR\n" +
                     "FROM REZEPT\n" +
                     "INNER JOIN REZEPTZUTAT\n" +
                     "ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR\n" +
-                    "LEFT JOIN ALLERGENE\n" +
-                    "ON REZEPT.REZEPTNR = ALLERGENE.REZEPTNR\n" +
-                    "LEFT JOIN KATEGORIE\n" +
-                    "ON REZEPT.REZEPTNR = KATEGORIE.REZEPTNR\n" +
+                    "LEFT JOIN REZEPTALLERGENE\n" +
+                    "ON REZEPT.REZEPTNR = REZEPTALLERGENE.REZEPTNR\n" +
+                    "LEFT JOIN REZEPTKATEGORIEN\n" +
+                    "ON REZEPT.REZEPTNR = REZEPTKATEGORIEN.REZEPTNR\n" +
                     "ORDER BY REZEPT.REZEPTNR";
             
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
@@ -271,8 +271,6 @@ public class DBUtils {
     }
 
     public static void selectOrder() {
-        // Define a List of Ingredients
-        //List<OrderList> list = new ArrayList<>();
         // Get Connection
         try (Connection conn = connector()) {
             // Pass your SQL in this String.
@@ -297,8 +295,60 @@ public class DBUtils {
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
-        // Return the list which can be obtained by List<IngredientList> list = dbUtil.selectIngredients(); !!Dependency it needs to have DBUtils dbUtil = new DBUtils(); to be defined!!
-        //return list;
+    }
+
+    public static void selectCategories() {
+        // Get Connection
+        try (Connection conn = connector()) {
+            // Pass your SQL in this String.
+            String sql = "SELECT * FROM KATEGORIEN";
+            // Make a preparedStatement and set Scroll to insensitive (both directions)
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                // Execute query and safe Result in rs
+                try (ResultSet rs = ps.executeQuery()) {
+                    // If no result do nothing
+                    if (!rs.next()) {
+                        System.out.println("Successfully got Data from Categories (no entries)");
+                    } else {
+                        // For Each result add it to IngredientList.
+                        do {
+                            // 1: KategorieNr (BigDecimal), 2: Kategorie (String)
+                            inst.categoriesList.add(new CategoriesList(rs.getBigDecimal(1), rs.getString(2)));
+                        } while (rs.next());
+                        System.out.println("Successfully got Data from Categories");
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void selectAllergens() {
+        // Get Connection
+        try (Connection conn = connector()) {
+            // Pass your SQL in this String.
+            String sql = "SELECT * FROM ALLERGENE";
+            // Make a preparedStatement and set Scroll to insensitive (both directions)
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                // Execute query and safe Result in rs
+                try (ResultSet rs = ps.executeQuery()) {
+                    // If no result do nothing
+                    if (!rs.next()) {
+                        System.out.println("Successfully got Data from Allergens (no entries)");
+                    } else {
+                        // For Each result add it to IngredientList.
+                        do {
+                            // 1: AllergenNr (BigDecimal), 2: Allergen (String)
+                            inst.allergensList.add(new AllergensList(rs.getBigDecimal(1), rs.getString(2)));
+                        } while (rs.next());
+                        System.out.println("Successfully got Data from Allergens");
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
     }
 
 }
