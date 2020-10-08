@@ -39,7 +39,7 @@ public class Ingredients {
             list.stream().filter(ingredient -> arg.toLowerCase().equals(ingredient.getIngredientName().toLowerCase())).findAny().ifPresentOrElse(ingredient -> {
                 String str =
                         "Properties of the Ingredient: "
-                                + "ID: " + ingredient.getIngredientID() + " | Name: " + ingredient.getIngredientName()
+                                + "\nID: " + ingredient.getIngredientID() + " | Name: " + ingredient.getIngredientName()
                                 + "\nUnit: " + ingredient.getUnit()
                                 + "\nNetprice: " + ingredient.getNettoprice()
                                 + "\nIn Stock: " + ingredient.getAmount() 

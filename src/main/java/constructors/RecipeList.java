@@ -12,10 +12,10 @@ public class RecipeList implements Serializable {
     private BigDecimal recipeProtein;
     private List<BigDecimal> ingredients;
     private List<Integer> amount;
-    private List<String> allergens;
-    private List<String> categories;
+    private List<BigDecimal> allergens;
+    private List<BigDecimal> categories;
 
-    public RecipeList(BigDecimal recipeID, String recipeName, BigDecimal recipeCalories, BigDecimal recipeCarbs, BigDecimal recipeProtein, List<BigDecimal> ingredients, List<Integer> amount, List<String> allergens, List<String> categories){
+    public RecipeList(BigDecimal recipeID, String recipeName, BigDecimal recipeCalories, BigDecimal recipeCarbs, BigDecimal recipeProtein, List<BigDecimal> ingredients, List<Integer> amount, List<BigDecimal> allergens, List<BigDecimal> categories){
         this.recipeID = recipeID;
         this.recipeName = recipeName;
         this.recipeCalories = recipeCalories;
@@ -83,19 +83,19 @@ public class RecipeList implements Serializable {
         this.amount = amount;
     }
 
-    public List<String> getAllergens() {
+    public List<BigDecimal> getAllergens() {
         return allergens;
     }
 
-    public void setAllergens(List<String> allergens) {
+    public void setAllergens(List<BigDecimal> allergens) {
         this.allergens = allergens;
     }
 
-    public List<String> getCategories() {
+    public List<BigDecimal> getCategories() {
         return categories;
     }
 
-    public void setCategories(List<String> categories) {
+    public void setCategories(List<BigDecimal> categories) {
         this.categories = categories;
     }
 }

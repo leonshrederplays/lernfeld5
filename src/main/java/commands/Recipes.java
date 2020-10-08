@@ -72,21 +72,33 @@ public class Recipes {
                 // Make a String seperated by ", " from a list.
                 String ingreds = String.join(", ", ingredsList);
                 // Make a String seperated by ", " from a list.
-                String allergens = String.join(", ", recipe.getAllergens());
+                List<String> allergens = new ArrayList<>();
+                recipe.getAllergens().forEach(allergen -> {
+                    ConfigInstance.allergensList.stream().filter(allergenList -> allergen.equals(allergenList.getAllergenID())).findAny().ifPresent(alleg -> {
+                        allergens.add(alleg.getAllergen());
+                    });
+                });
+                String allergensString = String.join(", ", allergens);
                 // Make a String seperated by ", " from a list.
-                String categories = String.join(", ", recipe.getCategories());
+                List<String> categories = new ArrayList<>();
+                recipe.getCategories().forEach(category -> {
+                    ConfigInstance.categoriesList.stream().filter(categoryList -> category.equals(categoryList.getCategoryID())).findAny().ifPresent(categ -> {
+                        categories.add(categ.getCategory());
+                    });
+                });
+                String categoriesString = String.join(", ", categories);
                 // Call the recipeDescBuilder to send recipe info.
                 String str =
                         "Properties of this Recipe: "
-                                + "ID: " + recipe.getRecipeID()
+                                + "\nID: " + recipe.getRecipeID()
                                 + " | Name: " + recipe.getRecipeName()
                                 + "\nCalories: " + calories 
                                 + "\nCarbohydrates: " + carbohydrates 
                                 + "\nProtein: " + protein 
                                 + "\nIngredients: " + ingreds 
                                 + "\nPrice: " + price +"$"
-                                + "\nAllergens: " + allergens 
-                                + "\nCategroies: " + categories;
+                                + "\nAllergens: " + allergensString
+                                + "\nCategroies: " + categoriesString;
                 System.out.println(str);
             }, () -> {
 

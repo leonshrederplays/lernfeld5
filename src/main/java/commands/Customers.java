@@ -89,7 +89,7 @@ public class Customers {
     public static void customer(){
         List<CustomerList> list = ConfigInstance.customerList;
         list.forEach(customer -> {
-            String str ="Customer-Number: " + customer.getKUNDENNR()
+            String str ="CustomerID: " + customer.getKUNDENNR()
                     + " | Last name: " + customer.getNACHNAME()
                     + " First name: " + customer.getVORNAME();
             System.out.println(str);
@@ -103,7 +103,7 @@ public class Customers {
                 if (customer.getVORNAME().toLowerCase().equals(arg[2].toLowerCase())) {
                     String str =
                             "Data of Customer: "
-                                    + "Customer-Number: " + customer.getKUNDENNR()
+                                    + "\nCustomerID: " + customer.getKUNDENNR()
                                     + " | Last name: " + customer.getNACHNAME()
                                     + "\nFirst name: " + customer.getVORNAME() 
                                     + "\nDate of birth: " + customer.getGEBURTSDATUM() 
@@ -126,7 +126,7 @@ public class Customers {
                 list.stream().filter(customer -> new BigDecimal(id).equals(customer.getKUNDENNR())).findAny().ifPresentOrElse(customer -> {
                     String str =
                             "Data of Customer: "
-                                    + "Customer-Number: " + customer.getKUNDENNR()
+                                    + "\nCustomerID: " + customer.getKUNDENNR()
                                     + " | Last name: " + customer.getNACHNAME()
                                     + "\nFirst name: " + customer.getVORNAME() 
                                     + "\nDate of birth: " + customer.getGEBURTSDATUM() 

@@ -87,6 +87,7 @@ public class Main /*extends Application*/ {
                         if (command.length > 1) {
                             Ingredients.ingredientDescription(command[1]);
                         } else {
+                            Ingredients ingred = new Ingredients();
                             Ingredients.ingredient();
                         }
                     } catch (Exception e) {
@@ -111,7 +112,8 @@ public class Main /*extends Application*/ {
                     break;
 
                 case "addrecipe":
-                    AddRecipe.addRecipe();
+                    System.out.println("You typed addrecipe so now we will create a recipe lets start.");
+                    new AddRecipe().addRecipeName();
                     break;
 
                 case "orders":
