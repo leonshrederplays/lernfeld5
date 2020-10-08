@@ -4,6 +4,7 @@ import constructors.AllergensList;
 import constructors.CategoriesList;
 import constructors.IngredientList;
 import instances.ConfigInstance;
+import utils.DBUtils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -13,39 +14,70 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class AddRecipe {
 
-    private static List<BigDecimal> verifiedIngredients = new ArrayList<>();
-    private static List<String> verifiedIngredientNames = new ArrayList<>();
-    private static List<Integer> verifiedAmount = new ArrayList<>();
-    private static List<BigDecimal> verifiedCategoryID = new ArrayList<>();
-    private static List<String> verifiedCategoryName = new ArrayList<>();
-    private static List<BigDecimal> verifiedAllergenID = new ArrayList<>();
-    private static List<String> verifiedAllergenName = new ArrayList<>();
-    private static List<String> recipeName = new ArrayList<>();
-    private static List<BigDecimal> calories = new ArrayList<>();
-    private static List<BigDecimal> carbohydrates = new ArrayList<>();
-    private static List<BigDecimal> protein = new ArrayList<>();
-    private static List<BigDecimal> price = new ArrayList<>();
-    private static List<String> notPresent = new ArrayList<>();
-    private static List<String> noCategory = new ArrayList<>();
-    private static List<String> noAllergen = new ArrayList<>();
-    private static boolean wrongAmount = false;
-    private static boolean wrongCategory = false;
-    private static boolean wrongAllergen = false;
+    private List<BigDecimal> verifiedIngredients = new ArrayList<>();
+    private List<String> verifiedIngredientNames = new ArrayList<>();
+    private List<Integer> verifiedAmount = new ArrayList<>();
+    private List<BigDecimal> verifiedCategoryID = new ArrayList<>();
+    private List<String> verifiedCategoryName = new ArrayList<>();
+    private List<BigDecimal> verifiedAllergenID = new ArrayList<>();
+    private List<String> verifiedAllergenName = new ArrayList<>();
+    private List<String> recipeName = new ArrayList<>();
+    private List<BigDecimal> calories = new ArrayList<>();
+    private List<BigDecimal> carbohydrates = new ArrayList<>();
+    private List<BigDecimal> protein = new ArrayList<>();
+    private List<BigDecimal> price = new ArrayList<>();
+    private List<String> notPresent = new ArrayList<>();
+    private List<String> noCategory = new ArrayList<>();
+    private List<String> noAllergen = new ArrayList<>();
+    private boolean wrongAmount = false;
+    private boolean wrongCategory = false;
+    private boolean wrongAllergen = false;
+    private boolean wrongName = false;
 
-    public static void addRecipe() {
-        System.out.println("You typed addrecipe so now we will create a recipe lets start.");
-        System.out.println("First name your Recipe. Type cancel at any time to exit the Command. (Please notice that when you pass a space you cannot search for its name use a - or a _ then)");
-        Scanner nameScanner = new Scanner(System.in);
-        recipeName.addAll(Arrays.asList(nameScanner.nextLine().split(" ")));
-        if (recipeName.get(0).toLowerCase().equals("cancel")) {
-            System.out.println("Canceling addrecipe Command...");
-            clearData();
-            return;
+    public void addRecipeName() {
+        System.out.println("First name your Recipe. (First char uppercase & min 3chars) Type cancel at any time to exit the Command. (Please notice that when you pass a space you cannot search for its name use a - or a _ then)");
+        if (wrongName) {
+            System.out.println("Notice that you need to make the first char a uppercase one. And have at least 3 chars as a name.");
+            wrongName = false;
         }
-        addIngredients();
+        Scanner nameScanner = new Scanner(System.in);
+        try {
+            recipeName.addAll(Arrays.asList(nameScanner.nextLine().split(" ")));
+            //nameScanner.close();
+            if (recipeName.get(0).toLowerCase().equals("cancel")) {
+                System.out.println("Canceling addrecipe Command...");
+
+                return;
+            }
+        } catch (NoSuchElementException e) {
+            System.out.println("Du musst einen Namen angeben!");
+            recipeName.clear();
+            addRecipeName();
+        }
+        boolean verifyName = verifyName(recipeName);
+        if (verifyName) {
+            addIngredients();
+        } else {
+            wrongName = true;
+            recipeName.clear();
+            addRecipeName();
+        }
+
     }
 
-    public static void addIngredients() {
+    public boolean verifyName(List<String> list) {
+        String length = String.join(" ", list);
+        try {
+            if (Character.isUpperCase(length.charAt(0)) && length.length() >= 3 && length.length() <= 30) return true;
+        } catch (StringIndexOutOfBoundsException e) {
+            System.out.println("You must provide an name!");
+            return false;
+        }
+
+        return false;
+    }
+
+    public void addIngredients() {
         List<String> list = new ArrayList<>();
         Scanner ingredientScanner = new Scanner(System.in);
         Ingredients.ingredient();
@@ -63,15 +95,7 @@ public class AddRecipe {
         list.addAll(Arrays.asList(ingredientScanner.nextLine().split(" ")));
         if (list.get(0).toLowerCase().equals("cancel")) {
             System.out.println("Canceling addrecipe Command...");
-            verifiedIngredientNames.clear();
-            verifiedIngredients.clear();
-            verifiedAmount.clear();
-            calories.clear();
-            carbohydrates.clear();
-            protein.clear();
-            price.clear();
-            wrongAmount = false;
-            notPresent.clear();
+
             return;
         }
         System.out.println("I gotta verify your ingredients...");
@@ -86,7 +110,7 @@ public class AddRecipe {
         }
     }
 
-    public static boolean verifyIngredients(List<String> ingredients) {
+    public boolean verifyIngredients(List<String> ingredients) {
         List<IngredientList> list = ConfigInstance.ingredientList;
         List<BigDecimal> existingIngred = new ArrayList<>();
         ingredients.forEach(ingredient -> {
@@ -102,7 +126,7 @@ public class AddRecipe {
             //boolean isPresent = list.stream().filter(listIngred -> ingredient.equals(listIngred.getIngredientID()) || ingredient.equals(listIngred.getIngredientName())).findAny().isPresent();
             if (isIDValid) {
                 list.stream().filter(listIngred -> new BigDecimal(finalId).equals(listIngred.getIngredientID())).findAny().ifPresent(ingred -> {
-                    if(!existingIngred.contains(ingred.getIngredientID())) {
+                    if (!existingIngred.contains(ingred.getIngredientID())) {
                         verifiedIngredients.add(ingred.getIngredientID());
                         verifiedIngredientNames.add(ingred.getIngredientName());
                         calories.add(ingred.getCalorie());
@@ -114,7 +138,7 @@ public class AddRecipe {
                 });
             } else if (isNameValid) {
                 list.stream().filter(listIngred -> ingredient.toLowerCase().equals(listIngred.getIngredientName().toLowerCase())).findAny().ifPresent(ingred -> {
-                    if(!existingIngred.contains(ingred.getIngredientID())) {
+                    if (!existingIngred.contains(ingred.getIngredientID())) {
                         verifiedIngredients.add(ingred.getIngredientID());
                         verifiedIngredientNames.add(ingred.getIngredientName());
                         calories.add(ingred.getCalorie());
@@ -136,7 +160,7 @@ public class AddRecipe {
         return false;
     }
 
-    public static void addAmount() {
+    public void addAmount() {
         List<String> logString = new ArrayList<>();
         if (wrongAmount) {
             System.out.println("You must pass all amounts for every ingredient only Integers allowed! please try again.");
@@ -150,7 +174,7 @@ public class AddRecipe {
         amountTester.addAll(Arrays.asList(amountScanner.nextLine().split(" ")));
         if (amountTester.get(0).equals("cancel")) {
             System.out.println("Canceling addrecipe Command...");
-            clearData();
+
             return;
         }
         System.out.println("I gotta verify your amount...");
@@ -164,7 +188,7 @@ public class AddRecipe {
         }
     }
 
-    public static boolean verifyAmount(List<String> amountTest) {
+    public boolean verifyAmount(List<String> amountTest) {
 
         if (amountTest.size() == verifiedIngredients.size()) {
             int amo = 0;
@@ -180,7 +204,7 @@ public class AddRecipe {
         return false;
     }
 
-    public static void addCategories() {
+    public void addCategories() {
         List<String> logString = new ArrayList<>();
         Categories.categories();
         if (!noCategory.isEmpty()) {
@@ -195,7 +219,7 @@ public class AddRecipe {
         categoryTester.addAll(Arrays.asList(categoryScanner.nextLine().split(" ")));
         if (categoryTester.get(0).equals("cancel")) {
             System.out.println("Canceling addrecipe Command...");
-            clearData();
+
         }
         System.out.println("I gotta verify your categories...");
         boolean verifiedCategoryBool = verifyCategories(categoryTester);
@@ -208,7 +232,7 @@ public class AddRecipe {
         }
     }
 
-    public static boolean verifyCategories(List<String> categoryTest) {
+    public boolean verifyCategories(List<String> categoryTest) {
         List<CategoriesList> list = ConfigInstance.categoriesList;
         List<BigDecimal> existingCategory = new ArrayList<>();
         categoryTest.forEach(category -> {
@@ -224,7 +248,7 @@ public class AddRecipe {
             //boolean isPresent = list.stream().filter(listIngred -> ingredient.equals(listIngred.getIngredientID()) || ingredient.equals(listIngred.getIngredientName())).findAny().isPresent();
             if (isIDValid) {
                 list.stream().filter(listCateg -> new BigDecimal(finalId).equals(listCateg.getCategoryID())).findAny().ifPresent(categ -> {
-                    if(!existingCategory.contains(categ.getCategoryID())) {
+                    if (!existingCategory.contains(categ.getCategoryID())) {
                         verifiedCategoryID.add(categ.getCategoryID());
                         verifiedCategoryName.add(categ.getCategory());
                         existingCategory.add(categ.getCategoryID());
@@ -232,7 +256,7 @@ public class AddRecipe {
                 });
             } else if (isNameValid) {
                 list.stream().filter(listCateg -> category.toLowerCase().equals(listCateg.getCategory().toLowerCase())).findAny().ifPresent(categ -> {
-                    if(!existingCategory.contains(categ.getCategoryID())) {
+                    if (!existingCategory.contains(categ.getCategoryID())) {
                         verifiedCategoryID.add(categ.getCategoryID());
                         verifiedCategoryName.add(categ.getCategory());
                         existingCategory.add(categ.getCategoryID());
@@ -243,14 +267,14 @@ public class AddRecipe {
             }
         });
 
-        if(noCategory.isEmpty()) {
+        if (noCategory.isEmpty()) {
             return true;
         }
 
         return false;
     }
 
-    public static void addAllergens() {
+    public void addAllergens() {
         List<String> logString = new ArrayList<>();
         Allergens.allergens();
         if (!noAllergen.isEmpty()) {
@@ -265,7 +289,7 @@ public class AddRecipe {
         allergenTester.addAll(Arrays.asList(allergenScanner.nextLine().split(" ")));
         if (allergenTester.get(0).equals("cancel")) {
             System.out.println("Canceling addrecipe Command...");
-            clearData();
+
         }
         System.out.println("I gotta verify your allergens...");
         boolean verifiedAllergenBool = verifyAllergens(allergenTester);
@@ -278,7 +302,7 @@ public class AddRecipe {
         }
     }
 
-    public static boolean verifyAllergens(List<String> allergensTest) {
+    public boolean verifyAllergens(List<String> allergensTest) {
 
         List<AllergensList> list = ConfigInstance.allergensList;
         List<BigDecimal> existingAllergen = new ArrayList<>();
@@ -289,21 +313,21 @@ public class AddRecipe {
             } catch (NumberFormatException e) {
             }
             int finalId = id;
-            boolean isIDValid = list.stream().filter( listAllerg -> new BigDecimal(finalId).equals( listAllerg.getAllergenID())).findAny().isPresent();
-            boolean isNameValid = list.stream().filter( listAllerg -> allergen.toLowerCase().equals( listAllerg.getAllergen().toLowerCase())).findAny().isPresent();
+            boolean isIDValid = list.stream().filter(listAllerg -> new BigDecimal(finalId).equals(listAllerg.getAllergenID())).findAny().isPresent();
+            boolean isNameValid = list.stream().filter(listAllerg -> allergen.toLowerCase().equals(listAllerg.getAllergen().toLowerCase())).findAny().isPresent();
 
             //boolean isPresent = list.stream().filter(listIngred -> ingredient.equals(listIngred.getIngredientID()) || ingredient.equals(listIngred.getIngredientName())).findAny().isPresent();
             if (isIDValid) {
-                list.stream().filter( listAllerg -> new BigDecimal(finalId).equals( listAllerg.getAllergenID())).findAny().ifPresent(alleg -> {
-                    if(!existingAllergen.contains(alleg.getAllergenID())) {
+                list.stream().filter(listAllerg -> new BigDecimal(finalId).equals(listAllerg.getAllergenID())).findAny().ifPresent(alleg -> {
+                    if (!existingAllergen.contains(alleg.getAllergenID())) {
                         verifiedAllergenID.add(alleg.getAllergenID());
                         verifiedAllergenName.add(alleg.getAllergen());
                         existingAllergen.add(alleg.getAllergenID());
                     }
                 });
             } else if (isNameValid) {
-                list.stream().filter( listAllerg -> allergen.toLowerCase().equals( listAllerg.getAllergen().toLowerCase())).findAny().ifPresent(alleg -> {
-                    if(!existingAllergen.contains(alleg.getAllergenID())) {
+                list.stream().filter(listAllerg -> allergen.toLowerCase().equals(listAllerg.getAllergen().toLowerCase())).findAny().ifPresent(alleg -> {
+                    if (!existingAllergen.contains(alleg.getAllergenID())) {
                         verifiedAllergenID.add(alleg.getAllergenID());
                         verifiedAllergenName.add(alleg.getAllergen());
                         existingAllergen.add(alleg.getAllergenID());
@@ -314,14 +338,14 @@ public class AddRecipe {
             }
         });
 
-        if(noAllergen.isEmpty()) {
+        if (noAllergen.isEmpty()) {
             return true;
         }
 
         return false;
     }
 
-    public static void previewRecipe() {
+    public void previewRecipe() {
         System.out.println("As example i will show you what you will see when executing recipe <name / or id>:");
         AtomicInteger i = new AtomicInteger();
         AtomicReference<BigDecimal> caloriesMath = new AtomicReference<>(BigDecimal.ZERO);
@@ -349,53 +373,32 @@ public class AddRecipe {
             i.getAndIncrement();
         });
         i.set(0);
+        String recipeStringName = String.join(" ", recipeName);
         String str =
                 "Properties of this Recipe: "
                         + "\nID: SOME ID"
-                        + " | Name: " + String.join(" ", recipeName)
+                        + " | Name: " + recipeStringName
                         + "\nCalories: " + caloriesMath.get()
                         + "\nCarbohydrates: " + carbohydratesMath.get()
                         + "\nProtein: " + proteinMath.get()
                         + "\nIngredients: " + String.join(", ", verifiedIngredientNames)
-                        + "\nPrice: " + priceMath.get() +"$"
+                        + "\nPrice: " + priceMath.get() + "$"
                         + "\nAllergens: " + String.join(", ", verifiedAllergenName)
                         + "\nCategroies: " + String.join(", ", verifiedCategoryName);
         System.out.println(str);
         System.out.println("");
-        saveWork();
+        saveWork(recipeStringName, caloriesMath.get(), carbohydratesMath.get(), proteinMath.get(), priceMath.get());
     }
 
-    public static void saveWork() {
+    public void saveWork(String recipeString, BigDecimal calorie, BigDecimal carbo, BigDecimal prot, BigDecimal pri) {
         System.out.println("Do you want to save changes? (Y/N)");
         Scanner saveScanner = new Scanner(System.in);
         String save = saveScanner.next();
-        if(save.toLowerCase().equals("y")) {
-            System.out.println("ACCEPTED");
-        } else if(save.toLowerCase().equals("n")) {
+        if (save.toLowerCase().equals("y")) {
+            System.out.println("I will now insert the Script into the Database.");
+            DBUtils.insertRecipe(recipeString, calorie, carbo, prot, pri, verifiedIngredients, verifiedAllergenID, verifiedCategoryID, verifiedAmount);
+        } else if (save.toLowerCase().equals("n")) {
             System.out.println("Aborting addRecipe Command...");
-            clearData();
         }
     }
-
-    public static void clearData() {
-        recipeName.clear();
-        verifiedIngredientNames.clear();
-        verifiedIngredients.clear();
-        verifiedAmount.clear();
-        verifiedAllergenID.clear();
-        verifiedAllergenID.clear();
-        verifiedCategoryID.clear();
-        verifiedCategoryName.clear();
-        calories.clear();
-        carbohydrates.clear();
-        protein.clear();
-        price.clear();
-        wrongAmount = false;
-        wrongCategory = false;
-        wrongAllergen = false;
-        notPresent.clear();
-        noCategory.clear();
-        noAllergen.clear();
-    }
-
 }

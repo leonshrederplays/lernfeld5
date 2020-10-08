@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DBUtils {
 
@@ -75,16 +76,16 @@ public class DBUtils {
         // Some Trolls that i found.
         String path = path = DBUtils.class.getClassLoader().getResource("utils/Commander.class").getPath();
 
-        System.err.println(path+":106:"+" error: ';' expected\n" + "                                + \"\\n\"Bestellnummer: \" + orders.getBESTELLNR()");
-        System.err.println(path+":112:"+" error: illegal start of expression\n" +
+        System.err.println(path + ":106:" + " error: ';' expected\n" + "                                + \"\\n\"Bestellnummer: \" + orders.getBESTELLNR()");
+        System.err.println(path + ":112:" + " error: illegal start of expression\n" +
                 "            }, () -> {");
 
-        System.err.println(path+":138: error: ';' expected\n" + "                                + \"\\n\"ID: \" + recipe.getRecipeID()");
-        System.err.println(path+":144:"+" error: illegal start of expression\n" +
+        System.err.println(path + ":138: error: ';' expected\n" + "                                + \"\\n\"ID: \" + recipe.getRecipeID()");
+        System.err.println(path + ":144:" + " error: illegal start of expression\n" +
                 "            }, () -> {");
 
-        System.err.println(path+":182:"+" error: ';' expected\n" + "                                + \"\\n\"KundenNr: \" + customer.getKUNDENNR()");
-        System.err.println(path+":196:"+" error: illegal start of expression\n" +
+        System.err.println(path + ":182:" + " error: ';' expected\n" + "                                + \"\\n\"KundenNr: \" + customer.getKUNDENNR()");
+        System.err.println(path + ":196:" + " error: illegal start of expression\n" +
                 "            }, () -> {");
         System.exit(1);
     }
@@ -110,8 +111,8 @@ public class DBUtils {
         try (Connection conn = firstBootConnector()) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
             // SQL-Skript
-            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL.sql")).replace("file:", "").replace("%20"," ");
-            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
+            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL.sql")).replace("file:", "").replace("%20", " ");
+            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20", " ");
             // Das SQL-Skript ausführen.
             // Datenbank und Tabellen erstellen.
             sr.runScript(new BufferedReader(new FileReader(dbFile)));
@@ -119,7 +120,7 @@ public class DBUtils {
             sr.runScript(new BufferedReader(new FileReader(dataFile)));
             // Set DBInitialized to true.
             ConfigInstance.isSQLfinished = true;
-        } catch(SQLException | IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -129,14 +130,14 @@ public class DBUtils {
         try (Connection conn = firstBootConnector()) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
             // SQL-Skript Path
-            String dbFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dbSQL_recreate.sql")).replace("file:", "").replace("%20"," ");
-            String dataFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20"," ");
+            String dbFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dbSQL_recreate.sql")).replace("file:", "").replace("%20", " ");
+            String dataFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20", " ");
             // Das SQL-Skript ausführen.
             // Datenbank und Tabellen erstellen.
             sr.runScript(new BufferedReader(new FileReader(dbFile)));
             // Testdaten erstellen.
             sr.runScript(new BufferedReader(new FileReader(dataFile)));
-        } catch(SQLException | IOException e) {
+        } catch (SQLException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -176,15 +177,15 @@ public class DBUtils {
         try (Connection conn = connector()) {
             String sql =
                     "SELECT REZEPT.*, REZEPTZUTAT.ZUTATENNR, REZEPTZUTAT.MENGE, REZEPTALLERGENE.ALLERGENNR, REZEPTKATEGORIEN.KATEGORIENR\n" +
-                    "FROM REZEPT\n" +
-                    "INNER JOIN REZEPTZUTAT\n" +
-                    "ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR\n" +
-                    "LEFT JOIN REZEPTALLERGENE\n" +
-                    "ON REZEPT.REZEPTNR = REZEPTALLERGENE.REZEPTNR\n" +
-                    "LEFT JOIN REZEPTKATEGORIEN\n" +
-                    "ON REZEPT.REZEPTNR = REZEPTKATEGORIEN.REZEPTNR\n" +
-                    "ORDER BY REZEPT.REZEPTNR";
-            
+                            "FROM REZEPT\n" +
+                            "INNER JOIN REZEPTZUTAT\n" +
+                            "ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR\n" +
+                            "LEFT JOIN REZEPTALLERGENE\n" +
+                            "ON REZEPT.REZEPTNR = REZEPTALLERGENE.REZEPTNR\n" +
+                            "LEFT JOIN REZEPTKATEGORIEN\n" +
+                            "ON REZEPT.REZEPTNR = REZEPTKATEGORIEN.REZEPTNR\n" +
+                            "ORDER BY REZEPT.REZEPTNR";
+
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 try (ResultSet rs = ps.executeQuery()) {
                     if (!rs.next()) {
@@ -192,7 +193,7 @@ public class DBUtils {
                     } else {
                         do {
                             boolean hasID = recipeNr.contains(rs.getInt(1));
-                            if(hasID) {
+                            if (hasID) {
                                 int recipeID = rs.getInt(1);
 
                                 inst.recipeList.stream().filter(recipeList -> recipeList.getRecipeID().equals(new BigDecimal(recipeID))).findAny().ifPresent(recipe -> {
@@ -212,17 +213,17 @@ public class DBUtils {
                                     } catch (SQLException throwables) {
                                         throwables.printStackTrace();
                                     }
-                                    if(allergen != null && !allergenBig.contains(allergen)) {
+                                    if (allergen != null && !allergenBig.contains(allergen)) {
                                         allergens.add(new BigDecimal(String.valueOf(allergen)));
                                         allergenBig.add(new BigDecimal(String.valueOf(allergen)));
                                     }
 
-                                    if(category != null && !categoriesBig.contains(category)) {
+                                    if (category != null && !categoriesBig.contains(category)) {
                                         categories.add(new BigDecimal(String.valueOf(category)));
                                         categoriesBig.add(new BigDecimal(String.valueOf(category)));
                                     }
 
-                                    if(!ingredient.equals(0) && !ingreds.contains(ingredient)) {
+                                    if (!ingredient.equals(0) && !ingreds.contains(ingredient)) {
                                         ingreds.add(ingredient);
                                         amount.add(ingredAmount);
                                         recipe.setAmount(amount);
@@ -265,7 +266,7 @@ public class DBUtils {
                     } else {
                         do {
                             // 1: KundenNr (BigDecimal), 2: Nachname (String), 3: Vorname (String), 4: Geburtsdatum (Date), 5: Strasse (String), 6: HausNr (Integer), 7: PLZ (Integer), 8: Ort (String), 9: Telefon (String), 10: E-Mail (String)
-                            inst.customerList.add(new CustomerList(rs.getBigDecimal(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8),rs.getString(9), rs.getString(10)));
+                            inst.customerList.add(new CustomerList(rs.getBigDecimal(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getString(9), rs.getString(10)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Customers");
                     }
@@ -354,6 +355,81 @@ public class DBUtils {
             }
         } catch (SQLException throwables) {
             throwables.printStackTrace();
+        }
+    }
+
+    private static BigDecimal recipeNr = BigDecimal.ZERO;
+
+    public static void insertRecipe(String recipeName, BigDecimal calories, BigDecimal carbohydrates, BigDecimal protein, BigDecimal price, List<BigDecimal> ingredients, List<BigDecimal> allergens, List<BigDecimal> categories, List<Integer> amount) {
+        List<RecipeList> list = ConfigInstance.recipeList;
+        list.forEach(recipe -> {
+            if (recipe.getRecipeName().toLowerCase().equals(recipeName.toLowerCase())) {
+                System.out.println("You cannot create a recipe with the same name...");
+                return;
+            }
+        });
+
+        try (Connection con = connector()) {
+                String sql = "INSERT INTO REZEPT (REZEPTNAME, GESAMTKALORIEN, GESAMTKH, GESAMTPROTEIN, GESAMTPREIS) " + "VALUES (?,?,?,?,?)";
+                try (PreparedStatement psInsertRecipe = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+                    psInsertRecipe.setString(1, recipeName);
+                    psInsertRecipe.setBigDecimal(2, calories);
+                    psInsertRecipe.setBigDecimal(3, carbohydrates);
+                    psInsertRecipe.setBigDecimal(4, protein);
+                    psInsertRecipe.setBigDecimal(5, price);
+                    psInsertRecipe.executeUpdate();
+                    sql = "SELECT REZEPT.REZEPTNR FROM REZEPT WHERE REZEPTNAME = ?";
+                    try (PreparedStatement psSelectRecipe = con.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+                        psSelectRecipe.setString(1, recipeName);
+                        try (ResultSet rs = psSelectRecipe.executeQuery()) {
+                            if(rs.next()) {
+                                recipeNr = rs.getBigDecimal(1);
+                                AtomicInteger i = new AtomicInteger();
+                                ingredients.forEach(ingredient -> {
+                                    String sqlIngreds = "INSERT INTO REZEPTZUTAT (REZEPTNR, ZUTATENNR, MENGE)" + "VALUES (?,?,?)";
+                                    try (PreparedStatement psInsertIngredients = con.prepareStatement(sqlIngreds)) {
+                                        psInsertIngredients.setBigDecimal(1, recipeNr);
+                                        psInsertIngredients.setBigDecimal(2, ingredient);
+                                        psInsertIngredients.setInt(3, amount.get(i.get()));
+                                        psInsertIngredients.executeUpdate();
+                                        i.getAndIncrement();
+                                    } catch(SQLException e) {
+                                        System.out.println("Something went wrong inserting into Rezeptzutat.");
+                                    }
+                                });
+                                allergens.forEach(allergen -> {
+                                    String sqlAllergens = "INSERT INTO REZEPTALLERGENE (REZEPTNR, ALLERGENNR)" + "VALUES (?,?)";
+                                    try (PreparedStatement psInsertAllergens = con.prepareStatement(sqlAllergens, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                                        psInsertAllergens.setBigDecimal(1, recipeNr);
+                                        psInsertAllergens.setBigDecimal(2, allergen);
+                                        psInsertAllergens.executeUpdate();
+                                    } catch (SQLException e) {
+                                        System.out.println("Something went wrong inserting into Rezeptallergen.");
+                                    }
+                                });
+                                categories.forEach(category -> {
+                                    String sqlCategories = "INSERT INTO REZEPTKATEGORIEN (REZEPTNR, KATEGORIENR)" + "VALUES (?,?)";
+                                    try (PreparedStatement psInsertCategories = con.prepareStatement(sqlCategories, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                                        psInsertCategories.setBigDecimal(1, recipeNr);
+                                        psInsertCategories.setBigDecimal(2, category);
+                                        psInsertCategories.executeUpdate();
+                                        Thread.sleep(3000);
+                                        ConfigInstance.recipeList.add(new RecipeList(recipeNr, recipeName, calories, carbohydrates, protein, ingredients, amount, allergens, categories));
+                                        recipeNr = BigDecimal.ZERO;
+                                    } catch (SQLException | InterruptedException e) {
+                                        System.out.println("Something went wrong inserting in Rezeptkategorien.");
+                                    }
+                                });
+                            }
+                        }
+                    }
+
+                }
+            con.commit();
+            //ConfigInstance.recipeList.add(new RecipeList(finalRecipeNr, recipeName, calories, carbohydrates, protein, ingredients, amount, allergens, categories));
+            //selectData();
+            } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
