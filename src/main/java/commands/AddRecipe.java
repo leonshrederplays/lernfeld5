@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AddRecipe {
 
@@ -323,39 +324,40 @@ public class AddRecipe {
     public static void previewRecipe() {
         System.out.println("As example i will show you what you will see when executing recipe <name / or id>:");
         AtomicInteger i = new AtomicInteger();
-        BigDecimal caloriesMath = BigDecimal.ZERO;
+        AtomicReference<BigDecimal> caloriesMath = new AtomicReference<>(BigDecimal.ZERO);
         calories.forEach(calorie -> {
-            caloriesMath.add(calorie.multiply(new BigDecimal(verifiedAmount.get(i.get())))).setScale(2, RoundingMode.HALF_EVEN);
+            caloriesMath.getAndUpdate(update -> update.add(calorie.multiply(new BigDecimal(verifiedAmount.get(i.get()))))).setScale(2, RoundingMode.HALF_EVEN);
             i.getAndIncrement();
         });
         i.set(0);
-        BigDecimal carbohydratesMath = BigDecimal.ZERO;
+        AtomicReference<BigDecimal> carbohydratesMath = new AtomicReference<>(BigDecimal.ZERO);
         carbohydrates.forEach(carbo -> {
-            carbohydratesMath.add(carbo.multiply(new BigDecimal(verifiedAmount.get(i.get())))).setScale(2, RoundingMode.HALF_EVEN);
+            carbohydratesMath.getAndUpdate(update -> update.add(carbo.multiply(new BigDecimal(verifiedAmount.get(i.get()))))).setScale(2, RoundingMode.HALF_EVEN);
             i.getAndIncrement();
         });
         i.set(0);
 
-        BigDecimal proteinMath = BigDecimal.ZERO;
+        AtomicReference<BigDecimal> proteinMath = new AtomicReference<>(BigDecimal.ZERO);
         protein.forEach(prot -> {
-            proteinMath.add(prot.multiply(new BigDecimal(verifiedAmount.get(i.get())))).setScale(2, RoundingMode.HALF_EVEN);
+            proteinMath.getAndUpdate(update -> update.add(prot.multiply(new BigDecimal(verifiedAmount.get(i.get()))))).setScale(2, RoundingMode.HALF_EVEN);
         });
         i.set(0);
 
-        BigDecimal priceMath = BigDecimal.ZERO;
+        AtomicReference<BigDecimal> priceMath = new AtomicReference<>(BigDecimal.ZERO);
         price.forEach(pri -> {
-            priceMath.add(pri.multiply(new BigDecimal(verifiedAmount.get(i.get())))).setScale(2, RoundingMode.HALF_EVEN);
+            priceMath.getAndUpdate(update -> update.add(pri.multiply(new BigDecimal(verifiedAmount.get(i.get()))))).setScale(2, RoundingMode.HALF_EVEN);
+            i.getAndIncrement();
         });
         i.set(0);
         String str =
                 "Properties of this Recipe: "
                         + "\nID: SOME ID"
                         + " | Name: " + String.join(" ", recipeName)
-                        + "\nCalories: " + caloriesMath
-                        + "\nCarbohydrates: " + carbohydratesMath
-                        + "\nProtein: " + proteinMath
+                        + "\nCalories: " + caloriesMath.get()
+                        + "\nCarbohydrates: " + carbohydratesMath.get()
+                        + "\nProtein: " + proteinMath.get()
                         + "\nIngredients: " + String.join(", ", verifiedIngredientNames)
-                        + "\nPrice: " + priceMath +"$"
+                        + "\nPrice: " + priceMath.get() +"$"
                         + "\nAllergens: " + String.join(", ", verifiedAllergenName)
                         + "\nCategroies: " + String.join(", ", verifiedCategoryName);
         System.out.println(str);
