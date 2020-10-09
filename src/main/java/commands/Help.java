@@ -2,7 +2,7 @@ package commands;
 
 public class Help {
 
-    public static void helper() {
+    public void helper() {
         System.out.print("Here is a list of available commands:\n" +
                 "\n" +
                 "help -- shows a list of all available commands\n" +

@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class Customers {
 
-    public static void passwordManager(String[] command) {
+    public void passwordManager(String[] command) {
         ConfigInstance conf = new ConfigInstance();
         Console console = System.console();
         int attempts = 0;
@@ -42,9 +42,9 @@ public class Customers {
                         try {
                             if (command.length > 1) {
                                 if(command.length == 3) {
-                                    Customers.customerDescription(command, true);
+                                    customerDescription(command, true);
                                 } else {
-                                    Customers.customerDescription(command, false);
+                                    customerDescription(command, false);
                                 }
                             } else {
                                 Customers.customer();
@@ -67,12 +67,12 @@ public class Customers {
                         try {
                             if (command.length > 1) {
                                 if(command.length == 3) {
-                                    Customers.customerDescription(command, true);
+                                    customerDescription(command, true);
                                 } else {
-                                    Customers.customerDescription(command, false);
+                                    customerDescription(command, false);
                                 }
                             } else {
-                                Customers.customer();
+                                customer();
                             }
                         } catch (Exception e) {
                             e.printStackTrace();

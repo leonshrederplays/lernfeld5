@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Allergens {
 
-    public static void allergens() {
+    public void allergens() {
         List<AllergensList> list = ConfigInstance.allergensList;
         list.forEach(allergen -> {
             String str ="AllergenID: " + allergen.getAllergenID()

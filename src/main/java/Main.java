@@ -1,4 +1,5 @@
 import commands.*;
+import constructors.RecipeList;
 import instances.ConfigInstance;
 import utils.DBUtils;
 
@@ -78,17 +79,18 @@ public class Main /*extends Application*/ {
             command = input.nextLine().split(" ");
             switch (command[0]) {
                 case "help":
-                    Help.helper();
+                    Help help = new Help();
+                    help.helper();
                     command = null;
                     break;
 
                 case "ingreds":
+                    Ingredients ingred = new Ingredients();
                     try {
                         if (command.length > 1) {
-                            Ingredients.ingredientDescription(command[1]);
+                            ingred.ingredientDescription(command[1]);
                         } else {
-                            Ingredients ingred = new Ingredients();
-                            Ingredients.ingredient();
+                            ingred.ingredient();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -98,11 +100,12 @@ public class Main /*extends Application*/ {
                     break;
 
                 case "recipe":
+                    Recipes recipe = new Recipes();
                     try {
                         if (command.length > 1) {
-                            Recipes.recipeDescription(command[1]);
+                            recipe.recipeDescription(command[1]);
                         } else {
-                            Recipes.recipe();
+                            recipe.recipe();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -112,16 +115,18 @@ public class Main /*extends Application*/ {
                     break;
 
                 case "addrecipe":
+                    AddRecipe addrecipe = new AddRecipe();
                     System.out.println("You typed addrecipe so now we will create a recipe lets start.");
-                    new AddRecipe().addRecipeName();
+                    addrecipe.addRecipeName();
                     break;
 
                 case "orders":
+                    Orders order = new Orders();
                     try {
                         if (command.length > 1) {
-                            Orders.orderDescription(command[1]);
+                            order.orderDescription(command[1]);
                         } else {
-                            Orders.orders();
+                            order.orders();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -131,31 +136,37 @@ public class Main /*extends Application*/ {
                     break;
 
                 case "customers":
-                    Customers.passwordManager(command);
+                    Customers cust = new Customers();
+                    cust.passwordManager(command);
                     command = null;
                     System.out.println(" ");
                     break;
 
                 case "categories":
-                    Categories.categories();
+                    Categories categ = new Categories();
+                    categ.categories();
                     break;
 
                 case "allergens":
-                    Allergens.allergens();
+                    Allergens allerg = new Allergens();
+                    allerg.allergens();
                     break;
 
                 case "recreate" :
-                    Recreate.recreate();
+                    Recreate rec = new Recreate();
+                    rec.recreate();
                     command = null;
                     System.out.println(" ");
                     break;
 
                 case "reload":
-                    Reload.reload();
+                    Reload rel = new Reload();
+                    rel.reload();
                     break;
 
                 case "exit":
-                    Shutdown.shutdown();
+                    Shutdown shut = new Shutdown();
+                    shut.shutdown();
                     command = null;
                     System.out.println(" ");
                     break;

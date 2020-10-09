@@ -276,7 +276,8 @@ public class AddRecipe {
 
     public void addAllergens() {
         List<String> logString = new ArrayList<>();
-        Allergens.allergens();
+        Allergens allerg = new Allergens();
+        allerg.allergens();
         if (!noAllergen.isEmpty()) {
             System.out.println("The Allergen(s): " + String.join(", ", noAllergen) + " do not exist. please try again");
             verifiedAllergenID.clear();
