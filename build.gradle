@@ -16,6 +16,9 @@ javafx {
 }
 
 mainClassName='Main'
+sourceCompatibility = 15
+targetCompatibility = 15
+compileJava.options.encoding = 'UTF-8'
 
 dependencies {
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java

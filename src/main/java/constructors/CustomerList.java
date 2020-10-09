@@ -1,9 +1,10 @@
 package constructors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 public class CustomerList implements Serializable {
-    private int     KUNDENNR;
+    private BigDecimal     KUNDENNR;
     private String  NACHNAME;
     private String  VORNAME;
     private String  GEBURTSDATUM;
@@ -14,7 +15,7 @@ public class CustomerList implements Serializable {
     private String  TELEFON;
     private String  EMAIL;
 
-    public CustomerList(int KUNDENNR,String NACHNAME, String VORNAME, String GEBURTSDATUM, String STRASSE, String HAUSNR, int PLZ, String ORT, String TELEFON, String EMAIL) {
+    public CustomerList(BigDecimal KUNDENNR, String NACHNAME, String VORNAME, String GEBURTSDATUM, String STRASSE, String HAUSNR, int PLZ, String ORT, String TELEFON, String EMAIL) {
         this.KUNDENNR = KUNDENNR;
         this.NACHNAME = NACHNAME;
         this.VORNAME = VORNAME;
@@ -28,11 +29,11 @@ public class CustomerList implements Serializable {
 
     }
 
-    public int getKUNDENNR() {
+    public BigDecimal getKUNDENNR() {
         return KUNDENNR;
     }
 
-    public void setKUNDENNR(int KUNDENNR) {
+    public void setKUNDENNR(BigDecimal KUNDENNR) {
         this.KUNDENNR = KUNDENNR;
     }
 

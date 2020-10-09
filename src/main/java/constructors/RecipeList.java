@@ -1,27 +1,37 @@
 package constructors;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 public class RecipeList implements Serializable {
-    private int recipeID;
+    private BigDecimal recipeID;
     private String recipeName;
-    private int recipeCalories;
-    private int recipeCarbs;
-    private int recipeProtein;
+    private BigDecimal recipeCalories;
+    private BigDecimal recipeCarbs;
+    private BigDecimal recipeProtein;
+    private List<BigDecimal> ingredients;
+    private List<Integer> amount;
+    private List<BigDecimal> allergens;
+    private List<BigDecimal> categories;
 
-    public RecipeList(int recipeID, String recipeName, int recipeCalories, int recipeCarbs, int recipeProtein){
+    public RecipeList(BigDecimal recipeID, String recipeName, BigDecimal recipeCalories, BigDecimal recipeCarbs, BigDecimal recipeProtein, List<BigDecimal> ingredients, List<Integer> amount, List<BigDecimal> allergens, List<BigDecimal> categories){
         this.recipeID = recipeID;
         this.recipeName = recipeName;
         this.recipeCalories = recipeCalories;
         this.recipeCarbs = recipeCarbs;
         this.recipeProtein = recipeProtein;
+        this.ingredients = ingredients;
+        this.amount = amount;
+        this.allergens = allergens;
+        this.categories = categories;
     }
 
-    public int getRecipeID() {
+    public BigDecimal getRecipeID() {
         return recipeID;
     }
 
-    public void setRecipeID(int recipeID) {
+    public void setRecipeID(BigDecimal recipeID) {
         this.recipeID = recipeID;
     }
 
@@ -33,27 +43,59 @@ public class RecipeList implements Serializable {
         this.recipeName = recipeName;
     }
 
-    public int getRecipeCalories() {
+    public BigDecimal getRecipeCalories() {
         return recipeCalories;
     }
 
-    public void setRecipeCalories(int recipeCalories) {
+    public void setRecipeCalories(BigDecimal recipeCalories) {
         this.recipeCalories = recipeCalories;
     }
 
-    public int getRecipeCarbs() {
+    public BigDecimal getRecipeCarbs() {
         return recipeCarbs;
     }
 
-    public void setRecipeCarbs(int recipeCarbs) {
+    public void setRecipeCarbs(BigDecimal recipeCarbs) {
         this.recipeCarbs = recipeCarbs;
     }
 
-    public int getRecipeProtein() {
+    public BigDecimal getRecipeProtein() {
         return recipeProtein;
     }
 
-    public void setRecipeProtein(int recipeProtein) {
+    public void setRecipeProtein(BigDecimal recipeProtein) {
         this.recipeProtein = recipeProtein;
+    }
+
+    public List<BigDecimal> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(List<BigDecimal> ingredients) {
+        this.ingredients = ingredients;
+    }
+
+    public List<Integer> getAmount() {
+        return amount;
+    }
+
+    public void setAmount(List<Integer> amount) {
+        this.amount = amount;
+    }
+
+    public List<BigDecimal> getAllergens() {
+        return allergens;
+    }
+
+    public void setAllergens(List<BigDecimal> allergens) {
+        this.allergens = allergens;
+    }
+
+    public List<BigDecimal> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<BigDecimal> categories) {
+        this.categories = categories;
     }
 }

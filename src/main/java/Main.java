@@ -1,5 +1,6 @@
+import commands.*;
+import constructors.RecipeList;
 import instances.ConfigInstance;
-import utils.Commander;
 import utils.DBUtils;
 
 import java.io.Console;
@@ -15,6 +16,7 @@ public class Main /*extends Application*/ {
     public static void main(String[] args) {
         //Application.launch(args);
         DBUtils dbUtils = new DBUtils();
+        ConfigInstance conf = new ConfigInstance();
         // Define Filename
         File file = new File("config.ini");
         //dbUtils.error();
@@ -69,127 +71,106 @@ public class Main /*extends Application*/ {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Commander commander = new Commander();
-        Scanner input = new Scanner(System.in);
 
+        Scanner input = new Scanner(System.in);
         String[] command = null;
         do {
             System.out.println("Enter the command you want to execute: ");
             command = input.nextLine().split(" ");
             switch (command[0]) {
                 case "help":
-                    commander.helper();
+                    Help help = new Help();
+                    help.helper();
                     command = null;
                     break;
-                case "ingreds":
-                    try {
-                        if (command.length > 1) {
-                            commander.ingredientDescription(command[1]);
-                        } else {
-                            commander.ingredients();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    command = null;
-                    System.out.println(" ");
-                    break;
-                case "recipe":
-                    try {
-                        if (command.length > 1) {
-                            commander.recipeDescription(command[1]);
-                        } else {
-                            commander.recipe();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    command = null;
-                    System.out.println(" ");
-                    break;
-                case "orders":
-                    try {
-                        if (command.length > 1) {
-                            commander.orderDescription(command[1]);
-                        } else {
-                            commander.orders();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    command = null;
-                    System.out.println(" ");
-                    break;
-                case "customer":
-                    Console console = System.console();
-                    int attempts = 0;
-                    if(console == null) {
-                        Scanner passwordInput = new Scanner(System.in);
-                        System.out.println("WARNING: The Console isnt initialized so the password will be visible!");
-                        do{
-                            System.out.println("Enter the Password:");
-                            String password = passwordInput.next();
-                            if (password.equals("Admin")){
-                                attempts = 3;
-                                try {
-                                    if (command.length > 1) {
-                                        if(command.length == 3) {
-                                            commander.customerDescription(command, true);
-                                        } else {
-                                            commander.customerDescription(command, false);
-                                        }
-                                    } else {
-                                        commander.customer();
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                attempts++;
-                                System.out.println("Wrong password! You have " + (5 - attempts) + " tries left!");
-                            }
-                        } while (attempts < 3);
-                    } else {
-                        char[] password = console.readPassword("Enter your Password:");
-                        do{
-                            if (new String(password).equals("Admin")){
-                                attempts = 3;
-                                try {
-                                    if (command.length > 1) {
-                                        if(command.length == 3) {
-                                            commander.customerDescription(command, true);
-                                        } else {
-                                            commander.customerDescription(command, false);
-                                        }
-                                    } else {
-                                        commander.customer();
-                                    }
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                attempts++;
-                                System.out.println("Wrong password! You have " + (3 - attempts) + " tries left!");
-                            }
-                        } while (attempts < 3);
-                    }
 
+                case "ingreds":
+                    Ingredients ingred = new Ingredients();
+                    try {
+                        if (command.length > 1) {
+                            ingred.ingredientDescription(command[1]);
+                        } else {
+                            ingred.ingredient();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     command = null;
                     System.out.println(" ");
                     break;
+
+                case "recipe":
+                    Recipes recipe = new Recipes();
+                    try {
+                        if (command.length > 1) {
+                            recipe.recipeDescription(command[1]);
+                        } else {
+                            recipe.recipe();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    command = null;
+                    System.out.println(" ");
+                    break;
+
+                case "addrecipe":
+                    AddRecipe addrecipe = new AddRecipe();
+                    System.out.println("You typed addrecipe so now we will create a recipe lets start.");
+                    addrecipe.addRecipeName();
+                    break;
+
+                case "orders":
+                    Orders order = new Orders();
+                    try {
+                        if (command.length > 1) {
+                            order.orderDescription(command[1]);
+                        } else {
+                            order.orders();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    command = null;
+                    System.out.println(" ");
+                    break;
+
+                case "customers":
+                    Customers cust = new Customers();
+                    cust.passwordManager(command);
+                    command = null;
+                    System.out.println(" ");
+                    break;
+
+                case "categories":
+                    Categories categ = new Categories();
+                    categ.categories();
+                    break;
+
+                case "allergens":
+                    Allergens allerg = new Allergens();
+                    allerg.allergens();
+                    break;
+
                 case "recreate" :
-                    commander.recreate();
+                    Recreate rec = new Recreate();
+                    rec.recreate();
                     command = null;
                     System.out.println(" ");
                     break;
+
                 case "reload":
-                    commander.reload();
+                    Reload rel = new Reload();
+                    rel.reload();
                     break;
+
                 case "exit":
-                    commander.shutdown();
+                    Shutdown shut = new Shutdown();
+                    shut.shutdown();
                     command = null;
                     System.out.println(" ");
                     break;
+
                 default:
                     System.out.println("YEET: " + command[0] +  " isnt a command type help to get the command list.");
                     command = null;
