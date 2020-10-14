@@ -11,45 +11,16 @@ import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DBUtils {
-
-
-    private static ConfigInstance inst = new ConfigInstance();
-
-    public static Connection firstBootConnector() {
+    
+    public static Connection connector(String db) {
         Connection conn = null;
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/";
-            String user = "root";
-            String pass = "";
-            try {
-                // Connect to MySQL
-                conn = DriverManager.getConnection(url, user, pass);
-            } catch (SQLException e) {
-                try {
-                    pass = "like1234";
-                    // Connect to MySQL with password
-                    conn = DriverManager.getConnection(url, user, pass);
-                } catch (SQLException ec) {
-                    ec.printStackTrace();
-                }
-            }
-            // Dont push changes automatically to MySQL
-            conn.setAutoCommit(false);
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        return conn;
-    }
-
-    public static Connection connector() {
-        Connection conn = null;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            String url = "jdbc:mysql://localhost:3306/krautundrueben";
+            String url = "jdbc:mysql://localhost:3306/"+db;
             String user = "root";
             String pass = "";
             try {
@@ -65,6 +36,7 @@ public class DBUtils {
                 }
             }
             // Dont push changes automatically to MySQL
+            assert conn != null;
             conn.setAutoCommit(false);
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -74,7 +46,7 @@ public class DBUtils {
 
     public void error() {
         // Some Trolls that i found.
-        String path = path = DBUtils.class.getClassLoader().getResource("utils/Commander.class").getPath();
+        String path = Objects.requireNonNull(DBUtils.class.getClassLoader().getResource("utils/Commander.class")).getPath();
 
         System.err.println(path + ":106:" + " error: ';' expected\n" + "                                + \"\\n\"Bestellnummer: \" + orders.getBESTELLNR()");
         System.err.println(path + ":112:" + " error: illegal start of expression\n" +
@@ -92,10 +64,10 @@ public class DBUtils {
 
     public static void selectData() {
         // Reinizialize of Lists.
-        inst.ingredientList = new ArrayList<>();
-        inst.recipeList = new ArrayList<>();
-        inst.customerList = new ArrayList<>();
-        inst.orderList = new ArrayList<>();
+        ConfigInstance.ingredientList = new ArrayList<>();
+        ConfigInstance.recipeList = new ArrayList<>();
+        ConfigInstance.customerList = new ArrayList<>();
+        ConfigInstance.orderList = new ArrayList<>();
 
         // Select everything and drop it in the list.
         selectIngredients();
@@ -106,13 +78,13 @@ public class DBUtils {
         selectAllergens();
     }
 
-    public void createSQL() {
+    public static void createSQL() {
         // Get Connection to MySQL
-        try (Connection conn = firstBootConnector()) {
+        try (Connection conn = connector("")) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
             // SQL-Skript
-            String dbFile = String.valueOf(getClass().getClassLoader().getResource("dbSQL.sql")).replace("file:", "").replace("%20", " ");
-            String dataFile = String.valueOf(getClass().getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20", " ");
+            String dbFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dbSQL.sql")).replace("file:", "").replace("%20", " ");
+            String dataFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dataSQL.sql")).replace("file:", "").replace("%20", " ");
             // Das SQL-Skript ausführen.
             // Datenbank und Tabellen erstellen.
             sr.runScript(new BufferedReader(new FileReader(dbFile)));
@@ -127,7 +99,7 @@ public class DBUtils {
 
     public static void recreateSQL() {
         // Get Connection to MySQL
-        try (Connection conn = firstBootConnector()) {
+        try (Connection conn = connector("")) {
             ScriptRunner sr = new ScriptRunner(conn, false, false);
             // SQL-Skript Path
             String dbFile = String.valueOf(DBUtils.class.getClassLoader().getResource("dbSQL_recreate.sql")).replace("file:", "").replace("%20", " ");
@@ -144,7 +116,7 @@ public class DBUtils {
 
     public static void selectIngredients() {
         // Get Connection
-        try (Connection conn = connector()) {
+        try (Connection conn = connector(ConfigInstance.database)) {
             // Pass your SQL in this String.
             String sql = "SELECT ZUTAT.*, LIEFERANT.LIEFERANTENNAME FROM ZUTAT LEFT JOIN LIEFERANT ON ZUTAT.LIEFERANTENNR = LIEFERANT.LIEFERANTENNR";
             // Make a preparedStatement and set Scroll to insensitive (both directions)
@@ -159,7 +131,7 @@ public class DBUtils {
                         do {
                             // rs.getObject or etc. And Column Number required.
                             // 1: ID (BigDecimal), 2: Bezeichnung (String), 3: Einheit (String), 4: Nettopreis (BigDecimal), 5: Menge (Integer), 6: LieferantenNr (BigDecimal), 7: Kalorien (BigDecimal), 8: Kohlenhydrate (BigDecimal), 9: Protein (BigDecimal), 10: Lieferanten-Name (String)
-                            inst.ingredientList.add(new IngredientList(rs.getBigDecimal(1), rs.getString(2), rs.getString(3), rs.getBigDecimal(4), rs.getInt(5), rs.getBigDecimal(6), rs.getString(10), rs.getBigDecimal(7), rs.getBigDecimal(8), rs.getBigDecimal(9)));
+                            ConfigInstance.ingredientList.add(new IngredientList(rs.getBigDecimal(1), rs.getString(2), rs.getString(3), rs.getBigDecimal(4), rs.getInt(5), rs.getBigDecimal(6), rs.getString(10), rs.getBigDecimal(7), rs.getBigDecimal(8), rs.getBigDecimal(9)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Ingredients");
                     }
@@ -174,17 +146,18 @@ public class DBUtils {
         List<Integer> recipeNr = new ArrayList<>();
         List<BigDecimal> allergenBig = new ArrayList<>();
         List<BigDecimal> categoriesBig = new ArrayList<>();
-        try (Connection conn = connector()) {
+        try (Connection conn = connector(ConfigInstance.database)) {
             String sql =
-                    "SELECT REZEPT.*, REZEPTZUTAT.ZUTATENNR, REZEPTZUTAT.MENGE, REZEPTALLERGENE.ALLERGENNR, REZEPTKATEGORIEN.KATEGORIENR\n" +
-                            "FROM REZEPT\n" +
-                            "INNER JOIN REZEPTZUTAT\n" +
-                            "ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR\n" +
-                            "LEFT JOIN REZEPTALLERGENE\n" +
-                            "ON REZEPT.REZEPTNR = REZEPTALLERGENE.REZEPTNR\n" +
-                            "LEFT JOIN REZEPTKATEGORIEN\n" +
-                            "ON REZEPT.REZEPTNR = REZEPTKATEGORIEN.REZEPTNR\n" +
-                            "ORDER BY REZEPT.REZEPTNR";
+                    """
+                            SELECT REZEPT.*, REZEPTZUTAT.ZUTATENNR, REZEPTZUTAT.MENGE, REZEPTALLERGENE.ALLERGENNR, REZEPTKATEGORIEN.KATEGORIENR
+                            FROM REZEPT
+                            INNER JOIN REZEPTZUTAT
+                            ON REZEPT.REZEPTNR = REZEPTZUTAT.REZEPTNR
+                            LEFT JOIN REZEPTALLERGENE
+                            ON REZEPT.REZEPTNR = REZEPTALLERGENE.REZEPTNR
+                            LEFT JOIN REZEPTKATEGORIEN
+                            ON REZEPT.REZEPTNR = REZEPTKATEGORIEN.REZEPTNR
+                            ORDER BY REZEPT.REZEPTNR""";
 
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 try (ResultSet rs = ps.executeQuery()) {
@@ -196,7 +169,7 @@ public class DBUtils {
                             if (hasID) {
                                 int recipeID = rs.getInt(1);
 
-                                inst.recipeList.stream().filter(recipeList -> recipeList.getRecipeID().equals(new BigDecimal(recipeID))).findAny().ifPresent(recipe -> {
+                                ConfigInstance.recipeList.stream().filter(recipeList -> recipeList.getRecipeID().equals(new BigDecimal(recipeID))).findAny().ifPresent(recipe -> {
                                     List<BigDecimal> ingreds = recipe.getIngredients();
                                     List<Integer> amount = recipe.getAmount();
                                     List<BigDecimal> allergens = recipe.getAllergens();
@@ -223,7 +196,7 @@ public class DBUtils {
                                         categoriesBig.add(new BigDecimal(String.valueOf(category)));
                                     }
 
-                                    if (!ingredient.equals(0) && !ingreds.contains(ingredient)) {
+                                    if (!ingredient.equals(new BigDecimal(0)) && !ingreds.contains(ingredient)) {
                                         ingreds.add(ingredient);
                                         amount.add(ingredAmount);
                                         recipe.setAmount(amount);
@@ -244,7 +217,7 @@ public class DBUtils {
                                 recipeNr.add(rs.getInt(1));
                                 // Ingredient (Integer-Liste), Amount (Integer-Liste), Allergens (String-List), Categories (String-List)
                                 // 1: ID (BigDecimal), 2: Rezeptname (String), 3: Gesamtkalorien (BigDecimal), 4: Gesamtkohlenhydrate (BigDecimal), 5: Gesamtprotein (BigDecimal), 6: Gesamtpreis (BigDecimal)
-                                inst.recipeList.add(new RecipeList(rs.getBigDecimal(1), rs.getString(2), rs.getBigDecimal(3), rs.getBigDecimal(4), rs.getBigDecimal(5), ingredient, amount, allergens, categories));
+                                ConfigInstance.recipeList.add(new RecipeList(rs.getBigDecimal(1), rs.getString(2), rs.getBigDecimal(3), rs.getBigDecimal(4), rs.getBigDecimal(5), ingredient, amount, allergens, categories));
                             }
                         } while (rs.next());
                         System.out.println("Successfully got Data from Recipes");
@@ -257,7 +230,7 @@ public class DBUtils {
     }
 
     public static void selectCustomer() {
-        try (Connection conn = connector()) {
+        try (Connection conn = connector(ConfigInstance.database)) {
             String sql = "SELECT * FROM KUNDE";
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 try (ResultSet rs = ps.executeQuery()) {
@@ -266,7 +239,7 @@ public class DBUtils {
                     } else {
                         do {
                             // 1: KundenNr (BigDecimal), 2: Nachname (String), 3: Vorname (String), 4: Geburtsdatum (Date), 5: Strasse (String), 6: HausNr (Integer), 7: PLZ (Integer), 8: Ort (String), 9: Telefon (String), 10: E-Mail (String)
-                            inst.customerList.add(new CustomerList(rs.getBigDecimal(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getString(9), rs.getString(10)));
+                            ConfigInstance.customerList.add(new CustomerList(rs.getBigDecimal(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getInt(7), rs.getString(8), rs.getString(9), rs.getString(10)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Customers");
                     }
@@ -279,7 +252,7 @@ public class DBUtils {
 
     public static void selectOrder() {
         // Get Connection
-        try (Connection conn = connector()) {
+        try (Connection conn = connector(ConfigInstance.database)) {
             // Pass your SQL in this String.
             String sql = "SELECT * FROM BESTELLUNG";
             // Make a preparedStatement and set Scroll to insensitive (both directions)
@@ -293,7 +266,7 @@ public class DBUtils {
                         // For Each result add it to IngredientList.
                         do {
                             // 1: BestellNr (BigDecimal), 2: KundenNr (BigDecimal), 3: Bestelldatum (Date), 4: Rechnungsbetrag (BigDecimal)
-                            inst.orderList.add(new OrderList(rs.getBigDecimal(1), rs.getBigDecimal(2), rs.getDate(3), rs.getBigDecimal(4)));
+                            ConfigInstance.orderList.add(new OrderList(rs.getBigDecimal(1), rs.getBigDecimal(2), rs.getDate(3), rs.getBigDecimal(4)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Orders");
                     }
@@ -306,7 +279,7 @@ public class DBUtils {
 
     public static void selectCategories() {
         // Get Connection
-        try (Connection conn = connector()) {
+        try (Connection conn = connector(ConfigInstance.database)) {
             // Pass your SQL in this String.
             String sql = "SELECT * FROM KATEGORIEN";
             // Make a preparedStatement and set Scroll to insensitive (both directions)
@@ -320,7 +293,7 @@ public class DBUtils {
                         // For Each result add it to IngredientList.
                         do {
                             // 1: KategorieNr (BigDecimal), 2: Kategorie (String)
-                            inst.categoriesList.add(new CategoriesList(rs.getBigDecimal(1), rs.getString(2)));
+                            ConfigInstance.categoriesList.add(new CategoriesList(rs.getBigDecimal(1), rs.getString(2)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Categories");
                     }
@@ -333,7 +306,7 @@ public class DBUtils {
 
     public static void selectAllergens() {
         // Get Connection
-        try (Connection conn = connector()) {
+        try (Connection conn = connector(ConfigInstance.database)) {
             // Pass your SQL in this String.
             String sql = "SELECT * FROM ALLERGENE";
             // Make a preparedStatement and set Scroll to insensitive (both directions)
@@ -347,7 +320,7 @@ public class DBUtils {
                         // For Each result add it to IngredientList.
                         do {
                             // 1: AllergenNr (BigDecimal), 2: Allergen (String)
-                            inst.allergensList.add(new AllergensList(rs.getBigDecimal(1), rs.getString(2)));
+                            ConfigInstance.allergensList.add(new AllergensList(rs.getBigDecimal(1), rs.getString(2)));
                         } while (rs.next());
                         System.out.println("Successfully got Data from Allergens");
                     }
@@ -365,11 +338,10 @@ public class DBUtils {
         list.forEach(recipe -> {
             if (recipe.getRecipeName().toLowerCase().equals(recipeName.toLowerCase())) {
                 System.out.println("You cannot create a recipe with the same name...");
-                return;
             }
         });
 
-        try (Connection con = connector()) {
+        try (Connection con = connector(ConfigInstance.database)) {
                 String sql = "INSERT INTO REZEPT (REZEPTNAME, GESAMTKALORIEN, GESAMTKH, GESAMTPROTEIN, GESAMTPREIS) " + "VALUES (?,?,?,?,?)";
                 try (PreparedStatement psInsertRecipe = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
                     psInsertRecipe.setString(1, recipeName);

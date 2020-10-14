@@ -4,7 +4,7 @@ import utils.DBUtils;
 
 public class Reload {
 
-    public static void reload() {
+    public void reload() {
         try {
             DBUtils.selectData();
             System.out.println("Successfully reloaded all Lists");

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Orders {
 
-    public static void orders(){
+    public void orders(){
         List<OrderList> list = ConfigInstance.orderList;
         list.forEach(orders -> {
             String str ="Order-Number: " + orders.getBESTELLNR()
@@ -17,7 +17,7 @@ public class Orders {
         });
     }
 
-    public static void orderDescription(String arg) {
+    public void orderDescription(String arg) {
         List<OrderList> list = ConfigInstance.orderList;
         try {
             int id = Integer.parseInt(arg);
@@ -30,9 +30,7 @@ public class Orders {
                                 + "\nInvoice amount: " + orders.getRECHNUNGSBETRAG() + "$";
 
                 System.out.println(str);
-            }, () -> {
-                System.out.println("The order: " + arg + " does not exist. type orders to list all orders.");
-            });
+            }, () -> System.out.println("The order: " + arg + " does not exist. type orders to list all orders."));
         } catch (NumberFormatException e) {
             System.out.println();
             System.out.println("The order must be searched with the order number! to display all orders type orders.");

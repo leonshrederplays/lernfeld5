@@ -17,11 +17,7 @@ public class Customers {
         if(ConfigInstance.isAdminPassed) {
             try {
                 if (command.length > 1) {
-                    if(command.length == 3) {
-                        Customers.customerDescription(command, true);
-                    } else {
-                        Customers.customerDescription(command, false);
-                    }
+                    Customers.customerDescription(command, command.length == 3);
                 } else {
                     Customers.customer();
                 }
@@ -37,15 +33,11 @@ public class Customers {
                     String password = passwordInput.next();
                     if (password.equals("Admin")){
                         conf.lockCustomers();
-                        conf.isAdminPassed = true;
+                        ConfigInstance.isAdminPassed = true;
                         attempts = 3;
                         try {
                             if (command.length > 1) {
-                                if(command.length == 3) {
-                                    customerDescription(command, true);
-                                } else {
-                                    customerDescription(command, false);
-                                }
+                                customerDescription(command, command.length == 3);
                             } else {
                                 Customers.customer();
                             }
@@ -62,15 +54,11 @@ public class Customers {
                     char[] password = console.readPassword("Enter your Password:");
                     if (new String(password).equals("Admin")){
                         conf.lockCustomers();
-                        conf.isAdminPassed = true;
+                        ConfigInstance.isAdminPassed = true;
                         attempts = 3;
                         try {
                             if (command.length > 1) {
-                                if(command.length == 3) {
-                                    customerDescription(command, true);
-                                } else {
-                                    customerDescription(command, false);
-                                }
+                                customerDescription(command, command.length == 3);
                             } else {
                                 customer();
                             }
@@ -117,9 +105,7 @@ public class Customers {
                 } else {
                     System.out.println("The Customer with that last name: " + arg[1] + " and first name: " + arg[2] + " does not exist. type customers to list all customers.");
                 }
-            }, () -> {
-                System.out.println("The customer with that last name: " + arg[1] + " does not exist. type customers to list all customers.");
-            });
+            }, () -> System.out.println("The customer with that last name: " + arg[1] + " does not exist. type customers to list all customers."));
         } else {
             try {
                 int id = Integer.parseInt(arg[1]);
@@ -137,9 +123,7 @@ public class Customers {
                                     + "\nPhone: " + customer.getTELEFON() 
                                     + "\nE-Mail: " + customer.getEMAIL();
                     System.out.println(str);
-                }, () -> {
-                    System.out.println("The Customer: " + arg[1] + " does not exist. type customers to list all customers.");
-                });
+                }, () -> System.out.println("The Customer: " + arg[1] + " does not exist. type customers to list all customers."));
             } catch (NumberFormatException e) {
                 System.out.println("type help to see the usage of this command.");
 

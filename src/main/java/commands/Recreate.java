@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class Recreate {
 
-    public static void recreate() {
+    public void recreate() {
         Scanner recreateInput = new Scanner(System.in);
         System.out.println("This will reset the Database to its default state. Are you sure? (Y/N)");
         String confirm = recreateInput.next();

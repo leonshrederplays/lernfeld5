@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class Ingredients {
-    public static void ingredient() {
+    public void ingredient() {
         List<IngredientList> list = ConfigInstance.ingredientList;
         list.forEach(ingredient -> {
             String str ="ID: " + ingredient.getIngredientID()
@@ -16,7 +16,7 @@ public class Ingredients {
         });
     }
 
-    public static void ingredientDescription(String arg) {
+    public void ingredientDescription(String arg) {
         List<IngredientList> list = ConfigInstance.ingredientList;
         try {
             int id = Integer.parseInt(arg);
@@ -32,9 +32,7 @@ public class Ingredients {
                                 + "\nCarbohydrates: " + ingredient.getCarbohydrates() 
                                 + "\nProtein: " + ingredient.getProtein();
                 System.out.println(str);
-            }, () -> {
-                System.out.println("The ingredient: " + arg + " does not exist. type ingreds to list all ingredients.");
-            });
+            }, () -> System.out.println("The ingredient: " + arg + " does not exist. type ingreds to list all ingredients."));
         } catch (NumberFormatException e) {
             list.stream().filter(ingredient -> arg.toLowerCase().equals(ingredient.getIngredientName().toLowerCase())).findAny().ifPresentOrElse(ingredient -> {
                 String str =
@@ -48,9 +46,7 @@ public class Ingredients {
                                 + "\nCarbohydrates: " + ingredient.getCarbohydrates() 
                                 + "\nProtein: " + ingredient.getProtein();
                 System.out.println(str);
-            }, () -> {
-                System.out.println("The ingredient: " + arg + " does not exist. type ingreds to list all ingredients.");
-            });
+            }, () -> System.out.println("The ingredient: " + arg + " does not exist. type ingreds to list all ingredients."));
         }
     }
 
