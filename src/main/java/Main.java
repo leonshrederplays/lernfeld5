@@ -131,7 +131,15 @@ public class Main /*extends Application*/ {
                 }
                 case "categories" -> {
                     Categories categ = new Categories();
-                    categ.categories();
+                    try {
+                        if (command.length > 1) {
+                            categ.categoryRecipes(command[1]);
+                        } else {
+                            categ.categories();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
                 case "allergens" -> {
                     Allergens allerg = new Allergens();

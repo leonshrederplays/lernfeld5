@@ -21,13 +21,13 @@ public class Orders {
         List<OrderList> list = ConfigInstance.orderList;
         try {
             int id = Integer.parseInt(arg);
-            list.stream().filter(orders -> new BigDecimal(id).equals(orders.getBESTELLNR())).findAny().ifPresentOrElse(orders -> {
+            list.stream().filter(orders -> new BigDecimal(id).equals(orders.getBESTELLNR())).findAny().ifPresentOrElse(order -> {
                 String str =
                         "Properties of this Order: "
-                                + "\nOrdering-Number: " + orders.getBESTELLNR()
-                                + "\nCustomer-Number: " + orders.getKUNDENNR()
-                                + "\nOrder date: " + orders.getBESTELLDATUM()
-                                + "\nInvoice amount: " + orders.getRECHNUNGSBETRAG() + "$";
+                                + "\nOrdering-Number: " + order.getBESTELLNR()
+                                + "\nCustomer-Number: " + order.getKUNDENNR()
+                                + "\nOrder date: " + order.getBESTELLDATUM()
+                                + "\nInvoice amount: " + order.getRECHNUNGSBETRAG() + "$";
 
                 System.out.println(str);
             }, () -> System.out.println("The order: " + arg + " does not exist. type orders to list all orders."));

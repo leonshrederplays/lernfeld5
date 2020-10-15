@@ -68,12 +68,14 @@ public class DBUtils {
         ConfigInstance.recipeList = new ArrayList<>();
         ConfigInstance.customerList = new ArrayList<>();
         ConfigInstance.orderList = new ArrayList<>();
+        ConfigInstance.allergensList = new ArrayList<>();
+        ConfigInstance.categoriesList = new ArrayList<>();
 
         // Select everything and drop it in the list.
         selectIngredients();
         selectRecipe();
         selectCustomer();
-        selectOrder();
+        selectOrderIngreds();
         selectCategories();
         selectAllergens();
     }
@@ -143,7 +145,7 @@ public class DBUtils {
     }
 
     public static void selectRecipe() {
-        List<Integer> recipeNr = new ArrayList<>();
+        List<BigDecimal> recipeNr = new ArrayList<>();
         List<BigDecimal> allergenBig = new ArrayList<>();
         List<BigDecimal> categoriesBig = new ArrayList<>();
         try (Connection conn = connector(ConfigInstance.database)) {
@@ -165,11 +167,11 @@ public class DBUtils {
                         System.out.println("Successfully got Data from Recipes (no entries)");
                     } else {
                         do {
-                            boolean hasID = recipeNr.contains(rs.getInt(1));
+                            boolean hasID = recipeNr.contains(rs.getBigDecimal(1));
                             if (hasID) {
-                                int recipeID = rs.getInt(1);
+                                BigDecimal recipeID = rs.getBigDecimal(1);
 
-                                ConfigInstance.recipeList.stream().filter(recipeList -> recipeList.getRecipeID().equals(new BigDecimal(recipeID))).findAny().ifPresent(recipe -> {
+                                ConfigInstance.recipeList.stream().filter(recipeList -> recipeList.getRecipeID().equals(recipeID)).findAny().ifPresent(recipe -> {
                                     List<BigDecimal> ingreds = recipe.getIngredients();
                                     List<Integer> amount = recipe.getAmount();
                                     List<BigDecimal> allergens = recipe.getAllergens();
@@ -214,7 +216,7 @@ public class DBUtils {
                                 categories.add(rs.getBigDecimal(10));
                                 allergenBig.add(rs.getBigDecimal(9));
                                 categoriesBig.add(rs.getBigDecimal(10));
-                                recipeNr.add(rs.getInt(1));
+                                recipeNr.add(rs.getBigDecimal(1));
                                 // Ingredient (Integer-Liste), Amount (Integer-Liste), Allergens (String-List), Categories (String-List)
                                 // 1: ID (BigDecimal), 2: Rezeptname (String), 3: Gesamtkalorien (BigDecimal), 4: Gesamtkohlenhydrate (BigDecimal), 5: Gesamtprotein (BigDecimal), 6: Gesamtpreis (BigDecimal)
                                 ConfigInstance.recipeList.add(new RecipeList(rs.getBigDecimal(1), rs.getString(2), rs.getBigDecimal(3), rs.getBigDecimal(4), rs.getBigDecimal(5), ingredient, amount, allergens, categories));
@@ -250,11 +252,17 @@ public class DBUtils {
         }
     }
 
-    public static void selectOrder() {
+    public static void selectOrderIngreds() {
+        List<BigDecimal> orderNr = new ArrayList<>();
         // Get Connection
         try (Connection conn = connector(ConfigInstance.database)) {
             // Pass your SQL in this String.
-            String sql = "SELECT * FROM BESTELLUNG";
+            String sql = """
+                    SELECT BESTELLUNG.*, BESTELLUNGZUTAT.ZUTATENNR, BESTELLUNGZUTAT.MENGE
+                                                FROM BESTELLUNG
+                                                RIGHT JOIN BESTELLUNGZUTAT
+                                                ON BESTELLUNG.BESTELLNR = BESTELLUNGZUTAT.BESTELLNR
+                                                ORDER BY BESTELLUNG.BESTELLNR""";
             // Make a preparedStatement and set Scroll to insensitive (both directions)
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 // Execute query and safe Result in rs
@@ -265,9 +273,111 @@ public class DBUtils {
                     } else {
                         // For Each result add it to IngredientList.
                         do {
-                            // 1: BestellNr (BigDecimal), 2: KundenNr (BigDecimal), 3: Bestelldatum (Date), 4: Rechnungsbetrag (BigDecimal)
-                            ConfigInstance.orderList.add(new OrderList(rs.getBigDecimal(1), rs.getBigDecimal(2), rs.getDate(3), rs.getBigDecimal(4)));
+                            // 1: BestellNr (BigDecimal), 2: KundenNr (BigDecimal), 3: Bestelldatum (Date), 4: Rechnungsbetrag (BigDecimal), 5: Ingredient (BigDecimal), 6: Amount (Integer)
+                            boolean hasID = orderNr.contains(rs.getBigDecimal(1));
+                            if (hasID) {
+                                BigDecimal orderID = rs.getBigDecimal(1);
+
+                                ConfigInstance.orderList.stream().filter(orderList -> orderList.getBESTELLNR().equals(orderID)).findAny().ifPresent(order -> {
+                                    List<BigDecimal> ingredList = order.getINGREDS();
+                                    List<Integer> ingredAmountList = order.getINGREDAMOUNT();
+                                    int amount = 0;
+                                    BigDecimal ingredient = BigDecimal.ZERO;
+                                    try {
+                                        ingredient = rs.getBigDecimal(5);
+                                        amount = rs.getInt(6);
+                                    } catch (SQLException throwables) {
+                                        throwables.printStackTrace();
+                                    }
+
+                                    if (!ingredient.equals(new BigDecimal(0)) && !ingredList.contains(ingredient)) {
+                                        ingredList.add(ingredient);
+                                        ingredAmountList.add(amount);
+                                        order.setINGREDS(ingredList);
+                                        order.setINGREDAMOUNT(ingredAmountList);
+                                    }
+
+                                });
+                            } else {
+                                List<BigDecimal> ingredList = new ArrayList<>();
+                                ingredList.add(rs.getBigDecimal(5));
+                                List<Integer> ingredAmountList = new ArrayList<>();
+                                ingredAmountList.add(rs.getInt(6));
+                                List<BigDecimal> recipeList = new ArrayList<>();
+                                List<Integer> recipeAmountList = new ArrayList<>();
+                                orderNr.add(rs.getBigDecimal(1));
+                                ConfigInstance.orderList.add(new OrderList(rs.getBigDecimal(1), rs.getBigDecimal(2), rs.getDate(3), rs.getBigDecimal(4), ingredList, ingredAmountList, recipeList, recipeAmountList));
+                            }
                         } while (rs.next());
+                        selectOrderRecipes();
+                        System.out.println("Successfully got Data from Orders");
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+    }
+
+    public static void selectOrderRecipes() {
+        List<BigDecimal> orderNr = new ArrayList<>();
+        ConfigInstance.orderList.forEach(order -> orderNr.add(order.getBESTELLNR()));
+        // Get Connection
+        try (Connection conn = connector(ConfigInstance.database)) {
+            // Pass your SQL in this String.
+            String sql = """
+                    SELECT BESTELLUNG.*, BESTELLUNGREZEPT.REZEPTNR, BESTELLUNGREZEPT.MENGE
+                            FROM BESTELLUNG
+                            RIGHT JOIN BESTELLUNGREZEPT
+                            ON BESTELLUNG.BESTELLNR = BESTELLUNGREZEPT.BESTELLNR
+                            ORDER BY BESTELLUNG.BESTELLNR""";
+            // Make a preparedStatement and set Scroll to insensitive (both directions)
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                // Execute query and safe Result in rs
+                try (ResultSet rs = ps.executeQuery()) {
+                    // If no result do nothing
+                    if (!rs.next()) {
+                        System.out.println("Successfully got Data from Orders (no entries)");
+                    } else {
+                        // For Each result add it to IngredientList.
+                        do {
+                            // 1: BestellNr (BigDecimal), 2: KundenNr (BigDecimal), 3: Bestelldatum (Date), 4: Rechnungsbetrag (BigDecimal), 5: Recipe (BigDecimal), 6: Amount (Integer)
+                            boolean hasID = orderNr.contains(rs.getBigDecimal(1));
+                            if (hasID) {
+                                BigDecimal orderID = rs.getBigDecimal(1);
+
+                                ConfigInstance.orderList.stream().filter(orderList -> orderList.getBESTELLNR().equals(orderID)).findAny().ifPresent(order -> {
+                                    List<BigDecimal> recipeList = order.getRECIPES();
+                                    List<Integer> recipeAmountList = order.getRECIPEAMOUNT();
+                                    int amount = 0;
+                                    BigDecimal recipe = BigDecimal.ZERO;
+                                    try {
+                                        recipe = rs.getBigDecimal(5);
+                                        amount = rs.getInt(6);
+                                    } catch (SQLException throwables) {
+                                        throwables.printStackTrace();
+                                    }
+
+                                    if (!recipe.equals(new BigDecimal(0)) && !recipeList.contains(recipe)) {
+                                        recipeList.add(recipe);
+                                        recipeAmountList.add(amount);
+                                        order.setRECIPES(recipeList);
+                                        order.setRECIPEAMOUNT(recipeAmountList);
+                                    }
+
+                                });
+                            } else {
+                                List<BigDecimal> recipeList = new ArrayList<>();
+                                recipeList.add(rs.getBigDecimal(5));
+                                List<Integer> recipeAmountList = new ArrayList<>();
+                                recipeAmountList.add(rs.getInt(6));
+                                List<BigDecimal> ingredList = new ArrayList<>();
+                                List<Integer> ingredAmountList = new ArrayList<>();
+                                orderNr.add(rs.getBigDecimal(1));
+                                ConfigInstance.orderList.add(new OrderList(rs.getBigDecimal(1), rs.getBigDecimal(2), rs.getDate(3), rs.getBigDecimal(4), ingredList, ingredAmountList, recipeList, recipeAmountList));
+                            }
+                        } while (rs.next());
+
                         System.out.println("Successfully got Data from Orders");
                     }
                 }

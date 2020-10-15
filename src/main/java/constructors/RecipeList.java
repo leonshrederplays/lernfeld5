@@ -60,5 +60,17 @@ public class RecipeList implements Serializable {
     public List<BigDecimal> getCategories() {
         return categories;
     }
-    
+
+    public BigDecimal getRecipeCalories() {
+        return recipeCalories;
+    }
+
+    public BigDecimal getRecipeCarbs() {
+        return recipeCarbs;
+    }
+
+    public BigDecimal getRecipeProtein() {
+        return recipeProtein;
+    }
+
 }
