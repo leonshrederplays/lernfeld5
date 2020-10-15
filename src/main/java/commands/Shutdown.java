@@ -2,7 +2,7 @@ package commands;
 
 public class Shutdown {
 
-    public static void shutdown(){
+    public void shutdown(){
         System.out.println("Shutting down...");
         try {
             Thread.sleep(1);

@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class Recipes {
 
-    public static void recipe(){
+    public void recipe(){
         List<RecipeList> list = ConfigInstance.recipeList;
         list.forEach(recipe -> {
             String str ="ID: " + recipe.getRecipeID()
@@ -21,16 +21,18 @@ public class Recipes {
         });
     }
 
-    public static void recipeDescription(String arg) {
+    public void recipeDescription(String arg) {
         List<RecipeList> list = ConfigInstance.recipeList;
         int id = 0;
         boolean isIDValid = false;
         try {
             id = Integer.parseInt(arg);
             int finalId = id;
-            isIDValid = list.stream().filter(recipe -> new BigDecimal(finalId).equals(recipe.getRecipeID())).findAny().isPresent();
-        } catch (NumberFormatException e) { }
-        boolean isNameValid = list.stream().filter(recipe -> arg.toLowerCase().equals(recipe.getRecipeName().toLowerCase())).findAny().isPresent();
+            isIDValid = list.stream().anyMatch(recipe -> new BigDecimal(finalId).equals(recipe.getRecipeID()));
+        } catch (NumberFormatException e) {
+            //System.out.println("");
+        }
+        boolean isNameValid = list.stream().anyMatch(recipe -> arg.toLowerCase().equals(recipe.getRecipeName().toLowerCase()));
 
         if(isIDValid || isNameValid) {
             int finalId1 = id;
@@ -65,27 +67,17 @@ public class Recipes {
                         price.getAndUpdate(update -> update.add(new BigDecimal("" + ingred.getNettoprice()).multiply(amount).setScale(2, RoundingMode.HALF_EVEN)));
                         // Increase ingredients by 1.
                         ingredients.getAndIncrement();
-                    }, () -> {
-                        System.out.println("Wait what there is an ingredient that is not defined!?");
-                    });
+                    }, () -> System.out.println("Wait what there is an ingredient that is not defined!?"));
                 });
                 // Make a String seperated by ", " from a list.
                 String ingreds = String.join(", ", ingredsList);
                 // Make a String seperated by ", " from a list.
                 List<String> allergens = new ArrayList<>();
-                recipe.getAllergens().forEach(allergen -> {
-                    ConfigInstance.allergensList.stream().filter(allergenList -> allergen.equals(allergenList.getAllergenID())).findAny().ifPresent(alleg -> {
-                        allergens.add(alleg.getAllergen());
-                    });
-                });
+                recipe.getAllergens().forEach(allergen -> ConfigInstance.allergensList.stream().filter(allergenList -> allergen.equals(allergenList.getAllergenID())).findAny().ifPresent(alleg -> allergens.add(alleg.getAllergen())));
                 String allergensString = String.join(", ", allergens);
                 // Make a String seperated by ", " from a list.
                 List<String> categories = new ArrayList<>();
-                recipe.getCategories().forEach(category -> {
-                    ConfigInstance.categoriesList.stream().filter(categoryList -> category.equals(categoryList.getCategoryID())).findAny().ifPresent(categ -> {
-                        categories.add(categ.getCategory());
-                    });
-                });
+                recipe.getCategories().forEach(category -> ConfigInstance.categoriesList.stream().filter(categoryList -> category.equals(categoryList.getCategoryID())).findAny().ifPresent(categ -> categories.add(categ.getCategory())));
                 String categoriesString = String.join(", ", categories);
                 // Call the recipeDescBuilder to send recipe info.
                 String str =

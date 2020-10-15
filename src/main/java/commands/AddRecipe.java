@@ -12,26 +12,27 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+@SuppressWarnings("ALL")
 public class AddRecipe {
 
-    private List<BigDecimal> verifiedIngredients = new ArrayList<>();
-    private List<String> verifiedIngredientNames = new ArrayList<>();
-    private List<Integer> verifiedAmount = new ArrayList<>();
-    private List<BigDecimal> verifiedCategoryID = new ArrayList<>();
-    private List<String> verifiedCategoryName = new ArrayList<>();
-    private List<BigDecimal> verifiedAllergenID = new ArrayList<>();
-    private List<String> verifiedAllergenName = new ArrayList<>();
-    private List<String> recipeName = new ArrayList<>();
-    private List<BigDecimal> calories = new ArrayList<>();
-    private List<BigDecimal> carbohydrates = new ArrayList<>();
-    private List<BigDecimal> protein = new ArrayList<>();
-    private List<BigDecimal> price = new ArrayList<>();
-    private List<String> notPresent = new ArrayList<>();
-    private List<String> noCategory = new ArrayList<>();
-    private List<String> noAllergen = new ArrayList<>();
+    private final List<BigDecimal> verifiedIngredients = new ArrayList<>();
+    private final List<String> verifiedIngredientNames = new ArrayList<>();
+    private final List<Integer> verifiedAmount = new ArrayList<>();
+    private final List<BigDecimal> verifiedCategoryID = new ArrayList<>();
+    private final List<String> verifiedCategoryName = new ArrayList<>();
+    private final List<BigDecimal> verifiedAllergenID = new ArrayList<>();
+    private final List<String> verifiedAllergenName = new ArrayList<>();
+    private final List<String> recipeName = new ArrayList<>();
+    private final List<BigDecimal> calories = new ArrayList<>();
+    private final List<BigDecimal> carbohydrates = new ArrayList<>();
+    private final List<BigDecimal> protein = new ArrayList<>();
+    private final List<BigDecimal> price = new ArrayList<>();
+    private final List<String> notPresent = new ArrayList<>();
+    private final List<String> noCategory = new ArrayList<>();
+    private final List<String> noAllergen = new ArrayList<>();
     private boolean wrongAmount = false;
-    private boolean wrongCategory = false;
-    private boolean wrongAllergen = false;
+    private final boolean wrongCategory = false;
+    private final boolean wrongAllergen = false;
     private boolean wrongName = false;
 
     public void addRecipeName() {
@@ -78,9 +79,9 @@ public class AddRecipe {
     }
 
     public void addIngredients() {
-        List<String> list = new ArrayList<>();
         Scanner ingredientScanner = new Scanner(System.in);
-        Ingredients.ingredient();
+        Ingredients ingred = new Ingredients();
+        ingred.ingredient();
         if (!notPresent.isEmpty()) {
             System.out.println("These values were invalid: " + String.join(", ", notPresent) + " please try again.");
             notPresent.clear();
@@ -92,7 +93,7 @@ public class AddRecipe {
             price.clear();
         }
         System.out.println("Next add ingredients space seperated above is a list. (Best if you use ID but you can also use names)");
-        list.addAll(Arrays.asList(ingredientScanner.nextLine().split(" ")));
+        List<String> list = new ArrayList<>(Arrays.asList(ingredientScanner.nextLine().split(" ")));
         if (list.get(0).toLowerCase().equals("cancel")) {
             System.out.println("Canceling addrecipe Command...");
 
@@ -101,8 +102,8 @@ public class AddRecipe {
         System.out.println("I gotta verify your ingredients...");
         boolean verifiedIngreds = verifyIngredients(list);
         if (verifiedIngreds) {
-            List<String> logString = new ArrayList<>();
-            verifiedIngredients.forEach(number -> logString.add(number.toString()));
+            //List<String> logString = new ArrayList<>();
+            //verifiedIngredients.forEach(number -> logString.add(number.toString()));
             //System.out.println(String.join(", ", logString));
             addAmount();
         } else {
@@ -118,10 +119,13 @@ public class AddRecipe {
             try {
                 id = Integer.parseInt(ingredient);
             } catch (NumberFormatException e) {
+                //System.out.println("Now searching for Name instead of id.");
             }
             int finalId = id;
-            boolean isIDValid = list.stream().filter(listIngred -> new BigDecimal(finalId).equals(listIngred.getIngredientID())).findAny().isPresent();
-            boolean isNameValid = list.stream().filter(listIngred -> ingredient.toLowerCase().equals(listIngred.getIngredientName().toLowerCase())).findAny().isPresent();
+            boolean isIDValid = list.stream().anyMatch(listIngred -> new BigDecimal(finalId).equals(listIngred.getIngredientID()));
+            boolean isNameValid = list.stream().anyMatch(listIngred -> ingredient.toLowerCase().equals(listIngred.getIngredientName().toLowerCase()));
+            //boolean isIDValid = list.stream().filter().findAny().isPresent();
+            //boolean isNameValid = list.stream().filter(listIngred -> ingredient.toLowerCase().equals(listIngred.getIngredientName().toLowerCase())).findAny().isPresent();
 
             //boolean isPresent = list.stream().filter(listIngred -> ingredient.equals(listIngred.getIngredientID()) || ingredient.equals(listIngred.getIngredientName())).findAny().isPresent();
             if (isIDValid) {
@@ -160,18 +164,18 @@ public class AddRecipe {
         return false;
     }
 
+
     public void addAmount() {
-        List<String> logString = new ArrayList<>();
+        //List<String> logString = new ArrayList<>();
         if (wrongAmount) {
             System.out.println("You must pass all amounts for every ingredient only Integers allowed! please try again.");
             wrongAmount = false;
             verifiedAmount.clear();
         }
         Scanner amountScanner = new Scanner(System.in);
-        List<String> amountTester = new ArrayList<>();
         System.out.println("Next pass the amount of ingredients in the order of the ingredients you typed space seperated");
         System.out.println("One amount for these: " + String.join(", ", verifiedIngredientNames));
-        amountTester.addAll(Arrays.asList(amountScanner.nextLine().split(" ")));
+        List<String> amountTester = new ArrayList<>(Arrays.asList(amountScanner.nextLine().split(" ")));
         if (amountTester.get(0).equals("cancel")) {
             System.out.println("Canceling addrecipe Command...");
 
@@ -180,7 +184,7 @@ public class AddRecipe {
         System.out.println("I gotta verify your amount...");
         boolean verifiedAmountBool = verifyAmount(amountTester);
         if (verifiedAmountBool) {
-            verifiedAmount.forEach(number -> logString.add(number.toString()));
+            //verifiedAmount.forEach(number -> logString.add(number.toString()));
             //System.out.println(String.join(", ", logString));
             addCategories();
         } else {
@@ -191,7 +195,6 @@ public class AddRecipe {
     public boolean verifyAmount(List<String> amountTest) {
 
         if (amountTest.size() == verifiedIngredients.size()) {
-            int amo = 0;
             try {
                 amountTest.forEach(am -> verifiedAmount.add(Integer.parseInt(am)));
                 System.out.println("Amounts are valid continuing.");
@@ -205,8 +208,9 @@ public class AddRecipe {
     }
 
     public void addCategories() {
-        List<String> logString = new ArrayList<>();
-        Categories.categories();
+        //List<String> logString = new ArrayList<>();
+        Categories category = new Categories();
+        category.categories();
         if (!noCategory.isEmpty()) {
             System.out.println("The Categorie(s): " + String.join(", ", noCategory) + " do not exist. please try again");
             verifiedCategoryID.clear();
@@ -214,9 +218,8 @@ public class AddRecipe {
             noCategory.clear();
         }
         Scanner categoryScanner = new Scanner(System.in);
-        List<String> categoryTester = new ArrayList<>();
         System.out.println("Next pass the categories of the recipe. categories are listed above. space seperated");
-        categoryTester.addAll(Arrays.asList(categoryScanner.nextLine().split(" ")));
+        List<String> categoryTester = new ArrayList<>(Arrays.asList(categoryScanner.nextLine().split(" ")));
         if (categoryTester.get(0).equals("cancel")) {
             System.out.println("Canceling addrecipe Command...");
 
@@ -224,7 +227,7 @@ public class AddRecipe {
         System.out.println("I gotta verify your categories...");
         boolean verifiedCategoryBool = verifyCategories(categoryTester);
         if (verifiedCategoryBool) {
-            verifiedCategoryID.forEach(number -> logString.add(number.toString()));
+            //verifiedCategoryID.forEach(number -> logString.add(number.toString()));
             //System.out.println(String.join(", ", logString));
             addAllergens();
         } else {
@@ -240,10 +243,13 @@ public class AddRecipe {
             try {
                 id = Integer.parseInt(category);
             } catch (NumberFormatException e) {
+                //System.out.println("");
             }
             int finalId = id;
-            boolean isIDValid = list.stream().filter(listCateg -> new BigDecimal(finalId).equals(listCateg.getCategoryID())).findAny().isPresent();
-            boolean isNameValid = list.stream().filter(listCateg -> category.toLowerCase().equals(listCateg.getCategory().toLowerCase())).findAny().isPresent();
+            boolean isIDValid = list.stream().anyMatch(listCateg -> new BigDecimal(finalId).equals(listCateg.getCategoryID()));
+            boolean isNameValid = list.stream().anyMatch(listCateg -> category.toLowerCase().equals(listCateg.getCategory().toLowerCase()));
+            //boolean isIDValid = list.stream().filter(listCateg -> new BigDecimal(finalId).equals(listCateg.getCategoryID())).findAny().isPresent();
+            //boolean isNameValid = list.stream().filter(listCateg -> category.toLowerCase().equals(listCateg.getCategory().toLowerCase())).findAny().isPresent();
 
             //boolean isPresent = list.stream().filter(listIngred -> ingredient.equals(listIngred.getIngredientID()) || ingredient.equals(listIngred.getIngredientName())).findAny().isPresent();
             if (isIDValid) {
@@ -267,11 +273,7 @@ public class AddRecipe {
             }
         });
 
-        if (noCategory.isEmpty()) {
-            return true;
-        }
-
-        return false;
+        return noCategory.isEmpty();
     }
 
     public void addAllergens() {
@@ -285,9 +287,8 @@ public class AddRecipe {
             noAllergen.clear();
         }
         Scanner allergenScanner = new Scanner(System.in);
-        List<String> allergenTester = new ArrayList<>();
         System.out.println("Next pass the allergens of the recipe. allergens are listed above. space seperated");
-        allergenTester.addAll(Arrays.asList(allergenScanner.nextLine().split(" ")));
+        List<String> allergenTester = new ArrayList<>(Arrays.asList(allergenScanner.nextLine().split(" ")));
         if (allergenTester.get(0).equals("cancel")) {
             System.out.println("Canceling addrecipe Command...");
 
@@ -312,10 +313,13 @@ public class AddRecipe {
             try {
                 id = Integer.parseInt(allergen);
             } catch (NumberFormatException e) {
+                //System.out.println("");
             }
             int finalId = id;
-            boolean isIDValid = list.stream().filter(listAllerg -> new BigDecimal(finalId).equals(listAllerg.getAllergenID())).findAny().isPresent();
-            boolean isNameValid = list.stream().filter(listAllerg -> allergen.toLowerCase().equals(listAllerg.getAllergen().toLowerCase())).findAny().isPresent();
+            boolean isIDValid = list.stream().anyMatch(listAllerg -> new BigDecimal(finalId).equals(listAllerg.getAllergenID()));
+            boolean isNameValid = list.stream().anyMatch(listAllerg -> allergen.toLowerCase().equals(listAllerg.getAllergen().toLowerCase()));
+            //boolean isIDValid = list.stream().filter(listAllerg -> new BigDecimal(finalId).equals(listAllerg.getAllergenID())).findAny().isPresent();
+            //boolean isNameValid = list.stream().filter(listAllerg -> allergen.toLowerCase().equals(listAllerg.getAllergen().toLowerCase())).findAny().isPresent();
 
             //boolean isPresent = list.stream().filter(listIngred -> ingredient.equals(listIngred.getIngredientID()) || ingredient.equals(listIngred.getIngredientName())).findAny().isPresent();
             if (isIDValid) {
@@ -339,11 +343,7 @@ public class AddRecipe {
             }
         });
 
-        if (noAllergen.isEmpty()) {
-            return true;
-        }
-
-        return false;
+        return noAllergen.isEmpty();
     }
 
     public void previewRecipe() {
@@ -363,9 +363,7 @@ public class AddRecipe {
         i.set(0);
 
         AtomicReference<BigDecimal> proteinMath = new AtomicReference<>(BigDecimal.ZERO);
-        protein.forEach(prot -> {
-            proteinMath.getAndUpdate(update -> update.add(prot.multiply(new BigDecimal(verifiedAmount.get(i.get()))))).setScale(2, RoundingMode.HALF_EVEN);
-        });
+        protein.forEach(prot -> proteinMath.getAndUpdate(update -> update.add(prot.multiply(new BigDecimal(verifiedAmount.get(i.get()))))).setScale(2, RoundingMode.HALF_EVEN));
         i.set(0);
 
         AtomicReference<BigDecimal> priceMath = new AtomicReference<>(BigDecimal.ZERO);
@@ -387,7 +385,7 @@ public class AddRecipe {
                         + "\nAllergens: " + String.join(", ", verifiedAllergenName)
                         + "\nCategroies: " + String.join(", ", verifiedCategoryName);
         System.out.println(str);
-        System.out.println("");
+        System.out.println(" ");
         saveWork(recipeStringName, caloriesMath.get(), carbohydratesMath.get(), proteinMath.get(), priceMath.get());
     }
 
