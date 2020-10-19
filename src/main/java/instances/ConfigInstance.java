@@ -3,6 +3,7 @@ package instances;
 import constructors.*;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,10 @@ public class ConfigInstance implements Serializable {
     public static List<OrderList> orderList = new ArrayList<>();
     public static List<CategoriesList> categoriesList = new ArrayList<>();
     public static List<AllergensList> allergensList = new ArrayList<>();
+
+    public static List<BigDecimal> cartIngredients = new ArrayList<>();
+    public static List<BigDecimal> cartRecipes = new ArrayList<>();
+
     public static boolean isSQLfinished = false;
     public static boolean isAdminPassed = false;
     public static String database = "krautundrueben";
