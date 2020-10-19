@@ -1,3 +1,4 @@
+import GUI.MainFrame;
 import commands.Shutdown;
 import commands.*;
 import instances.ConfigInstance;
@@ -68,5 +69,6 @@ public class Main /*extends Application*/ {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        new MainFrame().showFrame();
     }
 }
