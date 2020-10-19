@@ -1,7 +1,6 @@
 plugins {
     id 'java'
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.0.8'
 }
 
 group 'org.example'
@@ -10,10 +9,7 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
-javafx {
-    version = "15"
-    modules = [ 'javafx.controls', 'javafx.fxml']
-}
+
 
 mainClassName='Main'
 sourceCompatibility = 15
@@ -23,7 +19,4 @@ compileJava.options.encoding = 'UTF-8'
 dependencies {
     // https://mvnrepository.com/artifact/mysql/mysql-connector-java
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
-    // https://mvnrepository.com/artifact/org.openjfx/javafx
-    compile group: 'org.openjfx', name: 'javafx', version: '15', ext: 'pom'
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }
