@@ -37,6 +37,11 @@ public class MainFrame extends BaseFrame {
         consoleButton.addActionListener(e -> {
             new ConsoleFrame().showFrame();
         });
+        ingredientsButton = new JButton("Ingredient Search");
+        ingredientsButton.setPreferredSize(new Dimension(200,100));
+        ingredientsButton.addActionListener(e -> {
+            new IngredsFrame().showFrame();
+        });
 
         mainFramePanel = new JPanel();
         mainFramePanel.setPreferredSize(new Dimension(1280, 720));
@@ -48,7 +53,7 @@ public class MainFrame extends BaseFrame {
         mainFramePanel.add(welcomeLabel);
         mainFramePanel.add(new JLabel());
         mainFramePanel.add(new JButton());
-        mainFramePanel.add(new JButton());
+        mainFramePanel.add(ingredientsButton);
         mainFramePanel.add(new JButton());
         mainFramePanel.add(new JButton());
         mainFramePanel.add(new JButton());

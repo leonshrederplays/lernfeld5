@@ -4,19 +4,28 @@ import constructors.IngredientList;
 import instances.ConfigInstance;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Ingredients {
-    public String ingredient() {
-        var ref = new Object() {
-            String str;
-        };
+    public List<String> ingredient() {
+        List<String> ingreds = new ArrayList<>();
         List<IngredientList> list = ConfigInstance.ingredientList;
         list.forEach(ingredient -> {
-            ref.str ="ID: " + ingredient.getIngredientID()
+            String str ="ID: " + ingredient.getIngredientID()
                     + " | Name: " + ingredient.getIngredientName();
+            ingreds.add(str);
         });
-        return ref.str;
+        return ingreds;
+    }
+    public List<String> ingredientChoice() {
+        List<String> ingredsChoice = new ArrayList<>();
+        List<IngredientList> list = ConfigInstance.ingredientList;
+        ingredsChoice.add(" ");
+        list.forEach(ingredient -> {
+            ingredsChoice.add(ingredient.getIngredientName());
+        });
+        return ingredsChoice;
     }
 
     public String ingredientDescription(String arg) {

@@ -14,16 +14,21 @@ public class ConsoleFrame extends BaseFrame {
     private JLabel commandLabel;
     private JPanel consolePanel;
     private JButton commandButton;
+    private JScrollPane scroll;
     @Override
     void initialize() {
         commandField = new JTextField();
         commandField.setPreferredSize(new Dimension(1280, 70));
         consoleArea = new JTextArea();
         consoleArea.setPreferredSize(new Dimension(1280,640));
+        consoleArea.setEditable(false);
         consoleLabel = new JLabel("Console: ");
         commandLabel = new JLabel("Enter the command you want to execute: ");
         commandButton = new JButton("Execute");
         commandButton.setPreferredSize(new Dimension(200,100));
+        scroll = new JScrollPane(consoleArea);
+        scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
         commandButton.addActionListener(ev -> {
                     String[] command;
@@ -39,7 +44,7 @@ public class ConsoleFrame extends BaseFrame {
                                     if (command.length > 1) {
                                         consoleArea.setText(ingred.ingredientDescription(command[1]));
                                     } else {
-                                        consoleArea.setText(ingred.ingredient().toString());
+                                        consoleArea.setText(String.join("\n", ingred.ingredient()));
                                     }
                                 } catch (Exception e) {
                                     e.printStackTrace();
@@ -56,11 +61,10 @@ public class ConsoleFrame extends BaseFrame {
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                System.out.println(" ");
                             }
                             case "addrecipe" -> {
                                 AddRecipe addrecipe = new AddRecipe();
-                                System.out.println("You typed addrecipe so now we will create a recipe lets start.");
+                                consoleArea.setText("You typed addrecipe so now we will create a recipe lets start.");
                                 addrecipe.addRecipeName();
                             }
                             case "orders" -> {
@@ -131,7 +135,7 @@ public class ConsoleFrame extends BaseFrame {
         layout.setHgap(10);
         consolePanel.setLayout(layout);
         consolePanel.add(consoleLabel);
-        consolePanel.add(consoleArea);
+        consolePanel.add(scroll);
         consolePanel.add(commandLabel);
         consolePanel.add(commandField);
         consolePanel.add(new JLabel());
