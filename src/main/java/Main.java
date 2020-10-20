@@ -106,6 +106,20 @@ public class Main /*extends Application*/ {
                     }
                     System.out.println(" ");
                 }
+                case "recipecalories" ->{
+                    Recipes recipe = new Recipes();
+                    try {
+                        if(command.length > 1) {
+                            recipe.recipecalories(command[1]);
+                        } else {
+                            recipe.recipe();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(" ");
+                }
+
                 case "addrecipe" -> {
                     AddRecipe addrecipe = new AddRecipe();
                     System.out.println("You typed addrecipe so now we will create a recipe lets start.");
