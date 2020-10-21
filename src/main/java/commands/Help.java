@@ -8,6 +8,7 @@ public class Help {
                       Here is a list of available commands:
 
                       help -- shows a list of all available commands
+                      calories <Customer ID> -- shows the average calories of the orders of one customers
                       ingreds / ingreds <ingredient name/ingredient ID> -- list all ingredients / lists the details of one igredient
                       ingreds unused / ingreds unused -- lists all ingredients that are not used by any recipe
                       recipe / recipe <recipe name/recipe ID> -- lists all recipes / lists the details of one recipe
