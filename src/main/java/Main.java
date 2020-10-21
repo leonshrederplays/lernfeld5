@@ -115,6 +115,9 @@ public class Main /*extends Application*/ {
                         } else if(argList.size() == 2 && argList.get(0).toLowerCase().equals("amount")){
                             argList.remove(0);
                             recipe.recipeWithAmountOfIngreds(argList.get(0));
+                        } else if(argList.size() == 2 && argList.get(0).toLowerCase().equals("calories")) {
+                            argList.remove(0);
+                            recipe.recipeCalories(argList.get(0));
                         } else {
                             recipe.recipe();
                         }

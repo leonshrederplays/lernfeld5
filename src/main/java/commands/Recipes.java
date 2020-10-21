@@ -158,7 +158,8 @@ public class Recipes {
             System.out.println("The Recipe: " + arg + " does not exist. type recipe to list all recipes.");
         }
     }
-    public void recipecalories(String arg){
+
+    public void recipeCalories(String arg) {
         List<RecipeList> list = ConfigInstance.recipeList;
         list.forEach(recipe -> {
             if (recipe.getRecipeCalories().doubleValue() <= Double.parseDouble(arg)) {
@@ -166,9 +167,6 @@ public class Recipes {
                         + " | Name: " + recipe.getRecipeName()
                         + " | Kalorien: " + recipe.getRecipeCalories();
                 System.out.println(str);
-            }
-            else{
-                System.out.println("UFF");
             }
         });
 
