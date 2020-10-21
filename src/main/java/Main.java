@@ -80,6 +80,7 @@ public class Main /*extends Application*/ {
         do {
             System.out.println("Enter the command you want to execute: ");
             argList.addAll(Arrays.asList(input.nextLine().split(" ")));
+            if(argList.size() == 0) return;
             command = argList.get(0);
             argList.remove(0);
             //command = input.nextLine().split(" ");
@@ -106,6 +107,9 @@ public class Main /*extends Application*/ {
                     try {
                         if (argList.size() == 1) {
                             recipe.recipeDescription(argList.get(0));
+                        } else if(argList.size() == 2 && argList.get(0).toLowerCase().equals("ingred")) {
+                            argList.remove(0);
+                            recipe.recipeWithIngredient(argList.get(0));
                         } else {
                             recipe.recipe();
                         }
