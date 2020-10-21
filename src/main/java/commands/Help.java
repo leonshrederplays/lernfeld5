@@ -13,6 +13,7 @@ public class Help {
                       recipe / recipe <recipe name/recipe ID> -- lists all recipes / lists the details of one recipe
                       recipe ingred / recipe ingred <ingredient ID / ingredient name> -- lists all recipes of one ingredient
                       recipe amount / recipe amount <integer> -- lists all recipes with less or equal amount of ingredients
+                      recipe calories / recipe calories <integer> -- lists all recipes with less or equal calories
                       orders / orders <order ID> -- lists all orders / lists the details of one order
                       customers / customers <customer ID / customer lastname firstname> -- lists all customers / lists the details of one customer
                       categories / categories <category ID / category name> -- lists all categories / lists all recipes of one category
