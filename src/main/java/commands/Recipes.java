@@ -21,6 +21,44 @@ public class Recipes {
         });
     }
 
+    public void recipeWithIngredient(String arg) {
+        boolean isID = false;
+        List<RecipeList> list = ConfigInstance.recipeList;
+        BigDecimal id = BigDecimal.ZERO;
+        try {
+            id = new BigDecimal(Integer.parseInt(arg));
+            BigDecimal finalId1 = id;
+            isID = ConfigInstance.ingredientList.stream().anyMatch(ingred -> ingred.getIngredientID().equals(finalId1));
+        } catch(NumberFormatException e) {
+            //System.out.println("");
+        }
+        boolean isNameValid = ConfigInstance.ingredientList.stream().anyMatch(ingred -> arg.toLowerCase().equals(ingred.getIngredientName().toLowerCase()));
+
+        if(isID) {
+            BigDecimal finalId = id;
+            list.forEach(recipe -> {
+                if(recipe.getIngredients().contains(finalId)) {
+                    String str ="ID: " + recipe.getRecipeID()
+                            + " | Name: " + recipe.getRecipeName();
+                    System.out.println(str);
+                };
+            });
+        } else if (isNameValid) {
+            AtomicReference<BigDecimal> ingredID = new AtomicReference<>(BigDecimal.ZERO);
+            ConfigInstance.ingredientList.stream().filter(ingred -> ingred.getIngredientName().toLowerCase().equals(arg)).findAny().ifPresent(ing -> {
+                ingredID.set(ing.getIngredientID());
+            });
+            list.forEach(recipe -> {
+                if(recipe.getIngredients().contains(ingredID)) {
+                    String str ="ID: " + recipe.getRecipeID()
+                            + " | Name: " + recipe.getRecipeName();
+                    System.out.println(str);
+                };
+            });
+        }
+
+    }
+
     public void recipeDescription(String arg) {
         List<RecipeList> list = ConfigInstance.recipeList;
         int id = 0;
