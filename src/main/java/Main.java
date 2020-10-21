@@ -6,6 +6,9 @@ import utils.DBUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main /*extends Application*/ {
@@ -70,12 +73,18 @@ public class Main /*extends Application*/ {
         }
 
         Scanner input = new Scanner(System.in);
-        String[] command;
+        //String[] command;
+        List<String> argList = new ArrayList<>();
+        String command;
         boolean loopBool = true;
         do {
             System.out.println("Enter the command you want to execute: ");
-            command = input.nextLine().split(" ");
-            switch (command[0]) {
+            argList.addAll(Arrays.asList(input.nextLine().split(" ")));
+            if(argList.size() == 0) return;
+            command = argList.get(0);
+            argList.remove(0);
+            //command = input.nextLine().split(" ");
+            switch (command) {
                 case "help" -> {
                     Help help = new Help();
                     help.helper();
@@ -83,8 +92,8 @@ public class Main /*extends Application*/ {
                 case "ingreds" -> {
                     Ingredients ingred = new Ingredients();
                     try {
-                        if (command.length > 1) {
-                            ingred.ingredientDescription(command[1]);
+                        if (argList.size() == 1) {
+                            ingred.ingredientDescription(argList.get(0));
                         } else {
                             ingred.ingredient();
                         }
@@ -96,8 +105,11 @@ public class Main /*extends Application*/ {
                 case "recipe" -> {
                     Recipes recipe = new Recipes();
                     try {
-                        if (command.length > 1) {
-                            recipe.recipeDescription(command[1]);
+                        if (argList.size() == 1) {
+                            recipe.recipeDescription(argList.get(0));
+                        } else if(argList.size() == 2 && argList.get(0).toLowerCase().equals("ingred")) {
+                            argList.remove(0);
+                            recipe.recipeWithIngredient(argList.get(0));
                         } else {
                             recipe.recipe();
                         }
@@ -114,8 +126,8 @@ public class Main /*extends Application*/ {
                 case "orders" -> {
                     Orders order = new Orders();
                     try {
-                        if (command.length > 1) {
-                            order.orderDescription(command[1]);
+                        if (argList.size() == 1) {
+                            order.orderDescription(argList.get(0));
                         } else {
                             order.orders();
                         }
@@ -126,14 +138,15 @@ public class Main /*extends Application*/ {
                 }
                 case "customers" -> {
                     Customers cust = new Customers();
-                    cust.passwordManager(command);
+                    String[] str = String.join(" ", argList).split(" ");
+                    cust.passwordManager(str);
                     System.out.println(" ");
                 }
                 case "categories" -> {
                     Categories categ = new Categories();
                     try {
-                        if (command.length > 1) {
-                            categ.categoryRecipes(command[1]);
+                        if (argList.size() == 1) {
+                            categ.categoryRecipes(argList.get(0));
                         } else {
                             categ.categories();
                         }
@@ -144,13 +157,36 @@ public class Main /*extends Application*/ {
                 case "allergens" -> {
                     Allergens allerg = new Allergens();
                     try {
-                        if (command.length > 1) {
-                            allerg.allergenRecipes(command[1]);
+                        if (argList.size() == 1) {
+                            allerg.allergenRecipes(argList.get(0));
                         } else {
                             allerg.allergens();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                }
+                case "buy" -> {
+                    Buy buy = new Buy();
+                    try {
+                        if (argList.size() >= 2) {
+                            if(argList.get(0).equals("ingred")) {
+                                argList.remove(0);
+                                buy.addToCart(true, argList);
+                            } else if(argList.get(0).equals("recipe")) {
+                                argList.remove(0);
+                                buy.addToCart(false, argList);
+                            }
+                        } else {
+                            System.out.println("You have to pass two arguments like buy <recipe / ingred> <recipeid or name / ingredid or name> you can pass multiple");
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                case "cart" -> {
+                    for (int i = 0; i < argList.size(); i++) {
+                        System.out.println(argList.get(i));
                     }
                 }
                 case "recreate" -> {
@@ -173,8 +209,11 @@ public class Main /*extends Application*/ {
                     dbUtils.error();
                     System.out.println(" ");
                 }
-                default -> System.out.println("YEET: " + command[0] + " isnt a command type help to get the command list.");
+                default -> {
+                    if(argList.size() > 0) System.out.println("YEET: " + argList.get(0) + " isnt a command type help to get the command list.");
+                }
             }
+            if(argList.size() > 0) argList.clear();
         } while (loopBool);
     }
 
