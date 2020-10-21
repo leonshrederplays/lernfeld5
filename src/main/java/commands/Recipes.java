@@ -45,11 +45,11 @@ public class Recipes {
             });
         } else if (isNameValid) {
             AtomicReference<BigDecimal> ingredID = new AtomicReference<>(BigDecimal.ZERO);
-            ConfigInstance.ingredientList.stream().filter(ingred -> ingred.getIngredientName().toLowerCase().equals(arg)).findAny().ifPresent(ing -> {
+            ConfigInstance.ingredientList.stream().filter(ingred -> ingred.getIngredientName().toLowerCase().equals(arg.toLowerCase())).findAny().ifPresent(ing -> {
                 ingredID.set(ing.getIngredientID());
             });
             list.forEach(recipe -> {
-                if(recipe.getIngredients().contains(ingredID)) {
+                if(recipe.getIngredients().contains(ingredID.get())) {
                     String str ="ID: " + recipe.getRecipeID()
                             + " | Name: " + recipe.getRecipeName();
                     System.out.println(str);
@@ -57,6 +57,27 @@ public class Recipes {
             });
         }
 
+    }
+
+    public void recipeWithAmountOfIngreds(String arg) {
+        List<RecipeList> list = ConfigInstance.recipeList;
+        int id = 0;
+        boolean failed = false;
+        try {
+            id = Integer.parseInt(arg);
+        } catch(NumberFormatException e) {
+            System.out.println("You should pass a number!");
+            failed = true;
+        }
+        if (failed) return;
+        int finalId = id;
+        list.forEach(recipe -> {
+            if(recipe.getIngredients().size() <= finalId) {
+                String str ="ID: " + recipe.getRecipeID()
+                        + " | Name: " + recipe.getRecipeName();
+                System.out.println(str);
+            }
+        });
     }
 
     public void recipeDescription(String arg) {
@@ -136,6 +157,21 @@ public class Recipes {
         } else {
             System.out.println("The Recipe: " + arg + " does not exist. type recipe to list all recipes.");
         }
+    }
+    public void recipecalories(String arg){
+        List<RecipeList> list = ConfigInstance.recipeList;
+        list.forEach(recipe -> {
+            if (recipe.getRecipeCalories().doubleValue() <= Double.parseDouble(arg)) {
+                String str = "ID: " + recipe.getRecipeID()
+                        + " | Name: " + recipe.getRecipeName()
+                        + " | Kalorien: " + recipe.getRecipeCalories();
+                System.out.println(str);
+            }
+            else{
+                System.out.println("UFF");
+            }
+        });
+
     }
 
 }

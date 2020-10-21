@@ -10,14 +10,14 @@ import java.util.Scanner;
 
 public class Customers {
 
-    public void passwordManager(String[] command) {
+    public void passwordManager(List<String> command) {
         ConfigInstance conf = new ConfigInstance();
         Console console = System.console();
         int attempts = 0;
         if(ConfigInstance.isAdminPassed) {
             try {
-                if (command.length > 1) {
-                    Customers.customerDescription(command, command.length == 3);
+                if (command.size() >= 1) {
+                    Customers.customerDescription(command, command.size() == 2);
                 } else {
                     Customers.customer();
                 }
@@ -36,8 +36,8 @@ public class Customers {
                         ConfigInstance.isAdminPassed = true;
                         attempts = 3;
                         try {
-                            if (command.length > 1) {
-                                customerDescription(command, command.length == 3);
+                            if (command.size() >= 1) {
+                                customerDescription(command, command.size() == 2);
                             } else {
                                 Customers.customer();
                             }
@@ -57,8 +57,8 @@ public class Customers {
                         ConfigInstance.isAdminPassed = true;
                         attempts = 3;
                         try {
-                            if (command.length > 1) {
-                                customerDescription(command, command.length == 3);
+                            if (command.size() >= 1) {
+                                customerDescription(command, command.size() == 2);
                             } else {
                                 customer();
                             }
@@ -84,11 +84,11 @@ public class Customers {
         });
     }
 
-    public static void customerDescription(String[] arg, boolean isTwo) {
+    public static void customerDescription(List<String> arg, boolean isTwo) {
         List<CustomerList> list = ConfigInstance.customerList;
         if (isTwo) {
-            list.stream().filter(customer -> arg[1].toLowerCase().equals(customer.getNACHNAME().toLowerCase())).findAny().ifPresentOrElse(customer -> {
-                if (customer.getVORNAME().toLowerCase().equals(arg[2].toLowerCase())) {
+            list.stream().filter(customer -> arg.get(0).toLowerCase().equals(customer.getNACHNAME().toLowerCase())).findAny().ifPresentOrElse(customer -> {
+                if (customer.getVORNAME().toLowerCase().equals(arg.get(1).toLowerCase())) {
                     String str =
                             "Data of Customer: "
                                     + "\nCustomerID: " + customer.getKUNDENNR()
@@ -103,12 +103,12 @@ public class Customers {
                                     + "\nE-Mail: " + customer.getEMAIL();
                     System.out.println(str);
                 } else {
-                    System.out.println("The Customer with that last name: " + arg[1] + " and first name: " + arg[2] + " does not exist. type customers to list all customers.");
+                    System.out.println("The Customer with that last name: " + arg.get(0) + " and first name: " + arg.get(1) + " does not exist. type customers to list all customers.");
                 }
-            }, () -> System.out.println("The customer with that last name: " + arg[1] + " does not exist. type customers to list all customers."));
+            }, () -> System.out.println("The customer with that last name: " + arg.get(0) + " does not exist. type customers to list all customers."));
         } else {
             try {
-                int id = Integer.parseInt(arg[1]);
+                int id = Integer.parseInt(arg.get(0));
                 list.stream().filter(customer -> new BigDecimal(id).equals(customer.getKUNDENNR())).findAny().ifPresentOrElse(customer -> {
                     String str =
                             "Data of Customer: "
@@ -123,7 +123,7 @@ public class Customers {
                                     + "\nPhone: " + customer.getTELEFON() 
                                     + "\nE-Mail: " + customer.getEMAIL();
                     System.out.println(str);
-                }, () -> System.out.println("The Customer: " + arg[1] + " does not exist. type customers to list all customers."));
+                }, () -> System.out.println("The Customer: " + arg.get(0) + " does not exist. type customers to list all customers."));
             } catch (NumberFormatException e) {
                 System.out.println("type help to see the usage of this command.");
 
