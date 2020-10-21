@@ -6,6 +6,7 @@ import utils.DBUtils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -103,6 +104,18 @@ public class Main /*extends Application*/ {
                         e.printStackTrace();
                     }
                     System.out.println(" ");
+                }
+                case "calories" -> {
+                    try {
+                        if (argList.size() == 1) {
+                            int number = Integer.parseInt(argList.get(0));
+                            DBUtils.selectAverageCalories(new BigDecimal(number));
+                        }
+                    } catch (NumberFormatException e){
+                        System.out.println("please insert a number!!!!!!!");
+                    }
+
+
                 }
                 case "recipe" -> {
                     Recipes recipe = new Recipes();

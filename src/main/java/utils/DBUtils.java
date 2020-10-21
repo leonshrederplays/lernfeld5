@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -512,6 +513,33 @@ public class DBUtils {
             //selectData();
             } catch (SQLException e) {
             e.printStackTrace();
+        }
+    }
+    public static void selectAverageCalories(BigDecimal customer) {
+        // Get Connection
+        try (Connection conn = connector(ConfigInstance.database)) {
+            // Pass your SQL in this String.
+            String sql = "SELECT AVG(KALORIEN) Kalorien_durchschnitt FROM bestellung INNER JOIN bestellungzutat ON bestellung.BESTELLNR = bestellungzutat.BESTELLNR INNER JOIN zutat ON bestellungzutat.ZUTATENNR = zutat.ZUTATENNR WHERE KUNDENNR = ?;";
+            // Make a preparedStatement and set Scroll to insensitive (both directions)
+            try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
+                // Set the first ? in the defined SQL string to Hendrik
+                ps.setBigDecimal(1,customer );
+                // Execute query and safe Result in rs
+                try (ResultSet rs = ps.executeQuery()) {
+                    // If no result do nothing
+                    if (!rs.next()) {
+                        System.out.println("");
+                    } else {
+
+                        do {
+                            System.out.println("Customer: "+ customer +" has an average of: "+ rs.getBigDecimal(1).setScale(2, RoundingMode.HALF_EVEN)+ " kcal");
+                        } while (rs.next());
+                        System.out.println("");
+                    }
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
         }
     }
 
