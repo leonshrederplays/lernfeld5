@@ -92,7 +92,9 @@ public class Main /*extends Application*/ {
                 case "ingreds" -> {
                     Ingredients ingred = new Ingredients();
                     try {
-                        if (argList.size() == 1) {
+                        if (argList.size() == 1 && argList.get(0).toLowerCase().equals("unused")) {
+                            ingred.ingredientUnused();
+                        } else if (argList.size() == 1) {
                             ingred.ingredientDescription(argList.get(0));
                         } else {
                             ingred.ingredient();
