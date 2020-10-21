@@ -59,6 +59,27 @@ public class Recipes {
 
     }
 
+    public void recipeWithAmountOfIngreds(String arg) {
+        List<RecipeList> list = ConfigInstance.recipeList;
+        int id = 0;
+        boolean failed = false;
+        try {
+            id = Integer.parseInt(arg);
+        } catch(NumberFormatException e) {
+            System.out.println("You should pass a number!");
+            failed = true;
+        }
+        if (failed) return;
+        int finalId = id;
+        list.forEach(recipe -> {
+            if(recipe.getIngredients().size() <= finalId) {
+                String str ="ID: " + recipe.getRecipeID()
+                        + " | Name: " + recipe.getRecipeName();
+                System.out.println(str);
+            }
+        });
+    }
+
     public void recipeDescription(String arg) {
         List<RecipeList> list = ConfigInstance.recipeList;
         int id = 0;

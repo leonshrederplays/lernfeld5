@@ -110,6 +110,9 @@ public class Main /*extends Application*/ {
                         } else if(argList.size() == 2 && argList.get(0).toLowerCase().equals("ingred")) {
                             argList.remove(0);
                             recipe.recipeWithIngredient(argList.get(0));
+                        } else if(argList.size() == 2 && argList.get(0).toLowerCase().equals("amount")){
+                            argList.remove(0);
+                            recipe.recipeWithAmountOfIngreds(argList.get(0));
                         } else {
                             recipe.recipe();
                         }
@@ -210,7 +213,7 @@ public class Main /*extends Application*/ {
                     System.out.println(" ");
                 }
                 default -> {
-                    if(argList.size() > 0) System.out.println("YEET: " + argList.get(0) + " isnt a command type help to get the command list.");
+                    if(!command.isBlank() || !command.isEmpty()) System.out.println("YEET: " + command + " isnt a command type help to get the command list.");
                 }
             }
             if(argList.size() > 0) argList.clear();
