@@ -1,19 +1,18 @@
 # Lernfeld5
 
 ## Index
-* [Team-Rollen](https://github.com/leonshrederplays/lernfeld5#team-rollen)
-* [Team-Regeln](https://github.com/leonshrederplays/lernfeld5#team-regeln)
+* [Team-Roles](https://github.com/leonshrederplays/lernfeld5#team-rollen)
+* [Team-Rules](https://github.com/leonshrederplays/lernfeld5#team-regeln)
 
-## Team-Rollen
+## Team-Roles
 
-* Hendrik (Scrum-Master)
-* Maximilian (Scrum-Member / Datenschutzbeauftragter)
-* Jakob (Product-Owner)
-* Leon (Tech-Leader)
+* Hendrik (scrum-master)
+* Maximilian (scrum-member / privacy officer)
+* Jakob (product-owner)
+* Leon (tech-leader)
 
-## Team-Regeln
+## Team-Rules
 
-* Planung wird in Trello gemacht
-* Code kommentieren / Dokumentieren
-* MySQL als Datenbank verwenden
-* Java ist die Projektsprache für dieses Lernfeld
+* The project is planned in Trello
+* The project uses a MySQL Database
+* The project language is Java
