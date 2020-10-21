@@ -45,11 +45,11 @@ public class Recipes {
             });
         } else if (isNameValid) {
             AtomicReference<BigDecimal> ingredID = new AtomicReference<>(BigDecimal.ZERO);
-            ConfigInstance.ingredientList.stream().filter(ingred -> ingred.getIngredientName().toLowerCase().equals(arg)).findAny().ifPresent(ing -> {
+            ConfigInstance.ingredientList.stream().filter(ingred -> ingred.getIngredientName().toLowerCase().equals(arg.toLowerCase())).findAny().ifPresent(ing -> {
                 ingredID.set(ing.getIngredientID());
             });
             list.forEach(recipe -> {
-                if(recipe.getIngredients().contains(ingredID)) {
+                if(recipe.getIngredients().contains(ingredID.get())) {
                     String str ="ID: " + recipe.getRecipeID()
                             + " | Name: " + recipe.getRecipeName();
                     System.out.println(str);

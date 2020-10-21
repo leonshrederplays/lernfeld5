@@ -143,8 +143,7 @@ public class Main /*extends Application*/ {
                 }
                 case "customers" -> {
                     Customers cust = new Customers();
-                    String[] str = String.join(" ", argList).split(" ");
-                    cust.passwordManager(str);
+                    cust.passwordManager(argList);
                     System.out.println(" ");
                 }
                 case "categories" -> {
