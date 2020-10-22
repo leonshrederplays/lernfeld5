@@ -47,6 +47,7 @@ public class Main /*extends Application*/ {
                 } while(true);
             } else {
                 System.out.println("File exists: " + file.getName());
+                System.out.println(file.getAbsolutePath());
                 Scanner reader = new Scanner(file);
                 while (reader.hasNextLine()) {
                     String data = reader.nextLine();

@@ -519,7 +519,7 @@ public class DBUtils {
         // Get Connection
         try (Connection conn = connector(ConfigInstance.database)) {
             // Pass your SQL in this String.
-            String sql = "SELECT AVG(KALORIEN) Kalorien_durchschnitt FROM bestellung INNER JOIN bestellungzutat ON bestellung.BESTELLNR = bestellungzutat.BESTELLNR INNER JOIN zutat ON bestellungzutat.ZUTATENNR = zutat.ZUTATENNR WHERE KUNDENNR = ?;";
+            String sql = "SELECT AVG(KALORIEN) Kalorien_durchschnitt FROM BESTELLUNG INNER JOIN BESTELLUNGZUTAT ON BESTELLUNG.BESTELLNR = BESTELLUNGZUTAT.BESTELLNR INNER JOIN ZUTAT ON BESTELLUNGZUTAT.ZUTATENNR = ZUTAT.ZUTATENNR WHERE KUNDENNR = ?;";
             // Make a preparedStatement and set Scroll to insensitive (both directions)
             try (PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                 // Set the first ? in the defined SQL string to Hendrik
