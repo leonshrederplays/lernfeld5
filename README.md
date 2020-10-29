@@ -1,4 +1,4 @@
-# Lernfeld5
+# Lernfeld5 (Abgeschlossen)
 
 ## Index
 * [Team-Roles](https://github.com/leonshrederplays/lernfeld5#team-rollen)
